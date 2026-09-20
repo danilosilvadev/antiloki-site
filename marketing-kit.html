@@ -1,0 +1,419 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>antiloki Marketing Kit</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root {
+    --bg: #211e1b; --panel: #2a2521; --panel2: #322c27; --rule: #3b3530; --rule2: #4a433c;
+    --ink: #efe9e2; --dim: #a3998f; --muted: #6f665e; --ember: #c97c5c; --ember-soft: rgba(201,124,92,.14); --ok: #7fc48f; --warn: #d9b45a; --bad: #d9705a;
+    --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif; --body: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif; --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  a { color: var(--ember); }
+  .shell { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+  aside { position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid var(--rule); padding: 22px 16px; background: var(--panel); }
+  aside .mark { display: flex; align-items: center; gap: 8px; font-family: var(--display); font-weight: 800; font-size: 17px; margin-bottom: 4px; }
+  aside .mark i { width: 9px; height: 9px; background: var(--ember); transform: rotate(45deg); }
+  aside .sub { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; }
+  aside nav a { display: block; padding: 6px 8px; border-radius: 6px; text-decoration: none; color: var(--dim); font-size: 13.5px; }
+  aside nav a:hover { color: var(--ink); background: var(--panel2); }
+  aside nav a.on { color: var(--ember); background: var(--ember-soft); }
+  aside nav b { display: block; font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 14px 8px 4px; }
+  main { padding: 36px 44px 90px; max-width: 980px; }
+  h1 { font-family: var(--display); font-size: 40px; font-weight: 800; letter-spacing: -.02em; line-height: 1; margin: 0 0 8px; }
+  h2 { font-family: var(--display); font-size: 26px; font-weight: 700; letter-spacing: -.015em; margin: 56px 0 6px; padding-top: 24px; border-top: 1px solid var(--rule); }
+  h2:first-of-type { margin-top: 28px; }
+  h3 { font-family: var(--display); font-size: 17px; font-weight: 700; margin: 26px 0 8px; }
+  p { margin: 0 0 10px; max-width: 70ch; }
+  .lede { color: var(--dim); font-size: 16px; }
+  .eyebrow { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+  .mono { font-family: var(--mono); font-size: 12.5px; }
+  ul, ol { margin: 6px 0 12px; padding-left: 20px; max-width: 72ch; } li { margin: 3px 0; } li b { font-weight: 600; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0 16px; font-size: 13.5px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; } th { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); font-weight: 600; }
+  td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card { border: 1px solid var(--rule); border-radius: 10px; background: var(--panel); padding: 14px 16px; }
+  .card h4 { margin: 0 0 6px; font-size: 14px; font-weight: 600; } .card p { font-size: 13.5px; color: var(--dim); margin: 0; }
+  .copy { position: relative; border: 1px solid var(--rule); border-radius: 10px; background: var(--panel); padding: 14px 16px 14px; margin: 10px 0 14px; white-space: pre-wrap; font-size: 14px; line-height: 1.55; }
+  .copy.mono { font-family: var(--mono); font-size: 12.5px; }
+  .copy .lbl { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ember); margin-bottom: 8px; white-space: normal; }
+  .copy button { position: absolute; top: 10px; right: 10px; font-family: var(--mono); font-size: 10.5px; border: 1px solid var(--rule2); background: var(--bg); color: var(--dim); border-radius: 5px; padding: 3px 8px; cursor: pointer; }
+  .copy button:hover { color: var(--ink); border-color: var(--dim); } .copy button.done { color: var(--ok); border-color: var(--ok); }
+  .rule { color: var(--muted); font-size: 13px; }
+  .tag { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; border: 1px solid var(--rule2); border-radius: 4px; padding: 1px 6px; color: var(--dim); margin-right: 6px; }
+  .tag.ok { color: var(--ok); border-color: var(--ok); } .tag.no { color: var(--bad); border-color: var(--bad); }
+  .kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0 16px; }
+  .kpi div { border: 1px solid var(--rule); border-radius: 10px; background: var(--panel); padding: 12px 14px; } .kpi b { display: block; font-family: var(--mono); font-size: 22px; font-weight: 600; } .kpi span { font-size: 12.5px; color: var(--dim); }
+  .week { display: grid; grid-template-columns: 90px 1fr; gap: 12px; border-top: 1px solid var(--rule); padding: 10px 0; } .week b { font-family: var(--mono); font-size: 12px; color: var(--ember); }
+  .week ul { margin: 0; }
+  @media (max-width: 860px) { .shell { grid-template-columns: 1fr; } aside { position: static; height: auto; } main { padding: 24px 20px 60px; } .grid2, .kpi { grid-template-columns: 1fr; } }
+</style>
+
+<div class="shell">
+<aside>
+  <div class="mark"><i></i>antiloki</div>
+  <div class="sub">marketing kit · v1</div>
+  <nav id="nav">
+    <b>Foundation</b>
+    <a href="#position">Positioning</a><a href="#who">Who buys</a><a href="#message">Messaging</a>
+    <b>Plan</b>
+    <a href="#plan">Launch plan</a><a href="#channels">Channels & cadence</a><a href="#metrics">Numbers</a>
+    <b>Copy</b>
+    <a href="#ads">Ads</a><a href="#posts">Posts</a><a href="#video">Video scripts</a><a href="#listings">Launch listings</a>
+    <b>Selling</b>
+    <a href="#dm">DM playbooks</a><a href="#email">Email sequences</a><a href="#objections">Objections</a>
+    <b>Ops</b>
+    <a href="#assets">Assets checklist</a>
+  </nav>
+</aside>
+
+<main>
+  <span class="eyebrow">antiDesk + antiIDE · 7-day trial · $200/yr · $500 lifetime</span>
+  <h1>Marketing kit</h1>
+  <p class="lede">Everything needed to sell antiloki for the next 90 days: the position, the plan, every ad and post, and the DM scripts. Every block is paste-ready — hit copy.</p>
+
+  <!-- ─────────────────────────────── POSITIONING ─────────────────────────────── -->
+  <h2 id="position">Positioning</h2>
+  <div class="copy"><span class="lbl">one-liner</span><button>copy</button>antiloki runs Claude Code, Codex and OpenCode in parallel on your machine — each boxed to the folders you allow, verified before they merge, every move on the record.</div>
+  <div class="copy"><span class="lbl">the category we claim</span><button>copy</button>The desk for coding agents. Not another agent, not a cloud IDE — the local control layer for the agents you already pay for.</div>
+  <div class="grid2">
+    <div class="card"><h4>The problem, in the buyer's words</h4><p>"I run two or three agents at once and it's chaos. They overwrite each other, I can't tell what changed, and I find out the cost at the end of the month."</p></div>
+    <div class="card"><h4>The promise</h4><p>Parallel agents without the chaos: a folder box each, a verifier before merge, one timeline you can read like a stack trace, and the bill on screen while it runs.</p></div>
+    <div class="card"><h4>Why now</h4><p>Everyone with a Claude Code / Codex subscription is already running more than one session. The tooling is still single-agent, single-terminal. That gap is the product.</p></div>
+    <div class="card"><h4>Why us, not a cloud tool</h4><p>Local, one binary, no account, no telemetry. The only things that leave the machine are the calls your own CLIs already make. Serious teams can actually install it.</p></div>
+  </div>
+  <h3>Three claims we can prove (use these, only these)</h3>
+  <ol>
+    <li><b>Scope is enforced at the tool call.</b> A write outside the allowed folders is refused before the file changes. Demo: the gate on the landing page.</li>
+    <li><b>Goal runs are faster and verified.</b> Same goal, same machine: 380 s vs 513 s, 4/4 PASS verdicts, ~2× tokens. Say all three numbers, every time.</li>
+    <li><b>antiIDE scores a repo for $0.</b> Laws you ratify, every file judged with a score and a line number, no model call.</li>
+  </ol>
+  <p class="rule"><span class="tag no">never say</span> "10× faster", "autonomous", "replaces your engineers", "AI-powered". <span class="tag ok">say</span> "parallel", "scoped", "verified", "on the record", "on your machine".</p>
+
+  <!-- ─────────────────────────────── WHO ─────────────────────────────── -->
+  <h2 id="who">Who buys</h2>
+  <table>
+    <tr><th>segment</th><th>who exactly</th><th>trigger</th><th>plan they pick</th><th>where they are</th></tr>
+    <tr><td><b>1 · The power user</b></td><td>Senior dev / staff eng already paying for Claude Code Max or Codex. Runs 2–4 sessions a day.</td><td>Got burned: an agent touched the wrong folder, or a merge conflict between two agents.</td><td>Lifetime</td><td>X, HN, r/ClaudeAI, r/ChatGPTCoding, Discord (Claude, Cursor, OpenCode)</td></tr>
+    <tr><td><b>2 · The tech lead</b></td><td>Leads 3–10 devs. Cares about audit, scope, cost visibility. Buys 3–8 seats.</td><td>Needs to justify agent spend; needs a story for "what did the AI change".</td><td>Yearly ×N</td><td>LinkedIn, newsletters (Pragmatic Engineer, TLDR), YouTube</td></tr>
+    <tr><td><b>3 · The agency / freelancer</b></td><td>Ships client repos, several at once. Bills by outcome.</td><td>Parallel agents = parallel clients. Wants the timeline as a deliverable.</td><td>Lifetime</td><td>Instagram/TikTok dev creators, LinkedIn, Indie Hackers</td></tr>
+  </table>
+  <p class="rule">Priority order for the first 90 days: 1 → 2 → 3. Segment 1 converts fastest and writes the reviews segment 2 reads.</p>
+
+  <!-- ─────────────────────────────── MESSAGING ─────────────────────────────── -->
+  <h2 id="message">Messaging</h2>
+  <div class="grid2">
+    <div class="card"><h4>Pillar 1 · Boxed</h4><p>"Reads everything, writes only where you said." The gate is the hero visual everywhere.</p></div>
+    <div class="card"><h4>Pillar 2 · Verified</h4><p>"Faster, and it checked its own work." Always with the 380/513 numbers and the 4 verdicts.</p></div>
+    <div class="card"><h4>Pillar 3 · On the record</h4><p>"Read the audit like a stack trace." The timeline screenshot; the fuel line with real dollars.</p></div>
+    <div class="card"><h4>Pillar 4 · Local</h4><p>"One binary. Your machine. No account." Short, blunt, in every footer and bio.</p></div>
+  </div>
+  <h3>Tone</h3>
+  <ul><li>Engineer to engineer. Numbers over adjectives. Lowercase product words (antiDesk, antiIDE) never shouted.</li><li>One idea per post. If it needs a second paragraph to explain, it's two posts.</li><li>Show the UI. Every post has a screenshot, GIF or 15-second clip. No stock art, no AI illustrations.</li></ul>
+  <div class="copy"><span class="lbl">bio · all platforms (≤160)</span><button>copy</button>The desk for coding agents. Claude Code, Codex & OpenCode in parallel — boxed, verified, on the record. Local, one binary. 7-day trial → antiloki.dev</div>
+
+  <!-- ─────────────────────────────── PLAN ─────────────────────────────── -->
+  <h2 id="plan">Launch plan · 8 weeks</h2>
+  <div class="week"><b>W-3</b><ul><li>Landing page live with waitlist (email only). Pin 3 GIFs: the gate refusal, a goal run, the timeline.</li><li>Recruit <b>15 design partners</b> via DM (playbook below): free lifetime for a 20-min call + a quote.</li><li>Record the 60-second demo (script below). Record 4 × 15-second clips.</li></ul></div>
+  <div class="week"><b>W-2</b><ul><li>Ship signed builds for all 3 OSes. Install on a clean machine per OS; fix the first-run path until it's 3 clicks.</li><li>Write the benchmark post (the 380 vs 513 run, full method, cost table). This is the launch content.</li><li>Ask 5 design partners for a one-line quote with name + role.</li></ul></div>
+  <div class="week"><b>W-1</b><ul><li>Product Hunt page drafted, hunter lined up. HN "Show HN" drafted (listing below).</li><li>Schedule launch-week posts (X thread, LinkedIn, Reddit ×3, IG reels ×2).</li><li>Waitlist email #1: "7 days to launch — here's the benchmark".</li></ul></div>
+  <div class="week"><b>W0 · launch</b><ul><li><b>Tue 06:00 PT</b> Product Hunt + X thread + LinkedIn. <b>Tue 09:00 PT</b> Show HN. <b>Wed</b> Reddit (r/ClaudeAI, r/ChatGPTCoding, r/programming). <b>Thu</b> IG/TikTok reels. <b>Fri</b> newsletter pitches.</li><li>Launch offer: lifetime $500 → <b>$399 for 72 h</b> (one code, in the app and on the page). Never discount yearly.</li><li>Reply to every comment within the hour. Post the numbers people ask for.</li></ul></div>
+  <div class="week"><b>W1–W2</b><ul><li>Daily: 1 clip on X + IG, 20 DMs (playbook), every trial user gets the day-2 email.</li><li>Ship the two most-asked fixes. Post each as "you asked, shipped" with the GIF.</li><li>Second content piece: "what an agent audit looks like" (the timeline, a real session).</li></ul></div>
+  <div class="week"><b>W3–W4</b><ul><li>Ads on (Google search + X promoted, budgets below) only if organic CAC data says the funnel converts ≥ 8 % trial→paid.</li><li>Comparison page: antiloki vs "just tmux + 3 terminals" vs cloud agent platforms. Honest table.</li><li>Team offer for segment 2: 5 yearly seats = $800 (20 % off) via DM only.</li></ul></div>
+  <div class="week"><b>W5+</b><ul><li>Weekly benchmark: a public goal on a public repo, numbers posted every Monday. Becomes the series people follow.</li><li>Monthly changelog post. Ask every lifetime buyer for a 2-line review at day 14.</li></ul></div>
+
+  <!-- ─────────────────────────────── CHANNELS ─────────────────────────────── -->
+  <h2 id="channels">Channels & cadence</h2>
+  <table>
+    <tr><th>channel</th><th>role</th><th>cadence</th><th>format</th><th>owner time/wk</th></tr>
+    <tr><td>X / Twitter</td><td>segment 1 · reach + proof</td><td>1/day + 1 thread/wk</td><td>15-s clip, a number, a link in reply</td><td>3 h</td></tr>
+    <tr><td>LinkedIn</td><td>segment 2 · trust + team deals</td><td>3/wk + 25 DMs/day</td><td>text + screenshot, no links in body</td><td>5 h</td></tr>
+    <tr><td>Instagram / TikTok</td><td>segment 3 · discovery</td><td>3 reels/wk</td><td>vertical screen capture, captions, no talking head needed</td><td>3 h</td></tr>
+    <tr><td>Reddit</td><td>segments 1–2 · depth</td><td>1/wk + reply daily</td><td>text post with method + numbers, no link until asked</td><td>2 h</td></tr>
+    <tr><td>Hacker News</td><td>segment 1 · launch spike</td><td>launch + 1 post/month</td><td>Show HN, benchmark, "what we learned"</td><td>1 h</td></tr>
+    <tr><td>YouTube</td><td>segment 2 · search</td><td>2/month</td><td>6–10-min walkthroughs, titled as questions</td><td>4 h</td></tr>
+    <tr><td>Email</td><td>convert trials</td><td>automated</td><td>5-mail trial drip below</td><td>0.5 h</td></tr>
+    <tr><td>Discord / Slack communities</td><td>segment 1 · answers</td><td>daily 20 min</td><td>answer questions; mention the product only when it's the answer</td><td>2 h</td></tr>
+  </table>
+
+  <!-- ─────────────────────────────── NUMBERS ─────────────────────────────── -->
+  <h2 id="metrics">Numbers to run on</h2>
+  <div class="kpi"><div><b>3 %</b><span>landing → download (target)</span></div><div><b>60 %</b><span>download → first agent started (activation)</span></div><div><b>10 %</b><span>trial → paid (target; 6 % floor)</span></div><div><b>$330</b><span>blended ARPU (60 % lifetime / 40 % yearly)</span></div></div>
+  <table>
+    <tr><th>month</th><th>visitors</th><th>trials</th><th>paid</th><th>revenue</th><th>notes</th></tr>
+    <tr><td>1 (launch)</td><td class="n">25,000</td><td class="n">750</td><td class="n">75</td><td class="n">$24,750</td><td>PH + HN spike; launch discount on lifetime</td></tr>
+    <tr><td>2</td><td class="n">12,000</td><td class="n">360</td><td class="n">36</td><td class="n">$11,880</td><td>organic + DMs; ads only if funnel ≥ 8 %</td></tr>
+    <tr><td>3</td><td class="n">18,000</td><td class="n">540</td><td class="n">60</td><td class="n">$19,800</td><td>weekly benchmark series compounding; 3 team deals</td></tr>
+  </table>
+  <p class="rule">Instrument only these in the app (no telemetry otherwise, and say so): download counts from GitHub, activations from the store's license API, nothing from inside the app. Ask "how did you hear about us" at checkout — one free-text field.</p>
+  <p class="rule">Ad math: at $330 ARPU and 10 % trial→paid, a trial is worth $33. Pay up to <b>$15 per trial</b> (CPA on download), stop any campaign above $25.</p>
+
+  <!-- ─────────────────────────────── ADS ─────────────────────────────── -->
+  <h2 id="ads">Ads</h2>
+  <h3>Google Search · intent keywords</h3>
+  <p class="rule">Keywords: "claude code parallel", "run multiple claude code", "codex vs claude code", "claude code worktree", "ai coding agent audit", "claude code cost tracking", "opencode vs claude code". Match: phrase. Budget: $30/day to start. Land on #gate.</p>
+  <div class="copy mono"><span class="lbl">headlines (30 chars, rotate)</span><button>copy</button>Run 3 coding agents at once
+Claude Code, boxed by folder
+Agents that verify their work
+Codex + Claude Code, in parallel
+See what your AI changed. All of it.
+One desk for coding agents
+Local. One binary. No account.
+7-day free trial, no card</div>
+  <div class="copy mono"><span class="lbl">descriptions (90 chars)</span><button>copy</button>Claude Code, Codex & OpenCode side by side. Each boxed to folders you allow. Every move logged.
+Parallel agents without the chaos: scoped writes, verified merges, cost on screen. Local app.
+Same goal, one agent vs a verified goal run: 513 s vs 380 s. Try it free for 7 days.</div>
+
+  <h3>X / Twitter promoted</h3>
+  <div class="copy"><span class="lbl">promoted post A · the gate (attach: 8-s clip of a refused write)</span><button>copy</button>Your agent may write to src/api/**.
+It tries src/auth/session.ts.
+Refused — before the file changes.
+
+That's the whole product. Claude Code, Codex, OpenCode, in parallel, each in a box.
+7-day trial, local, no account → antiloki.dev</div>
+  <div class="copy"><span class="lbl">promoted post B · the number (attach: the bar chart)</span><button>copy</button>Same goal. Same machine. Same model.
+
+One agent: 513 s, $3.08, hit the turn cap.
+Goal run (4 tasks in parallel, each verified): 380 s, $5.86, 4/4 PASS.
+
+Faster and checked, for 2× the tokens. Your call — the numbers are on screen either way.
+antiloki.dev</div>
+  <p class="rule">Targeting: followers of @AnthropicAI, @OpenAIDevs, @cursor_ai, @opencode; keywords "claude code", "codex". $25/day. Kill if CPA &gt; $25/trial after 3 days.</p>
+
+  <h3>LinkedIn sponsored (segment 2)</h3>
+  <div class="copy"><span class="lbl">single image ad · 150 chars intro + headline</span><button>copy</button>Intro: Your team runs coding agents. Can you say what they changed, where, and what it cost? antiloki puts every agent in a folder box and every action on one timeline.
+Headline: The audit trail for coding agents
+CTA: Try free for 7 days</div>
+  <p class="rule">Targeting: titles Engineering Manager / Tech Lead / Staff Engineer; skills "Claude", "GitHub Copilot", "AI"; company size 11–500. Budget $40/day, 2 weeks, then judge on demo requests, not clicks.</p>
+
+  <h3>Reddit ads</h3>
+  <div class="copy"><span class="lbl">r/ClaudeAI · r/ChatGPTCoding · r/programming</span><button>copy</button>Title: Run Claude Code and Codex in parallel without them overwriting each other
+Body: Each agent gets its own worktree and a folder scope enforced at the tool call. Goal runs split work, verify each task, join once. One timeline, cost on screen. Local, one binary, 7-day trial.</div>
+
+  <!-- ─────────────────────────────── POSTS ─────────────────────────────── -->
+  <h2 id="posts">Organic posts</h2>
+  <h3>X thread · launch</h3>
+  <div class="copy"><span class="lbl">thread (7 posts; clip on 1, chart on 4, timeline on 5)</span><button>copy</button>1/ I run Claude Code, Codex and OpenCode at the same time on one repo. For months that was tmux and hope. So I built the desk they should have had. antiloki, out today. 🧵
+
+2/ Every agent gets a box: its own worktree and the folders it may write. A write outside the box is refused at the tool call — before the file changes. Reads stay free.
+
+3/ Agents delegate on their own when it's faster: plan → parallel tasks with owners → a verifier per task → one join. You don't approve anything unless you want to.
+
+4/ I timed it. Same goal, same machine: one agent 513 s / $3.08 (hit the turn cap). Goal run 380 s / $5.86, 4/4 verdicts PASS. Faster and checked, ~2× tokens. Numbers on screen, always.
+
+5/ Everything lands on one timeline — a git-graph you read like a stack trace. Tokens, dollars, 5-hour and weekly limits for all three engines in three quiet lines top-right.
+
+6/ antiIDE scores your repo for $0: laws you ratify, every file judged with a score and a line number. No model call. Agents boot with that context instead of re-reading your tree.
+
+7/ Local. One Rust binary. No account, no telemetry. 7-day trial, then $200/yr or $500 once. mac · windows · linux → antiloki.dev</div>
+
+  <h3>LinkedIn · 5 posts (one per week, text + screenshot, link in first comment)</h3>
+  <div class="copy"><span class="lbl">LI 1 · the story</span><button>copy</button>Last month one of my agents rewrote a file another agent was mid-way through. Both were "done". Neither was right.
+
+That was the day I stopped running coding agents in three terminals.
+
+What I wanted was simple: each agent gets the folders it may touch, nothing more; every task gets checked before it merges; and I can read what happened afterwards like a stack trace, not a log.
+
+That's antiloki. It runs Claude Code, Codex and OpenCode in parallel on your machine — boxed, verified, on the record. Local, one binary, no account.
+
+7-day trial. Link in the comments.</div>
+  <div class="copy"><span class="lbl">LI 2 · the number</span><button>copy</button>Is a team of agents actually faster than one? I measured instead of guessing.
+
+Same goal (survey four packages, fix their flaky tests), same machine, same model.
+
+→ One agent: 513 s, $3.08, hit the 40-turn cap.
+→ Goal run, 4 tasks in parallel, each verified: 380 s, $5.86, 4/4 PASS.
+
+26 % faster, every task with a verdict, roughly 2× the tokens.
+
+The interesting part isn't the win. It's that the agent decided on its own when splitting was worth it — and declined for a task too small to bother.
+
+Method and the full cost table in the comments.</div>
+  <div class="copy"><span class="lbl">LI 3 · for tech leads</span><button>copy</button>Three questions I now ask about any coding-agent setup:
+
+1. Where can it write? (Not "what did we tell it" — what is enforced.)
+2. Who checked the work before it merged?
+3. What did it cost, per task, today?
+
+If the answer to any of them is "we'd have to look", you don't have an agent process. You have a hope process.
+
+antiloki answers all three on one screen: folder scopes enforced at the tool call, a verifier per task, and the bill on the fuel line while it runs.</div>
+  <div class="copy"><span class="lbl">LI 4 · antiIDE</span><button>copy</button>Before I let an agent touch a repo, I want it to know the rules of the house.
+
+antiIDE writes them down: laws you ratify (no lone dispatch, no `==` null, whatever your team decided), then every file is judged — score, violated law, line number. Deterministic, no model, $0.
+
+Agents boot with that as context. They stop re-reading the whole tree and start on the files that actually need work.
+
+Screenshot: a 112-line file, score 85, two violations, exact lines.</div>
+  <div class="copy"><span class="lbl">LI 5 · local</span><button>copy</button>"Can we install it?"
+
+For most AI dev tools the honest answer is a security review. antiloki is one binary. It runs on the laptop. State is SQLite in the project folder. The only network calls are the ones your own Claude Code / Codex / OpenCode already make, plus a daily license check.
+
+No account. No telemetry. Delete the folder, it's gone.
+
+That's not a feature. It's the reason serious teams can say yes.</div>
+
+  <h3>Reddit · 2 posts (text only, link when asked)</h3>
+  <div class="copy"><span class="lbl">r/ClaudeAI</span><button>copy</button>Title: I measured one Claude Code agent vs a goal run of 4 verified subagents on the same task — numbers inside
+
+Body: Setup: same repo, same machine, same goal ("survey these 4 packages, fix the flaky tests"). One agent alone vs the same agent delegating a plan with 4 owned tasks, one verifier per task, one join.
+
+One agent: 513 s, $3.08, 40 tool calls, hit the turn cap.
+Goal run: 380 s (41 s planning + 340 s), $5.86, 69 tool calls across 10 CLI calls, 4/4 verdicts PASS.
+Recall was 100 % both ways.
+
+Takeaways: the speedup is real but modest (26 %); the verification is the actual value; tokens ~2×. The agent also declined to delegate a smaller task ("smaller than the overhead") which I didn't expect.
+
+I built the tool that runs this (antiloki — local desk for Claude Code / Codex / OpenCode with folder scopes and a timeline). Happy to share the method or the tool if useful.</div>
+  <div class="copy"><span class="lbl">r/ChatGPTCoding</span><button>copy</button>Title: Running Codex and Claude Code on the same repo at once — how I stopped them stepping on each other
+
+Body: Each agent in its own git worktree, with a write scope (globs) enforced by a hook at the tool call. Codex gets src/api/**, Claude gets src/tests/**. A write outside scope is refused and the agent is told why — before the file changes. Then one diff view across both worktrees shows overlaps (usually none).
+
+Doing this by hand is possible; I packaged it into a local app (antiloki). The scope rule is the part I'd keep even if I threw the rest away.</div>
+
+  <h3>Instagram / TikTok · captions (reels scripts in the video section)</h3>
+  <div class="copy"><span class="lbl">caption · the refusal</span><button>copy</button>The agent tried to write outside its box. Refused, before the file changed. That's the whole idea. 🧱
+Claude Code · Codex · OpenCode, in parallel, on your machine.
+7-day free trial → link in bio
+#claudecode #codex #aicoding #devtools #buildinpublic</div>
+  <div class="copy"><span class="lbl">caption · the number</span><button>copy</button>One agent: 513 s. Four verified subagents: 380 s. Same task, same machine, real dollars on screen.
+antiloki — the desk for coding agents. Free 7 days, link in bio.
+#claudecode #openai #codex #programming #softwareengineering</div>
+  <div class="copy"><span class="lbl">carousel (5 slides) · "3 questions before you trust an agent"</span><button>copy</button>1 · Where can it write?  2 · Who checked the work?  3 · What did it cost today?  4 · If the answer is "we'd have to look"…  5 · antiloki answers all three on one screen. Free 7 days.</div>
+
+  <!-- ─────────────────────────────── VIDEO ─────────────────────────────── -->
+  <h2 id="video">Video scripts</h2>
+  <div class="copy"><span class="lbl">60-second demo (landing page + YouTube + PH)</span><button>copy</button>[0–5s · Threads view, three agents visible] "Three coding agents on one repo. Watch what keeps them from colliding."
+[5–15s · agent card] "One card: engine, the folders it may write, what to do. Start." (click ▶)
+[15–25s · timeline shows refusal] "It tried to write outside its box. Refused before the file changed. It was told why."
+[25–40s · goal strip animating] "For a bigger task it split the work itself — four subagents, one verifier each. Four PASS. One join."
+[40–50s · fuel + timeline] "Tokens, dollars, limits, on screen the whole time. And afterwards you read the audit like a stack trace."
+[50–60s · download page] "Local. One binary. No account. Seven days free. antiloki.dev"</div>
+  <div class="copy"><span class="lbl">reel 1 · 12 s · the refusal (vertical, captions only)</span><button>copy</button>Text 1: "agent may write: src/api/**"  →  Text 2: "agent tries: src/auth/session.ts"  →  Text 3: "REFUSED · before the file changed"  →  Text 4: "antiloki · 7 days free"</div>
+  <div class="copy"><span class="lbl">reel 2 · 15 s · the split</span><button>copy</button>Screen: click 6 rows in the sidebar, the split fills 3×2; click a 7th, a new row appears. Text: "up to 3 across. more? new lines." → "every pane is an agent or a tool" → "antiloki"</div>
+  <div class="copy"><span class="lbl">reel 3 · 15 s · the number</span><button>copy</button>Bar chart animates: 513 s bar, then 380 s bar. Text: "one agent 513 s · $3.08" → "goal run 380 s · $5.86 · 4/4 PASS" → "faster. checked. you see the bill." → "antiloki"</div>
+  <div class="copy"><span class="lbl">reel 4 · 10 s · local</span><button>copy</button>Screen: .antiloki/ folder in Finder, drag to trash. Text: "one binary" → "state in your project folder" → "delete it, it's gone" → "antiloki"</div>
+
+  <!-- ─────────────────────────────── LISTINGS ─────────────────────────────── -->
+  <h2 id="listings">Launch listings</h2>
+  <div class="copy"><span class="lbl">Show HN title + first comment</span><button>copy</button>Show HN: antiloki – run Claude Code, Codex and OpenCode in parallel, each boxed to folders, with an audit timeline
+
+First comment: I run several coding agents on one repo and kept losing track of who changed what. antiloki is a local desktop app (one Rust binary, Tauri + axum, SQLite in the project) that gives each agent its own worktree and a write scope enforced at the tool call, lets an agent delegate to verified subagents when it's faster, and puts every action on one timeline with cost. Measured: one agent 513 s / $3.08 vs a 4-task goal run 380 s / $5.86, 4/4 verdicts. It runs the CLIs you already have; nothing leaves the machine except their own calls and a daily license check. 7-day trial, $200/yr or $500 lifetime. Happy to answer anything about the scope hook, the orchestration, or why local.</div>
+  <div class="copy"><span class="lbl">Product Hunt</span><button>copy</button>Name: antiloki
+Tagline: The desk for coding agents — parallel, boxed, verified, on the record
+Description: Run Claude Code, Codex and OpenCode side by side on your machine. Each agent gets a folder box enforced at the tool call, work is verified before it merges, and every move lands on one timeline with the cost. antiIDE scores your repo for $0. Local, one binary, no account. 7-day free trial.
+First comment: (the Show HN first comment, plus:) Launch offer: lifetime $399 for 72 hours with code PH72.</div>
+
+  <!-- ─────────────────────────────── DM PLAYBOOKS ─────────────────────────────── -->
+  <h2 id="dm">DM playbooks</h2>
+  <p class="lede">Rules for every platform: never open with a pitch; earn the reply with something specific about them; one link, only after they ask or accept; stop after the follow-up. 20 DMs a day beats 200.</p>
+
+  <h3>LinkedIn · segment 2 (tech leads) · 25/day</h3>
+  <p class="rule">Find them: Sales Navigator or plain search — title (Engineering Manager OR "Tech Lead" OR "Staff Engineer"), posted in the last 30 days about "Claude Code", "Codex", "Cursor", "agents". Connect with a note; DM only after acceptance. Track in a sheet: name · trigger post · step · reply.</p>
+  <div class="copy"><span class="lbl">step 1 · connection note (≤300)</span><button>copy</button>Hi {first} — saw your post on running agents on {their repo/topic}. I've been measuring exactly that (one agent vs verified subagents, real cost). Would like to compare notes.</div>
+  <div class="copy"><span class="lbl">step 2 · after accept (day 0)</span><button>copy</button>Thanks for connecting. Quick one from your post: when you run more than one agent at once, how do you stop them writing over each other today — worktrees, branches, or "carefully"?</div>
+  <div class="copy"><span class="lbl">step 3 · after they answer (day 0–1)</span><button>copy</button>That's the pattern I keep hearing. I built a local desk that enforces a folder scope per agent at the tool call and verifies each task before merge — the audit is one timeline with the cost. I measured it: 380 s vs 513 s on the same goal, 4/4 verdicts.
+
+Would a 15-min look be useful? If not, no worries — happy to just send the benchmark write-up.</div>
+  <div class="copy"><span class="lbl">step 4 · follow-up (day 4, then stop)</span><button>copy</button>Leaving this here in case it's useful for the team: {link to benchmark post}. If "what did the agent change, and what did it cost" ever comes up in a review, that's the problem it solves. Either way, thanks for the exchange.</div>
+  <div class="copy"><span class="lbl">team close (when they bite)</span><button>copy</button>For teams we do 5 yearly seats for $800 (instead of $1,000), invoiced with your VAT details. Or everyone trials for 7 days first and you decide with the timeline in front of you — I'd start there.</div>
+
+  <h3>X / Twitter · segment 1 · reply first, DM second</h3>
+  <p class="rule">Search daily: "claude code" (parallel OR worktree OR "two sessions" OR overwrote OR cost), "codex" + "claude code". Reply publicly with something useful (a real answer, a number). DM only people who liked/replied.</p>
+  <div class="copy"><span class="lbl">public reply pattern</span><button>copy</button>Worktree per agent + a write scope enforced at the tool call fixes 90 % of this. The remaining 10 % is a diff across worktrees before you merge. (I measured the parallel version: 380 s vs 513 s, 4/4 verified — happy to share the method.)</div>
+  <div class="copy"><span class="lbl">DM after engagement</span><button>copy</button>Hey — you liked the worktree/scope reply. I packaged that setup into a local app (Claude Code / Codex / OpenCode in parallel, folder boxes, one timeline). Want a lifetime key to try it properly and tell me what's wrong with it? No strings, I just want the feedback.</div>
+  <p class="rule">Give 30 lifetime keys this way in month 1. Ask each for one line of feedback; 5 of those become quotes.</p>
+
+  <h3>Instagram · segment 3 (creators + agencies)</h3>
+  <p class="rule">Targets: dev creators 5k–100k followers posting Claude Code / Cursor content; agency founders posting "shipped for a client". Engage on 2 posts first (real comments). Then DM.</p>
+  <div class="copy"><span class="lbl">creator DM</span><button>copy</button>Your reel on {topic} was the clearest one I've seen on it. I make a local app that runs Claude Code, Codex and OpenCode in parallel with each boxed to folders — the "refused before the file changed" moment is very reel-able. Want a lifetime key to play with? If it's worth a post, great; if not, keep the key.</div>
+  <div class="copy"><span class="lbl">agency DM</span><button>copy</button>Saw you're shipping {n} client projects in parallel — same here. Quick question: when you run agents across several repos at once, how do you show the client what was changed? I built a desk that logs every agent action as a timeline you can hand over. Happy to send a trial if that's a pain you have.</div>
+
+  <h3>Discord / Slack communities (Claude, OpenCode, Cursor, local dev servers)</h3>
+  <ul><li>Answer 3 questions a day without mentioning the product. Mention it only when it is literally the answer ("how do I stop two agents overwriting each other").</li><li>One #showcase post at launch with the 12-s refusal clip. Never repost.</li><li>Keep a list of the people who asked good questions — they're the beta list for the next feature.</li></ul>
+
+  <!-- ─────────────────────────────── EMAIL ─────────────────────────────── -->
+  <h2 id="email">Email sequences</h2>
+  <p class="rule">Store emails come from the checkout; trial emails need an address — ask for it once in the app's welcome (optional, "for the tips sequence"). Plain text, from a person, one link each.</p>
+  <div class="copy"><span class="lbl">trial · day 0 · "one thing to do first"</span><button>copy</button>Subject: the one thing to do first in antiloki
+
+You've got 7 days. Here's the fastest way to see the point:
+
+1. Open a repo. antiIDE indexes it (a minute).
+2. Under Agents, hit +. Pick Claude Code, tick ONE folder, type an ask that needs a file outside that folder.
+3. Watch the timeline. The write gets refused before the file changes.
+
+That's the whole idea; the rest is what you build on it. Reply to this email with anything that's unclear — I read all of them.
+— {name}</div>
+  <div class="copy"><span class="lbl">trial · day 2 · "make it split"</span><button>copy</button>Subject: make it split the work
+
+Give an agent a goal with 3–4 independent parts ("update these packages, each with tests"). It will plan, run tasks in parallel with owners, verify each, and join — you'll see the strip animate and the verdicts land.
+
+When I measured it: 380 s vs 513 s for one agent, 4/4 PASS, ~2× tokens. Your numbers will show on the fuel line top-right.</div>
+  <div class="copy"><span class="lbl">trial · day 5 · "what leaves the machine"</span><button>copy</button>Subject: what leaves your machine (short list)
+
+- your CLIs' own calls to their providers (as today)
+- a daily license check (a key + a machine id)
+- an update check (a static file on GitHub)
+
+That's the list. No account, no telemetry, state in .antiloki/ next to your code. If that matters to your team, forward this.</div>
+  <div class="copy"><span class="lbl">trial · day 7 · "ends today"</span><button>copy</button>Subject: your trial ends today
+
+Two ways to keep going: $200 a year (updates + support), or $500 once (forever, with 2 years of updates + support). Lifetime pays for itself in year 3.
+
+Your projects and timelines stay on disk either way. Paste the key once and you're back where you left off. {checkout link}</div>
+  <div class="copy"><span class="lbl">trial · day 9 · "one question"</span><button>copy</button>Subject: one question
+
+You tried antiloki and didn't buy — totally fine. Could you reply with the one thing that would have changed that? One line is plenty. It goes straight into what I build next.</div>
+  <div class="copy"><span class="lbl">cold email · 3 steps (segment 2, from a LinkedIn trigger)</span><button>copy</button>E1 (day 0) — Subject: agents overwriting each other
+{first}, your post about {topic} — when the team runs more than one agent on a repo, how do you keep them from writing over each other? I built a local desk that enforces a folder scope per agent and verifies tasks before merge. Measured 380 s vs 513 s, 4/4 verdicts. 15 min worth it?
+
+E2 (day 3) — Subject: re: agents overwriting each other
+The write-up with the method and the cost table: {link}. The part most leads care about is the timeline — "what did it change, what did it cost" in one screen.
+
+E3 (day 8) — Subject: closing the loop
+Last one from me. If it's not a problem right now, ignore this. If it becomes one, the trial is 7 days, no card: antiloki.dev. Thanks for reading.</div>
+
+  <!-- ─────────────────────────────── OBJECTIONS ─────────────────────────────── -->
+  <h2 id="objections">Objections → answers</h2>
+  <table>
+    <tr><th>they say</th><th>we say</th></tr>
+    <tr><td>"I can do this with tmux and worktrees."</td><td>You can — the scope enforcement and the verifier are the parts you can't script in an afternoon. Try the gate; if it doesn't earn its place, you've lost 7 days of nothing.</td></tr>
+    <tr><td>"2× tokens is expensive."</td><td>It is. That's why the bill is on screen and the agent decides when splitting is worth it — it declined a small task on its own in our run. You pay for verification, not speed.</td></tr>
+    <tr><td>"Another subscription."</td><td>$500 once, then it's yours. Lifetime pays off in year 3; most of segment 1 picks it.</td></tr>
+    <tr><td>"Does it work with Cursor / Windsurf?"</td><td>Not today. It runs the three CLIs (Claude Code, Codex, OpenCode). antiIDE works on any repo without any of them.</td></tr>
+    <tr><td>"Security review?"</td><td>One binary, local, no account, no telemetry; the list of network calls fits in three lines (day-5 email). Send them that.</td></tr>
+    <tr><td>"Is 26 % faster even meaningful?"</td><td>Alone, no. With a verdict per task before merge, yes — and that's the number we lead with, not the speed.</td></tr>
+  </table>
+
+  <!-- ─────────────────────────────── ASSETS ─────────────────────────────── -->
+  <h2 id="assets">Assets checklist</h2>
+  <ul>
+    <li><b>Screenshots (2× retina, dark)</b>: Threads with 3 agents · agent card · the refusal on the timeline · goal strip mid-run · fuel focused window · antiIDE Code with a scored file · Constitution.</li>
+    <li><b>GIFs (≤ 6 s, ≤ 3 MB)</b>: refusal · sidebar-click split · goal strip · timeline "···" opening.</li>
+    <li><b>Clips (vertical 9:16 + landscape 16:9)</b>: the four reels above, no audio required, captions burned in.</li>
+    <li><b>Charts</b>: the 513/380 bar chart as PNG (light and dark) with the four verdict chips.</li>
+    <li><b>Copy blocks</b>: this page. Bio, one-liner, and the "never say" list pinned in the team chat.</li>
+    <li><b>Store</b>: Lemon Squeezy product with Yearly / Lifetime variants; checkout URLs into the landing page (<span class="mono">CHECKOUT</span>) and the app build (<span class="mono">ANTILOKI_CHECKOUT_*</span>); launch code PH72 (lifetime $399, 72 h).</li>
+    <li><b>Pages</b>: landing (live) · benchmark post · comparison page · changelog.</li>
+    <li><b>Tracking</b>: one sheet — DM log (name · platform · trigger · step · reply) · weekly funnel (visits · downloads · activations · paid) · "how did you hear about us" answers.</li>
+  </ul>
+</main>
+</div>
+
+<script>
+  for (const box of document.querySelectorAll(".copy")) {
+    const btn = box.querySelector("button");
+    btn.addEventListener("click", async () => {
+      const text = Array.from(box.childNodes).filter((n) => !(n.nodeType === 1 && (n.tagName === "BUTTON" || n.classList.contains("lbl")))).map((n) => n.textContent).join("").trim();
+      try { await navigator.clipboard.writeText(text); btn.textContent = "copied"; btn.classList.add("done"); setTimeout(() => { btn.textContent = "copy"; btn.classList.remove("done"); }, 1400); } catch { btn.textContent = "select + ⌘C"; }
+    });
+  }
+  const links = Array.from(document.querySelectorAll("#nav a"));
+  const heads = links.map((a) => document.querySelector(a.getAttribute("href")));
+  const mark = () => { let cur = 0; heads.forEach((h, i) => { if (h && h.getBoundingClientRect().top < 120) cur = i; }); links.forEach((a, i) => a.classList.toggle("on", i === cur)); };
+  addEventListener("scroll", mark, { passive: true }); mark();
+</script>
