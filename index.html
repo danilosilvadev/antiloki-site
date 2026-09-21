@@ -60,6 +60,29 @@
   .benefits b { color: var(--ink); font-weight: 600; }
   @media (max-width: 860px) { .duo { grid-template-columns: 1fr; gap: 44px; } }
   @media (prefers-reduced-motion: reduce) { .duo-card .shot, .duo-card:not(:hover) .shot { animation: none; transform: none; transition: none; } }
+  /* THE LIGHTBOX (operator 2026-09-21: "onclick expands beautifully the prints"): the print flies from its
+     card to the middle of the screen (FLIP), the page dims and blurs behind it, the whole print is shown
+     (no crop), a caption under it; Esc, a click outside or × sends it back the way it came. ← → swap. */
+  .shot { cursor: zoom-in; }
+  .lightbox { position: fixed; inset: 0; z-index: 60; display: none; align-items: center; justify-content: center; padding: 4vh 4vw; }
+  .lightbox.open { display: flex; }
+  .lightbox .veil { position: absolute; inset: 0; background: rgba(6,6,8,.78); backdrop-filter: blur(14px) saturate(.8); -webkit-backdrop-filter: blur(14px) saturate(.8); opacity: 0; transition: opacity .35s ease; }
+  .lightbox.in .veil { opacity: 1; }
+  .lightbox .frame { position: relative; max-width: min(1600px, 92vw); max-height: 88vh; display: flex; flex-direction: column; gap: 12px; }
+  .lightbox .frame img { display: block; max-width: 100%; max-height: calc(88vh - 44px); width: auto; height: auto; border-radius: 14px; border: 1px solid rgba(255,255,255,.12);
+                          box-shadow: 0 80px 160px -50px rgba(0,0,0,.95), 0 0 0 1px rgba(255,255,255,.04) inset; transform-origin: top left; cursor: zoom-out; }
+  .lightbox .cap { display: flex; align-items: center; justify-content: space-between; gap: 16px; font-family: var(--mono); font-size: 12px; color: var(--muted); opacity: 0; transform: translateY(6px); transition: opacity .3s ease .25s, transform .3s ease .25s; }
+  .lightbox.in .cap { opacity: 1; transform: none; }
+  .lightbox .cap b { color: var(--ink); font-weight: 600; }
+  .lightbox .cap .keys { display: flex; gap: 10px; }
+  .lightbox .cap kbd { font-family: var(--mono); font-size: 10.5px; border: 1px solid var(--rule); border-radius: 5px; padding: 1px 6px; color: var(--dim); }
+  .lightbox .x { position: absolute; top: -14px; right: -14px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--rule); background: var(--panel); color: var(--ink); font-size: 18px; line-height: 1; cursor: pointer; display: grid; place-items: center; opacity: 0; transition: opacity .3s ease .25s; }
+  .lightbox.in .x { opacity: 1; }
+  .lightbox .x:hover { border-color: var(--ember); color: var(--ember); }
+  .lightbox .arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--rule); background: var(--panel); color: var(--ink); font-size: 20px; cursor: pointer; display: grid; place-items: center; opacity: 0; transition: opacity .3s ease .25s, border-color .2s; }
+  .lightbox .arrow.prev { left: -22px; } .lightbox .arrow.next { right: -22px; }
+  .lightbox.in .arrow { opacity: .85; } .lightbox .arrow:hover { opacity: 1; border-color: var(--ember); }
+  @media (max-width: 860px) { .lightbox .arrow { display: none; } .lightbox .x { top: -10px; right: -6px; } }
   .screen { position: relative; border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; background: var(--panel); box-shadow: 0 60px 120px -60px rgba(0,0,0,.8); aspect-ratio: 1440 / 860; margin-top: 48px; }
   .screen video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; }
   .cap { margin: 12px auto 0; text-align: center; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
@@ -303,6 +326,16 @@
   <span class="r">© 2026 antiloki</span>
 </div></footer>
 
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="the print, expanded">
+  <div class="veil"></div>
+  <div class="frame">
+    <button class="x" aria-label="close" title="close (Esc)">×</button>
+    <button class="arrow prev" aria-label="previous print" title="previous (←)">‹</button>
+    <button class="arrow next" aria-label="next print" title="next (→)">›</button>
+    <img alt="">
+    <div class="cap"><span><b></b> <span class="what"></span></span><span class="keys"><kbd>←</kbd><kbd>→</kbd> switch · <kbd>esc</kbd> close</span></div>
+  </div>
+</div>
 <script>
   // store links — set once the store exists; until then every buy button leads to the trial
   const CHECKOUT = { yearly: "", lifetime: "" };
@@ -311,7 +344,7 @@
   const fills = document.querySelectorAll(".bar .fill");
   const grow = () => fills.forEach((f) => { f.style.width = f.dataset.w + "%"; });
   if (matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) grow();
-  else { const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { grow(); io.disconnect(); } }, { threshold: .4 }); io.observe(document.querySelector(".measure")); }
+  else if (fills.length) { const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { grow(); io.disconnect(); } }, { threshold: .4 }); io.observe(fills[0].closest("section") ?? fills[0]); }
   // THE DUO'S 3D: each print leans toward the pointer (±9°), the shine follows it; leaving it resumes the idle drift
   for (const card of document.querySelectorAll(".duo-card[data-tilt]")) {
     const shot = card.querySelector(".shot");
@@ -322,6 +355,46 @@
     });
     card.addEventListener("pointerleave", () => { shot.style.removeProperty("--rx"); shot.style.removeProperty("--ry"); });
   }
+  // THE LIGHTBOX: FLIP from the card's print to the centered full print and back
+  const lb = document.getElementById("lightbox"), lbImg = lb.querySelector("img"), lbCap = lb.querySelector(".cap b"), lbWhat = lb.querySelector(".cap .what");
+  const shots = Array.from(document.querySelectorAll(".duo-card[data-tilt] .shot"));
+  let lbIndex = -1, lbFrom = null;
+  const shotOf = (i) => shots[(i + shots.length) % shots.length];
+  const flipIn = (fromRect) => {
+    const to = lbImg.getBoundingClientRect(); if (!fromRect || !to.width) return;
+    const sx = fromRect.width / to.width, sy = fromRect.height / to.height;
+    lbImg.style.transition = "none";
+    lbImg.style.transform = `translate(${fromRect.left - to.left}px, ${fromRect.top - to.top}px) scale(${sx}, ${sy})`;
+    lbImg.style.borderRadius = "14px";
+    requestAnimationFrame(() => requestAnimationFrame(() => { lbImg.style.transition = "transform .55s cubic-bezier(.2,.8,.2,1)"; lbImg.style.transform = "none"; }));
+  };
+  const show = (i, animate = true) => {
+    const shot = shotOf(i); const img = shot.querySelector("img"); const card = shot.closest(".duo-card");
+    lbIndex = (i + shots.length) % shots.length;
+    lbImg.src = img.src; lbImg.alt = img.alt;
+    lbCap.textContent = card.querySelector(".eyebrow")?.textContent ?? ""; lbWhat.textContent = card.querySelector("h2")?.textContent ?? "";
+    lbFrom = shot.getBoundingClientRect();
+    const wasOpen = lb.classList.contains("open");
+    lb.classList.add("open"); document.body.style.overflow = "hidden";
+    if (!wasOpen) { shot.style.visibility = "hidden"; requestAnimationFrame(() => lb.classList.add("in")); }
+    if (animate && !wasOpen) { if (lbImg.complete) flipIn(lbFrom); else lbImg.onload = () => flipIn(lbFrom); }
+    else { lbImg.style.transition = "opacity .25s ease"; lbImg.style.opacity = "0"; requestAnimationFrame(() => { lbImg.style.opacity = "1"; }); }
+  };
+  const hide = () => {
+    if (!lb.classList.contains("open")) return;
+    const shot = shotOf(lbIndex); const back = shot.getBoundingClientRect(); const cur = lbImg.getBoundingClientRect();
+    lb.classList.remove("in");
+    const done = () => { lb.classList.remove("open"); lbImg.style.transform = "none"; lbImg.style.opacity = "1"; document.body.style.overflow = ""; for (const s of shots) s.style.visibility = ""; lbImg.removeEventListener("transitionend", done); };
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches || !back.width) { done(); return; }
+    lbImg.style.transition = "transform .45s cubic-bezier(.4,0,.2,1), opacity .35s ease .1s";
+    lbImg.style.transform = `translate(${back.left - cur.left}px, ${back.top - cur.top}px) scale(${back.width / cur.width}, ${back.height / cur.height})`;
+    lbImg.style.opacity = "0";
+    lbImg.addEventListener("transitionend", done); setTimeout(done, 600);
+  };
+  shots.forEach((shot, i) => shot.addEventListener("click", () => show(i)));
+  lb.querySelector(".veil").addEventListener("click", hide); lb.querySelector(".x").addEventListener("click", hide); lbImg.addEventListener("click", hide);
+  lb.querySelector(".prev").addEventListener("click", () => show(lbIndex - 1, false)); lb.querySelector(".next").addEventListener("click", () => show(lbIndex + 1, false));
+  window.addEventListener("keydown", (e) => { if (!lb.classList.contains("open")) return; if (e.key === "Escape") hide(); else if (e.key === "ArrowLeft") show(lbIndex - 1, false); else if (e.key === "ArrowRight") show(lbIndex + 1, false); });
   // light up the visitor's OS
   const ua = navigator.userAgent, os = /Mac/.test(ua) ? "mac" : /Win/.test(ua) ? "win" : /Linux/.test(ua) ? "linux" : null;
   if (os) document.querySelector(`.os[data-os="${os}"]`)?.classList.add("me");
