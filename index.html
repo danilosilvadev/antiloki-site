@@ -38,6 +38,48 @@
   .hero p { margin: 24px auto 0; max-width: 52ch; font-size: clamp(16px, 1.5vw, 19px); color: var(--dim); }
   .hero .cta { display: flex; justify-content: center; gap: 12px; margin-top: 30px; flex-wrap: wrap; align-items: center; }
   .hero .fine { display: block; margin-top: 12px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+  /* THE REVEAL (operator 2026-09-21: "the headline appears after an animation, the prints forming themselves
+     in 3D out of a dark fog, like an Apple commercial"): once per visit. A fog of slow blurred blobs and grain
+     covers the viewport; the two prints rise out of the deep — far, blurred, dim, turned away — and settle
+     into a fanned pair under the headline; the fog thins; the headline rises word by word, then the rest.
+     Reduced motion, a repeat visit (sessionStorage), a scroll or a click → straight to the settled state. */
+  .fog { position: fixed; inset: 0; z-index: 55; pointer-events: none; overflow: hidden; background: #0d0b0a; transition: opacity 1.6s ease .1s; }
+  .fog i { position: absolute; border-radius: 50%; opacity: .9; mix-blend-mode: screen; will-change: transform; } /* soft by gradient, not by filter — a blur this size costs frames on integrated GPUs */
+  .fog i:nth-child(1) { width: 70vw; height: 70vw; left: -20vw; top: -10vh; background: radial-gradient(circle, rgba(70,52,44,.9), rgba(70,52,44,.35) 35%, transparent 68%); animation: fogA 14s ease-in-out infinite alternate; }
+  .fog i:nth-child(2) { width: 60vw; height: 60vw; right: -15vw; top: 10vh; background: radial-gradient(circle, rgba(52,44,48,.85), rgba(52,44,48,.3) 35%, transparent 68%); animation: fogB 17s ease-in-out infinite alternate; }
+  .fog i:nth-child(3) { width: 80vw; height: 50vw; left: 10vw; bottom: -25vh; background: radial-gradient(circle, rgba(72,50,38,.8), rgba(72,50,38,.3) 35%, transparent 68%); animation: fogC 12s ease-in-out infinite alternate; }
+  .fog i:nth-child(4) { width: 40vw; height: 40vw; left: 30vw; top: 20vh; background: radial-gradient(circle, rgba(201,124,92,.22), rgba(201,124,92,.08) 35%, transparent 68%); animation: fogB 9s ease-in-out infinite alternate-reverse; }
+  .fog::after { content: ""; position: absolute; inset: -50%; opacity: .07; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); animation: grain .6s steps(4) infinite; }
+  @keyframes fogA { from { transform: translate(0, 0) scale(1); } to { transform: translate(14vw, 8vh) scale(1.25); } }
+  @keyframes fogB { from { transform: translate(0, 0) scale(1.1); } to { transform: translate(-12vw, -6vh) scale(.9); } }
+  @keyframes fogC { from { transform: translate(0, 0) scale(1); } to { transform: translate(-8vw, -10vh) scale(1.3); } }
+  @keyframes grain { 0% { transform: translate(0, 0); } 25% { transform: translate(-6%, 4%); } 50% { transform: translate(5%, -7%); } 75% { transform: translate(-3%, -2%); } 100% { transform: translate(4%, 5%); } }
+  html.headline .fog, html.reduced .fog { opacity: 0; }
+  html.gone .fog { display: none; }
+  /* the hero text waits for the prints */
+  .hero .eyebrow, .hero p, .hero .cta, .hero .fine { opacity: 0; transform: translateY(10px); transition: opacity .8s ease, transform .8s ease; }
+  .hero h1 .w { display: inline-block; opacity: 0; transform: translateY(.45em); filter: blur(10px); transition: opacity .7s ease, transform .9s cubic-bezier(.2,.8,.2,1), filter .8s ease; }
+  html.headline .hero h1 .w { opacity: 1; transform: none; filter: none; }
+  html.settled .hero .eyebrow, html.settled .hero p, html.settled .hero .cta, html.settled .hero .fine { opacity: 1; transform: none; }
+  html.reduced .hero .eyebrow, html.reduced .hero p, html.reduced .hero .cta, html.reduced .hero .fine, html.reduced .hero h1 .w { opacity: 1; transform: none; filter: none; transition: none; }
+  /* the stage: two prints fanned in 3D under the headline; they rise out of the deep on the first visit */
+  .stage { position: relative; z-index: 56; height: clamp(220px, 34vw, 430px); margin: 56px auto 0; perspective: 1500px; perspective-origin: 50% 40%; transition: transform 1.5s cubic-bezier(.2,.8,.2,1); }
+  /* while the prints form they sit where the headline will be — mid-screen; they glide down as the words rise */
+  html:not(.headline):not(.reduced) .stage { transform: translateY(clamp(-360px, -38vh, -160px)); }
+  .stage .print { position: absolute; top: 0; width: 58%; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,.1); background: var(--panel); cursor: zoom-in;
+                  box-shadow: 0 70px 120px -50px rgba(0,0,0,.95), 0 0 0 1px rgba(255,255,255,.03) inset; transform-style: preserve-3d; will-change: transform, filter, opacity;
+                  transition: transform 2.4s cubic-bezier(.16,.84,.24,1), filter 2s ease, opacity 1.6s ease; }
+  .stage .print img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
+  .stage .print::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255,255,255,.12), transparent 40%, transparent 70%, rgba(255,255,255,.05)); pointer-events: none; }
+  .stage .print.a { left: 0; transform: translate3d(-42vw, 22vh, -1600px) rotateY(58deg) rotateX(26deg) rotateZ(-8deg); opacity: 0; filter: blur(22px) brightness(.35); }
+  .stage .print.b { right: 0; transform: translate3d(42vw, 26vh, -1900px) rotateY(-62deg) rotateX(22deg) rotateZ(9deg); opacity: 0; filter: blur(22px) brightness(.3); transition-delay: .35s; }
+  html.formed .stage .print.a, html.reduced .stage .print.a { transform: translate3d(0, 0, 0) rotateY(22deg) rotateX(6deg) rotateZ(-1deg); opacity: 1; filter: none; }
+  html.formed .stage .print.b, html.reduced .stage .print.b { transform: translate3d(0, 6%, 40px) rotateY(-22deg) rotateX(6deg) rotateZ(1deg); opacity: 1; filter: none; }
+  html.settled .stage .print { transition: transform .35s ease-out; }
+  html.reduced .stage .print { transition: none; }
+  .stage .glow { position: absolute; left: 50%; top: 60%; width: 70%; height: 60%; transform: translate(-50%, -50%); background: radial-gradient(ellipse, rgba(201,124,92,.18), rgba(201,124,92,.06) 40%, transparent 68%); pointer-events: none; opacity: 0; transition: opacity 2s ease 1s; }
+  html.formed .stage .glow, html.reduced .stage .glow { opacity: 1; }
+  @media (max-width: 860px) { .stage { height: clamp(180px, 46vw, 300px); } .stage .print { width: 64%; } html.formed .stage .print.a, html.reduced .stage .print.a { transform: rotateY(18deg) rotateX(5deg); } html.formed .stage .print.b, html.reduced .stage .print.b { transform: translate3d(0, 10%, 30px) rotateY(-18deg) rotateX(5deg); } }
   /* THE DUO */
   .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 56px; align-items: start; }
   .duo-card { display: flex; flex-direction: column; gap: 18px; }
@@ -227,6 +269,7 @@
 </div></nav>
 
 <main id="top">
+  <div class="fog" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   <!-- HERO — what it is, and the one reason -->
   <div class="wrap hero">
     <span class="eyebrow">antiloki · a desktop app · macOS · Windows · Linux</span>
@@ -234,6 +277,11 @@
     <p>Work faster — parallel sub-agents, one job per thread, the tools beside it. Work safer — every change on an audit trail, every file judged by deterministic analysis, no AI in the verdict. <b>On your machine, on the subscription you already pay for.</b></p>
     <div class="cta"><a class="btn ember" href="#download">Download — free for 7 days</a></div>
     <span class="fine">one binary · no account · no API key — your subscription is the engine</span>
+    <div class="stage" aria-hidden="true">
+      <i class="glow"></i>
+      <div class="print a" data-lb="0"><img src="img/10-threads.jpg" alt=""></div>
+      <div class="print b" data-lb="1"><img src="img/11-xray.jpg" alt=""></div>
+    </div>
   </div>
 
   <!-- THE DUO — the two screens, each with what you get from it (operator 2026-09-21: "not just a code
@@ -355,10 +403,37 @@
     });
     card.addEventListener("pointerleave", () => { shot.style.removeProperty("--rx"); shot.style.removeProperty("--ry"); });
   }
+  // THE REVEAL: the sequence, once per visit — fog → the prints form (0.2s) → the fog thins and the headline
+  // rises word by word (2.3s) → the rest (3.1s) → the fog is gone (5s). A scroll, a click or a key cuts to the end.
+  const root = document.documentElement, h1 = document.querySelector(".hero h1");
+  const wrapWords = (el) => { for (const node of Array.from(el.childNodes)) { if (node.nodeType === 3) { const frag = document.createDocumentFragment(); node.textContent.split(/(\s+)/).forEach((t) => { if (!t) return; if (/^\s+$/.test(t)) frag.appendChild(document.createTextNode(t)); else { const w = document.createElement("span"); w.className = "w"; w.textContent = t; frag.appendChild(w); } }); node.replaceWith(frag); } else if (node.nodeType === 1) wrapWords(node); } };
+  wrapWords(h1);
+  h1.querySelectorAll(".w").forEach((w, i) => { w.style.transitionDelay = `${i * 70}ms`; });
+  const timers = []; const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const settle = () => { timers.forEach(clearTimeout); root.classList.add("formed", "headline", "settled"); setTimeout(() => root.classList.add("gone"), 1800); };
+  let seen = false; try { seen = sessionStorage.getItem("antiloki:revealed") === "1" && !new URLSearchParams(location.search).has("reveal"); sessionStorage.setItem("antiloki:revealed", "1"); } catch {} // ?reveal replays it
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches || seen) { root.classList.add("reduced", "gone"); }
+  else {
+    at(200, () => root.classList.add("formed"));
+    at(2300, () => root.classList.add("headline"));
+    at(3100, () => root.classList.add("settled"));
+    at(5000, () => root.classList.add("gone"));
+    const cut = () => { settle(); for (const ev of ["wheel", "touchstart", "keydown", "pointerdown"]) window.removeEventListener(ev, cut); };
+    for (const ev of ["wheel", "touchstart", "keydown", "pointerdown"]) window.addEventListener(ev, cut, { passive: true });
+  }
+  // after the reveal the pair leans with the pointer (a few degrees), and each print opens the lightbox
+  const stage = document.querySelector(".stage");
+  stage.addEventListener("pointermove", (e) => {
+    if (!root.classList.contains("settled") && !root.classList.contains("reduced")) return;
+    const r = stage.getBoundingClientRect(); const px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+    stage.querySelector(".print.a").style.transform = `translate3d(${(px * 14).toFixed(1)}px, ${(py * 10).toFixed(1)}px, 0) rotateY(${(22 + px * 8).toFixed(1)}deg) rotateX(${(6 - py * 8).toFixed(1)}deg) rotateZ(-1deg)`;
+    stage.querySelector(".print.b").style.transform = `translate3d(${(px * 14).toFixed(1)}px, calc(6% + ${(py * 10).toFixed(1)}px), 40px) rotateY(${(-22 + px * 8).toFixed(1)}deg) rotateX(${(6 - py * 8).toFixed(1)}deg) rotateZ(1deg)`;
+  });
+  stage.addEventListener("pointerleave", () => { for (const p of stage.querySelectorAll(".print")) p.style.transform = ""; });
   // THE LIGHTBOX: FLIP from the card's print to the centered full print and back
   const lb = document.getElementById("lightbox"), lbImg = lb.querySelector("img"), lbCap = lb.querySelector(".cap b"), lbWhat = lb.querySelector(".cap .what");
   const shots = Array.from(document.querySelectorAll(".duo-card[data-tilt] .shot"));
-  let lbIndex = -1, lbFrom = null;
+  let lbIndex = -1, lbFrom = null, lbOrigin = null; // lbOrigin: the element the print flew from (a duo card or a stage print)
   const shotOf = (i) => shots[(i + shots.length) % shots.length];
   const flipIn = (fromRect) => {
     const to = lbImg.getBoundingClientRect(); if (!fromRect || !to.width) return;
@@ -368,23 +443,24 @@
     lbImg.style.borderRadius = "14px";
     requestAnimationFrame(() => requestAnimationFrame(() => { lbImg.style.transition = "transform .55s cubic-bezier(.2,.8,.2,1)"; lbImg.style.transform = "none"; }));
   };
-  const show = (i, animate = true) => {
+  const show = (i, animate = true, origin) => {
     const shot = shotOf(i); const img = shot.querySelector("img"); const card = shot.closest(".duo-card");
     lbIndex = (i + shots.length) % shots.length;
     lbImg.src = img.src; lbImg.alt = img.alt;
     lbCap.textContent = card.querySelector(".eyebrow")?.textContent ?? ""; lbWhat.textContent = card.querySelector("h2")?.textContent ?? "";
-    lbFrom = shot.getBoundingClientRect();
     const wasOpen = lb.classList.contains("open");
+    if (!wasOpen) lbOrigin = origin ?? shot;
+    lbFrom = lbOrigin.getBoundingClientRect();
     lb.classList.add("open"); document.body.style.overflow = "hidden";
-    if (!wasOpen) { shot.style.visibility = "hidden"; requestAnimationFrame(() => lb.classList.add("in")); }
+    if (!wasOpen) { lbOrigin.style.visibility = "hidden"; requestAnimationFrame(() => lb.classList.add("in")); }
     if (animate && !wasOpen) { if (lbImg.complete) flipIn(lbFrom); else lbImg.onload = () => flipIn(lbFrom); }
     else { lbImg.style.transition = "opacity .25s ease"; lbImg.style.opacity = "0"; requestAnimationFrame(() => { lbImg.style.opacity = "1"; }); }
   };
   const hide = () => {
     if (!lb.classList.contains("open")) return;
-    const shot = shotOf(lbIndex); const back = shot.getBoundingClientRect(); const cur = lbImg.getBoundingClientRect();
+    const back = (lbOrigin ?? shotOf(lbIndex)).getBoundingClientRect(); const cur = lbImg.getBoundingClientRect();
     lb.classList.remove("in");
-    const done = () => { lb.classList.remove("open"); lbImg.style.transform = "none"; lbImg.style.opacity = "1"; document.body.style.overflow = ""; for (const s of shots) s.style.visibility = ""; lbImg.removeEventListener("transitionend", done); };
+    const done = () => { lb.classList.remove("open"); lbImg.style.transform = "none"; lbImg.style.opacity = "1"; document.body.style.overflow = ""; for (const s of shots) s.style.visibility = ""; for (const s of document.querySelectorAll(".stage .print")) s.style.visibility = ""; lbImg.removeEventListener("transitionend", done); };
     if (matchMedia("(prefers-reduced-motion: reduce)").matches || !back.width) { done(); return; }
     lbImg.style.transition = "transform .45s cubic-bezier(.4,0,.2,1), opacity .35s ease .1s";
     lbImg.style.transform = `translate(${back.left - cur.left}px, ${back.top - cur.top}px) scale(${back.width / cur.width}, ${back.height / cur.height})`;
@@ -392,6 +468,7 @@
     lbImg.addEventListener("transitionend", done); setTimeout(done, 600);
   };
   shots.forEach((shot, i) => shot.addEventListener("click", () => show(i)));
+  for (const p of document.querySelectorAll(".stage .print")) p.addEventListener("click", () => show(Number(p.dataset.lb), true, p));
   lb.querySelector(".veil").addEventListener("click", hide); lb.querySelector(".x").addEventListener("click", hide); lbImg.addEventListener("click", hide);
   lb.querySelector(".prev").addEventListener("click", () => show(lbIndex - 1, false)); lb.querySelector(".next").addEventListener("click", () => show(lbIndex + 1, false));
   window.addEventListener("keydown", (e) => { if (!lb.classList.contains("open")) return; if (e.key === "Escape") hide(); else if (e.key === "ArrowLeft") show(lbIndex - 1, false); else if (e.key === "ArrowRight") show(lbIndex + 1, false); });
