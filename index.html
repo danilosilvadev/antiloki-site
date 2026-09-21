@@ -136,6 +136,13 @@
     .story .steps { padding: 8px 0 0; gap: 8px; }
   }
   @media (prefers-reduced-motion: reduce) { .story .step { opacity: 1; transform: none; transition: none; } .story .shot { transition: none; } }
+  /* FIVE PRINTS PER CHAPTER (operator 2026-09-21: "5 prints that prove the claims, zoomed on the part that matters;
+     click expands the whole page"): the shot stacks the five, the step in view fades its print in and zooms it on the
+     part named by `data-zoom` (origin x% y%, scale) — a click opens the whole print in the lightbox. */
+  .story .shot img { opacity: 0; transition: opacity .7s ease, transform 1.1s cubic-bezier(.2,.8,.2,1); transform-origin: var(--zx, 50%) var(--zy, 50%); transform: scale(var(--zs, 1)); will-change: transform, opacity; }
+  .story .shot img.on { opacity: 1; }
+  .story .shot::after { content: "⤢ click to expand"; position: absolute; right: 10px; bottom: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; color: var(--ink); background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.12); border-radius: 999px; padding: 3px 9px; opacity: 0; transition: opacity .25s; pointer-events: none; }
+  .story:hover .shot::after { opacity: .9; }
   /* THE LIGHTBOX (operator 2026-09-21: "onclick expands beautifully the prints"): the print flies from its
      card to the middle of the screen (FLIP), the page dims and blurs behind it, the whole print is shown
      (no crop), a caption under it; Esc, a click outside or × sends it back the way it came. ← → swap. */
@@ -331,13 +338,13 @@
         <span class="eyebrow">Threads</span>
         <h2>Speed — agents that work in parallel, each in its own box.</h2>
       </div>
-      <div class="sticky"><div class="tilt"><div class="shot"><img src="img/10-threads.jpg" alt="Threads: two agent panes side by side, the scope sentry refusing an out-of-scope edit, a live preview of the worktree in the same thread"><i class="shine"></i></div></div></div>
+      <div class="sticky"><div class="tilt"><div class="shot"><img src="img/threads-1.jpg" data-step="1" alt="Threads: a thread with two agents and a live preview of the worktree" class=on><img src="img/threads-2.jpg" data-step="2" alt="the scope sentry: an out-of-scope edit refused and shown, with one click to widen or keep"><img src="img/threads-3.jpg" data-step="3" alt="Heimdall's routing log: the ask split into two sub-agents, the tier chosen, the money saved"><img src="img/threads-4.jpg" data-step="4" alt="the QA judge's verdict on a finished plan: passed, score 97, three findings"><img src="img/threads-5.jpg" data-step="5" alt="the ▶ preview cell running the agent's worktree beside its chat; MIN · SCOPE · MAX on the footer"><i class="shine"></i></div></div></div>
       <ol class="steps">
-        <li class="step" data-step="1"><i>01</i><h3>One job, one thread.</h3><p>The chat, the agents and the tools that job needs, side by side — drag, resize, collapse. Leave for X-ray and the agents keep working; a floating stack shows each one's line.</p></li>
-        <li class="step" data-step="2"><i>02</i><h3>Boxed, not trusted.</h3><p>Every agent gets a worktree and a scope. A write anywhere else is refused by the tool itself, before the file changes — and the scope sentry shows the attempt, with one click to widen or keep.</p></li>
-        <li class="step" data-step="3"><i>03</i><h3>Heimdall routes every ask.</h3><p>A high-tier planner reads the ask first: one job or a plan, which model, which tier — the cheapest that can do it. Sub-agents fan out in parallel, each in its own box, on the subscription you already pay.</p></li>
-        <li class="step" data-step="4"><i>04</i><h3>Planned, verified, judged.</h3><p>A goal splits into tasks that own disjoint files; each is verified against its acceptance; an isolated QA judge reviews the whole run; one pull request at the end — sealed if the judge failed it.</p></li>
-        <li class="step" data-step="5"><i>05</i><h3>Preview beside it. MIN when you want it cheap.</h3><p>▶ preview boots the agent's worktree next to the chat, live. MIN mode turns exploration off — the agent navigates by antiloki's own intel (reviews, graph, docs, ASTs) and touches the disk only to edit.</p></li>
+        <li class="step" data-step="1" data-zoom="50 50 1"><i>01</i><h3>One job, one thread.</h3><p>The chat, the agents and the tools that job needs, side by side — drag, resize, collapse. Leave for X-ray and the agents keep working; a floating stack shows each one's line.</p></li>
+        <li class="step" data-step="2" data-zoom="76 8 2.3"><i>02</i><h3>Boxed, not trusted.</h3><p>Every agent gets a worktree and a scope. A write anywhere else is refused by the tool itself, before the file changes — and the scope sentry shows the attempt, with one click to widen or keep.</p></li>
+        <li class="step" data-step="3" data-zoom="22 26 2.1"><i>03</i><h3>Heimdall routes every ask.</h3><p>A high-tier planner reads the ask first: one job or a plan, which model, which tier — the cheapest that can do it. Sub-agents fan out in parallel, each in its own box, on the subscription you already pay.</p></li>
+        <li class="step" data-step="4" data-zoom="72 24 2.1"><i>04</i><h3>Planned, verified, judged.</h3><p>A goal splits into tasks that own disjoint files; each is verified against its acceptance; an isolated QA judge reviews the whole run; one pull request at the end — sealed if the judge failed it.</p></li>
+        <li class="step" data-step="5" data-zoom="78 74 1.7"><i>05</i><h3>Preview beside it. MIN when you want it cheap.</h3><p>▶ preview boots the agent's worktree next to the chat, live. MIN mode turns exploration off — the agent navigates by antiloki's own intel (reviews, graph, docs, ASTs) and touches the disk only to edit.</p></li>
       </ol>
     </article>
     <article class="duo-card story mirror" data-tilt id="xray">
@@ -345,13 +352,13 @@
         <span class="eyebrow">X-ray</span>
         <h2>Safety — every file judged, every number explained, before anything ships.</h2>
       </div>
-      <div class="sticky"><div class="tilt"><div class="shot"><img src="img/11-xray.jpg" alt="X-ray: a file's review — its score, why not 100, the law-based and measured health bars, the review over the snapshots"><i class="shine"></i></div></div></div>
+      <div class="sticky"><div class="tilt"><div class="shot"><img src="img/xray-1.jpg" data-step="1" alt="a file review: score 64, why not 100 axis by axis, comments at the lines with the move" class=on><img src="img/xray-2.jpg" data-step="2" alt="the laws: 17 rules, 250 violations across 7 laws, the ones broken most"><img src="img/xray-3.jpg" data-step="3" alt="the codebase as a map: every file a box, area its mass, colour its health; the blast-radius cascade"><img src="img/xray-4.jpg" data-step="4" alt="the review over the snapshots: most improved, most regressed, the axis drift"><img src="img/xray-5.jpg" data-step="5" alt="the design system harvested from the running app: 361 tokens, 108 components, 41 drift"><i class="shine"></i></div></div></div>
       <ol class="steps">
-        <li class="step" data-step="1"><i>01</i><h3>The verdict, not a vibe.</h3><p>Every file reviewed and scored — and <em>why not 100</em>, axis by axis: coupling, structure, cohesion, defects, tests, change. Deterministic analysis; no AI in the number.</p></li>
-        <li class="step" data-step="2"><i>02</i><h3>Laws, not lint.</h3><p>The rules your codebase lives by, checked at the line: what breaks a law, where, and what compliance is worth. A senior review that reads the same way every time.</p></li>
-        <li class="step" data-step="3"><i>03</i><h3>The codebase as a map.</h3><p>Every file a box, area its mass, colour its health; hubs, orphans, cycles, the most central and the most risky — at a glance, and per folder.</p></li>
-        <li class="step" data-step="4"><i>04</i><h3>What the tests never reach. What a change would touch.</h3><p>Coverage gaps by file, the blast radius before a change lands, and the review over the snapshots — the score's history, scrubbable.</p></li>
-        <li class="step" data-step="5"><i>05</i><h3>The same intel feeds the agents.</h3><p>Reviews, graph, docs and ASTs become the context pack every agent starts from — what MIN mode navigates by. Design too: your screens captured from the running app, the design system and its drift.</p></li>
+        <li class="step" data-step="1" data-zoom="18 12 2.2"><i>01</i><h3>The verdict, not a vibe.</h3><p>Every file reviewed and scored — and <em>why not 100</em>, axis by axis: coupling, structure, cohesion, defects, tests, change. Deterministic analysis; no AI in the number.</p></li>
+        <li class="step" data-step="2" data-zoom="16 26 1.9"><i>02</i><h3>Laws, not lint.</h3><p>The rules your codebase lives by, checked at the line: what breaks a law, where, and what compliance is worth. A senior review that reads the same way every time.</p></li>
+        <li class="step" data-step="3" data-zoom="24 56 1.9"><i>03</i><h3>The codebase as a map.</h3><p>Every file a box, area its mass, colour its health; hubs, orphans, cycles, the most central and the most risky — at a glance, and per folder.</p></li>
+        <li class="step" data-step="4" data-zoom="78 24 2"><i>04</i><h3>What the tests never reach. What a change would touch.</h3><p>Coverage gaps by file, the blast radius before a change lands, and the review over the snapshots — the score's history, scrubbable.</p></li>
+        <li class="step" data-step="5" data-zoom="28 22 1.8"><i>05</i><h3>The same intel feeds the agents.</h3><p>Reviews, graph, docs and ASTs become the context pack every agent starts from — what MIN mode navigates by. Design too: your screens captured from the running app, the design system and its drift.</p></li>
       </ol>
     </article>
   </section>
@@ -480,6 +487,11 @@
       const within = r0.top < innerHeight * 0.9 && rn.bottom > innerHeight * 0.1;
       for (const st of steps) st.classList.toggle("is-on", within && st === best);
       story.dataset.on = within && best ? best.dataset.step : "";
+      // the print of the step, zoomed on what it claims (before the first step / after the last: the first print, whole)
+      const cur = within && best ? best : steps[0];
+      const [zx, zy, zs] = (within && best ? (best.dataset.zoom ?? "50 50 1") : "50 50 1").split(" ");
+      const shot = story.querySelector(".shot");
+      for (const img of shot.querySelectorAll("img")) { const on = img.dataset.step === cur.dataset.step; img.classList.toggle("on", on); if (on) { img.style.setProperty("--zx", `${zx}%`); img.style.setProperty("--zy", `${zy}%`); img.style.setProperty("--zs", zs); } }
     };
     addEventListener("scroll", pick, { passive: true }); addEventListener("resize", pick); pick();
   }
@@ -497,10 +509,11 @@
     requestAnimationFrame(() => requestAnimationFrame(() => { lbImg.style.transition = "transform .55s cubic-bezier(.2,.8,.2,1)"; lbImg.style.transform = "none"; }));
   };
   const show = (i, animate = true, origin) => {
-    const shot = shotOf(i); const img = shot.querySelector("img"); const card = shot.closest(".duo-card");
+    const shot = shotOf(i); const img = shot.querySelector("img.on") ?? shot.querySelector("img"); const card = shot.closest(".duo-card");
     lbIndex = (i + shots.length) % shots.length;
     lbImg.src = img.src; lbImg.alt = img.alt;
-    lbCap.textContent = card.querySelector(".eyebrow")?.textContent ?? ""; lbWhat.textContent = card.querySelector("h2")?.textContent ?? "";
+    const step = card.querySelector(`.step[data-step="${img.dataset.step ?? ""}"] h3`);
+    lbCap.textContent = card.querySelector(".eyebrow")?.textContent ?? ""; lbWhat.textContent = step?.textContent ?? card.querySelector("h2")?.textContent ?? "";
     const wasOpen = lb.classList.contains("open");
     if (!wasOpen) lbOrigin = origin ?? shot;
     lbFrom = lbOrigin.getBoundingClientRect();
