@@ -38,6 +38,28 @@
   .hero p { margin: 24px auto 0; max-width: 52ch; font-size: clamp(16px, 1.5vw, 19px); color: var(--dim); }
   .hero .cta { display: flex; justify-content: center; gap: 12px; margin-top: 30px; flex-wrap: wrap; align-items: center; }
   .hero .fine { display: block; margin-top: 12px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+  /* THE DUO */
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 56px; align-items: start; }
+  .duo-card { display: flex; flex-direction: column; gap: 18px; }
+  .duo-head h2 { font-size: clamp(22px, 2.2vw, 28px); font-weight: 700; margin: 6px 0 0; line-height: 1.2; }
+  .tilt { perspective: 1400px; }
+  .shot { position: relative; border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; background: var(--panel); aspect-ratio: 16 / 9;
+          box-shadow: 0 50px 90px -40px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.03) inset;
+          transform-style: preserve-3d; transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(0);
+          transition: transform .12s ease-out; will-change: transform; }
+  .shot img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: top left; }
+  .shot .shine { position: absolute; inset: 0; pointer-events: none; opacity: 0;
+                 background: radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.14), transparent 45%); transition: opacity .25s; }
+  .duo-card:hover .shot .shine { opacity: 1; }
+  .duo-card:not(:hover) .shot { animation: drift 9s ease-in-out infinite; }
+  .duo-card:nth-child(2):not(:hover) .shot { animation-delay: -4.5s; }
+  @keyframes drift { 0%, 100% { transform: rotateX(4deg) rotateY(-6deg) translateY(0); } 50% { transform: rotateX(-3deg) rotateY(6deg) translateY(-6px); } }
+  .benefits { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .benefits li { font-size: 14.5px; color: var(--dim); line-height: 1.5; padding-left: 16px; position: relative; }
+  .benefits li::before { content: ""; position: absolute; left: 0; top: .62em; width: 6px; height: 6px; background: var(--ember); transform: rotate(45deg); }
+  .benefits b { color: var(--ink); font-weight: 600; }
+  @media (max-width: 860px) { .duo { grid-template-columns: 1fr; gap: 44px; } }
+  @media (prefers-reduced-motion: reduce) { .duo-card .shot, .duo-card:not(:hover) .shot { animation: none; transform: none; transition: none; } }
   .screen { position: relative; border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; background: var(--panel); box-shadow: 0 60px 120px -60px rgba(0,0,0,.8); aspect-ratio: 1440 / 860; margin-top: 48px; }
   .screen video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; }
   .cap { margin: 12px auto 0; text-align: center; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
@@ -178,7 +200,6 @@
   <a class="q" href="#desk">Threads</a>
   <a class="q" href="#xray">X-ray</a>
   <a class="q" href="#pricing">Pricing</a>
-  <a class="q" href="demo.html" target="_blank" rel="noopener">Live demo</a>
   <a class="btn sm ember" href="#download">Download · free 7 days</a>
 </div></nav>
 
@@ -186,12 +207,44 @@
   <!-- HERO — what it is, and the one reason -->
   <div class="wrap hero">
     <span class="eyebrow">antiloki · a desktop app · macOS · Windows · Linux</span>
-    <h1 style="margin-top:14px">The control layer for <em>AI coding agents.</em></h1>
-    <p>Your team already runs Claude Code, Codex or OpenCode. antiloki is where they work: on your machine, in parallel, each locked to the folders you allow, each task verified before it merges, every change and every dollar on one timeline. <b>It runs on the subscription you already pay for</b> — every AI call antiloki makes, the chat included, goes through your own CLI; no API key. You compose the desk in <b>threads</b> — the chat, the agents and the tools one job needs, side by side. Not another agent — the desk that makes the ones you have safe to scale.</p>
-    <div class="cta"><a class="btn ember" href="#download">Download — free for 7 days</a><a class="btn" href="demo.html" target="_blank" rel="noopener">Try the live demo →</a></div>
+    <h1 style="margin-top:14px">The workspace where AI builds <em>fast, safely.</em></h1>
+    <p>Claude Code, Codex and OpenCode in parallel on your machine — each boxed to the folders you allow, every task verified before it merges, every change and every dollar on one record. <b>On the subscription you already pay for.</b></p>
+    <div class="cta"><a class="btn ember" href="#download">Download — free for 7 days</a></div>
     <span class="fine">one binary · no account · no API key — your subscription is the engine</span>
-    <div class="screen" style="aspect-ratio: 1568 / 707"><img src="img/07-antiide-react.jpg" alt="X-ray on the React repository: the verdict, health over time, hotspots and the codebase map, with the chat docked on the right" style="position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover"></div>
-    <p class="cap">the real app · X-ray on the React repository — 2,171 files judged · the map, the hotspots, the trend · the chat beside it, reading the same screen</p>
+  </div>
+
+  <!-- THE DUO — the two screens, each with what you get from it (operator 2026-09-21: "not just a code
+       diagnosis project — Threads and X-ray, the two main benefits"). The prints float in 3D: a slow idle drift,
+       and they lean toward the pointer; still under prefers-reduced-motion. -->
+  <section class="duo wrap" aria-label="Threads and X-ray">
+    <article class="duo-card" data-tilt>
+      <div class="duo-head">
+        <span class="eyebrow">Threads</span>
+        <h2>Speed — agents that work in parallel, each in its own box.</h2>
+      </div>
+      <div class="tilt"><div class="shot"><img src="img/10-threads.jpg" alt="Threads: an agent pane with its plan running, a live preview of its worktree beside it, the router and QA on the header"><i class="shine"></i></div></div>
+      <ul class="benefits">
+        <li><b>One job, one thread.</b> The chat, the agents and the tools that job needs, side by side — drag, resize, collapse.</li>
+        <li><b>Boxed, not trusted.</b> Every agent writes only where you allowed; a write anywhere else is refused by the tool, before the file changes.</li>
+        <li><b>Planned, verified, judged.</b> A goal splits into tasks that own disjoint files, each verified against its acceptance; one QA judge reviews the whole run; one PR at the end.</li>
+        <li><b>Cheaper by design.</b> Heimdall routes every ask to the cheapest tier that can do it, and MIN mode replaces exploration with antiloki's own intel — on the subscription you already have.</li>
+      </ul>
+    </article>
+    <article class="duo-card" data-tilt>
+      <div class="duo-head">
+        <span class="eyebrow">X-ray</span>
+        <h2>Safety — every file judged, every number explained, before anything ships.</h2>
+      </div>
+      <div class="tilt"><div class="shot"><img src="img/11-xray.jpg" alt="X-ray: the Code tab with a file's measured review beside its source, health, laws broken at their lines, the map of the repository"><i class="shine"></i></div></div>
+      <ul class="benefits">
+        <li><b>The verdict, not a vibe.</b> Health and risk with their trend; the codebase as a map — every file a box, area its mass, colour its health.</li>
+        <li><b>Laws, not lint.</b> The rules your code breaks, at the line; what the tests never reach; the blast radius of a change before it lands.</li>
+        <li><b>The same intel feeds the agents.</b> Reviews, graph, docs and ASTs become the context pack every agent starts from — and what MIN mode navigates by.</li>
+        <li><b>Design too.</b> Your screens captured from the running app, the design system and its drift; an edit becomes a prompt, an RFC or a PR.</li>
+      </ul>
+    </article>
+  </section>
+  <div class="wrap"><p class="cap">the real app · the same codebase on both screens · Threads is where the agents work, X-ray is what they know</p>
   </div>
 
   <!-- HOW TEAMS WORK TODAY — the research -->
@@ -358,7 +411,7 @@
       <a class="os" data-os="win" href="https://github.com/danilosilvadev/antiloki-core-rust/releases/latest"><b>Windows</b><span>.exe · .msi · x64</span><em>Download ↓</em></a>
       <a class="os" data-os="linux" href="https://github.com/danilosilvadev/antiloki-core-rust/releases/latest"><b>Linux</b><span>.deb · .AppImage · x64</span><em>Download ↓</em></a>
     </div>
-    <p class="needs">needs git and at least one of <b>claude</b> · <b>codex</b> · <b>opencode</b> signed in · or <a href="demo.html" target="_blank" rel="noopener" style="color:var(--ember)">try the live demo first</a></p>
+    <p class="needs">needs git and at least one of <b>claude</b> · <b>codex</b> · <b>opencode</b> signed in</p>
   </div>
 
   <div class="wrap faq">
@@ -374,7 +427,6 @@
 <footer><div class="wrap">
   <span>antiloki · Threads · X-ray</span>
   <a href="https://github.com/danilosilvadev/antiloki-core-rust/releases/latest">releases</a>
-  <a href="demo.html">live demo</a>
   <a href="mailto:support@antiloki.dev">support@antiloki.dev</a>
   <span class="r">© 2026 antiloki</span>
 </div></footer>
@@ -388,6 +440,16 @@
   const grow = () => fills.forEach((f) => { f.style.width = f.dataset.w + "%"; });
   if (matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) grow();
   else { const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { grow(); io.disconnect(); } }, { threshold: .4 }); io.observe(document.querySelector(".measure")); }
+  // THE DUO'S 3D: each print leans toward the pointer (±9°), the shine follows it; leaving it resumes the idle drift
+  for (const card of document.querySelectorAll(".duo-card[data-tilt]")) {
+    const shot = card.querySelector(".shot");
+    card.addEventListener("pointermove", (e) => {
+      const r = shot.getBoundingClientRect(); const px = (e.clientX - r.left) / r.width; const py = (e.clientY - r.top) / r.height;
+      shot.style.setProperty("--ry", `${((px - .5) * 18).toFixed(2)}deg`); shot.style.setProperty("--rx", `${((.5 - py) * 14).toFixed(2)}deg`);
+      shot.style.setProperty("--mx", `${(px * 100).toFixed(1)}%`); shot.style.setProperty("--my", `${(py * 100).toFixed(1)}%`);
+    });
+    card.addEventListener("pointerleave", () => { shot.style.removeProperty("--rx"); shot.style.removeProperty("--ry"); });
+  }
   // light up the visitor's OS
   const ua = navigator.userAgent, os = /Mac/.test(ua) ? "mac" : /Win/.test(ua) ? "win" : /Linux/.test(ua) ? "linux" : null;
   if (os) document.querySelector(`.os[data-os="${os}"]`)?.classList.add("me");
