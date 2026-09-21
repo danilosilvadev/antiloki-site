@@ -217,7 +217,7 @@
        diagnosis project — Threads and X-ray, the two main benefits"). The prints float in 3D: a slow idle drift,
        and they lean toward the pointer; still under prefers-reduced-motion. -->
   <section class="duo wrap" aria-label="Threads and X-ray">
-    <article class="duo-card" data-tilt>
+    <article class="duo-card" data-tilt id="desk">
       <div class="duo-head">
         <span class="eyebrow">Threads</span>
         <h2>Speed — agents that work in parallel, each in its own box.</h2>
@@ -230,7 +230,7 @@
         <li><b>Cheaper by design.</b> Heimdall routes every ask to the cheapest tier that can do it, and MIN mode replaces exploration with antiloki's own intel — on the subscription you already have.</li>
       </ul>
     </article>
-    <article class="duo-card" data-tilt>
+    <article class="duo-card" data-tilt id="xray">
       <div class="duo-head">
         <span class="eyebrow">X-ray</span>
         <h2>Safety — every file judged, every number explained, before anything ships.</h2>
@@ -262,134 +262,6 @@
       <div class="pain"><div class="q">More agents means more to supervise, not less.</div><p>At five or six agents on one repo the questions become: which one is blocked, which one changed the wrong file, which branch is safe to merge. The operator becomes the bottleneck.</p></div>
       <div class="pain"><div class="q">Nobody can say what it changed or what it cost.</div><p>Review finds it late, production finds it later, the invoice finds it at month end. Trust stays at 29 % because there is no record to check.</p></div>
     </div>
-  </div>
-
-  <div class="wrap bridge">
-    <span class="eyebrow">what antiloki is</span>
-    <h2>A desktop app that gives every agent a box, every task a verdict, and every action a line on the record.</h2>
-    <p>It runs the CLIs you already pay for — Claude Code, Codex, OpenCode — side by side on one repository. Three things make that safe, and they map to the three problems above.</p>
-  </div>
-
-  <!-- WOW 1 — the box -->
-  <div class="wrap wow">
-    <div>
-      <span class="eyebrow">1 · the box — enforcement, not instructions</span>
-      <h2>An agent writes only where you allowed. Enforced at the tool call.</h2>
-      <p>Start an agent from one card: the engine, the folders it may touch, what to do. A write anywhere else is refused <b>before the file changes</b> — by the tool, not by a sentence in the prompt. The nine-second deletion can't happen from inside a box.</p>
-      <div class="proof"><span>the rule lives in the hook, not in the model's memory</span><span>each agent in its own git worktree — no collisions</span><span>one diff across all worktrees before you merge</span></div>
-    </div>
-    <div class="screen"><video autoplay muted loop playsinline preload="metadata" poster="img/02-agent-poster.jpg"><source src="img/02-agent.mp4" type="video/mp4"></video></div>
-  </div>
-
-  <!-- WOW 2 — the verdict -->
-  <div class="wrap wow flip">
-    <div>
-      <span class="eyebrow">2 · the verdict — review that scales with the agents</span>
-      <h2>Work splits into parallel tasks; every piece is verified before one join.</h2>
-      <p>Review can't keep up with generation — so the review happens as the work does. The agent splits a goal into owned tasks, runs them in parallel, and a verifier judges each one before a single join reaches you. You review one verified change list, not six raw branches.</p>
-      <div class="proof"><span>a verdict per task, before it merges</span><span>26 % faster than one agent alone, 4 of 4 PASS</span><span>about 2× the tokens — and you see that number too</span></div>
-      <p style="margin-top:14px">Any of the three can be the parent. On one afternoon, on the React repository: <b>Claude</b> delegated two edits, 2 of 2 verified in 85 s; <b>Codex</b> on the ChatGPT plan, 2 of 2 in 76 s; <b>OpenCode</b> on the Go plan (DeepSeek), 2 of 2 in 63 s. Each run ended the same way — <b>a pull request</b> in antiloki: the goal as its title, the verified report as its body, the diff, the proof suite and a safe merge one click away.</p>
-    </div>
-    <div class="measure">
-      <div class="t">same goal · same machine · same model — survey 4 packages, fix their flaky tests</div>
-      <div class="bars">
-        <div class="bar"><div class="who">one agent<small>hit the turn cap</small></div><div class="track"><div class="fill" data-w="100"></div></div><div class="val num"><b>513 s</b> · $3.08</div></div>
-        <div class="bar win"><div class="who">goal run<small>4 verified tasks</small></div><div class="track"><div class="fill" data-w="74.1"></div></div><div class="val num"><b>380 s</b> · $5.86</div></div>
-      </div>
-      <div class="verdicts"><div class="verdict"><b>PASS</b>compiler/apps</div><div class="verdict"><b>PASS</b>playground</div><div class="verdict"><b>PASS</b>runtime</div><div class="verdict"><b>PASS</b>docs-site</div></div>
-    </div>
-  </div>
-
-  <!-- THE CONTEXT LIBRARY — one place for every context -->
-  <div class="wrap wow">
-    <div>
-      <span class="eyebrow">the context library — every memory, one place</span>
-      <h2>Claude remembers. Codex remembers. Your team's rules live in six files. antiloki reads them all — and lets you pack them.</h2>
-      <p>The library shows every context on your machine: Claude Code's project memory and CLAUDE.md, Codex's memory and the AGENTS.md it reads, OpenCode's sessions, and antiloki's own — session docs, papers, skills. Read-only for the agents' stores, always. Pick the chunks that matter, consolidate them into a named pack, and that pack is one chip away in every agent's scope, every mission, every notebook and the chat.</p>
-      <div class="proof"><span>the AIs' memories, read-only</span><span>chunks → a pack, with provenance</span><span>reachable from every context selection</span></div>
-    </div>
-  </div>
-
-  <!-- WOW 3 — the record -->
-  <div class="wrap wow">
-    <div>
-      <span class="eyebrow">3 · the record — the trust you can check</span>
-      <h2>Every change and every dollar, on one timeline you can read like a stack trace.</h2>
-      <p>Trust needs a record. Each tool call, refusal, verdict and merge lands on one line, with the engine that did it. Tokens, cost and your 5-hour and weekly limits for all three CLIs sit in the corner while it runs — not on next month's invoice.</p>
-      <div class="proof"><span>"what did the AI change?" — answered in one screen</span><span>cost per task, live, per engine</span><span>hand the timeline to a reviewer, a client, or security</span></div>
-    </div>
-    <div class="record">
-      <div class="fuel"><div>claude — <b>41k tok · $1.20</b> · 5h 62% · wk 18%<span class="dot"></span></div><div>codex — <b>9k tok · $0.31</b> · 5h 12% · wk 4%<span class="dot"></span></div><div>opencode not running</div></div>
-      <div class="tl">
-        <div><span class="ts">14:53:05</span><i></i><span><b>join</b> · one change list · 3 files · tests 6/6 · delivered</span><span class="who">claude</span></div>
-        <div><span class="ts">14:52:40</span><i></i><span><b>verify</b> · <span class="ok">PASS · PASS · PASS · PASS</span></span><span class="who">claude</span></div>
-        <div><span class="ts">14:48:19</span><i></i><span><b>task 2</b> · playground · 2 files · owned only</span><span class="who">claude</span></div>
-        <div><span class="ts">14:47:41</span><i></i><span><b>refused</b> · <span class="no">Edit package.json — outside src/**</span></span><span class="who">codex</span></div>
-        <div><span class="ts">14:47:05</span><i></i><span><b>goal</b> · planned · 4 tasks · 1 wave</span><span class="who">claude</span></div>
-        <div><span class="ts">14:46:12</span><i class="y"></i><span><b>started</b> · Codex · migrate v3 · writes src/api/**</span><span class="who">you</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- THE X-RAY — the analysis screen, and the chat that reads it -->
-  <div class="wrap desk" id="xray">
-    <span class="eyebrow">the x-ray · the analysis, judged</span>
-    <h2>Every file judged, every number explained — and a chat that reads the same screen.</h2>
-    <p>The X-ray scores the repository against your rules and its own measurements (tests, coupling, structure, change) and tells you <b>why a file is not 100</b>. Then the ultra review: a $0 survey of the territory, the worst units ranked, and your own engine reading them to report what it can verify — with the fix. Every section drags into the chat as context; the chat already sees the brief and the open file's dossier.</p>
-    <div class="screen" style="aspect-ratio: 1568 / 770; margin-top:18px"><img src="img/08-ultra-review.jpg" alt="the Ultra review tab: engineering health gauge, determinism, the six axes, the territory by folder, the dossier" style="position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover"></div>
-    <p class="cap">the Ultra review · the $0 survey of packages/scheduler — health 47, the axes, the territory · the engine's verified findings follow below it</p>
-    <div class="screen" style="aspect-ratio: 1568 / 770; margin-top:18px"><img src="img/09-chat-sees-xray.jpg" alt="the docked chat answering from the X-ray screen: which rule is broken most, why a file is 81" style="position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover"></div>
-    <p class="cap">the chat sees the screen · “what am I looking at?” → the Quality tab and the most-broken rule · “why is this file not 100?” → the two axes that cost it, from the dossier</p>
-  </div>
-
-  <!-- WHO + LOCAL -->
-  <!-- THE DESK — threads: how the three things above are actually used, day to day -->
-  <div class="wrap desk" id="desk">
-    <span class="eyebrow">the desk · threads, not tabs</span>
-    <h2>One job, one thread: the chat, the agents and the tools it needs, side by side.</h2>
-    <p>A thread is a named split of live widgets. Open one for the migration, one for the review, one for the design pass — each holds exactly what that job needs. An agent in two threads is the same live agent; close a thread and nothing dies.</p>
-    <div class="grid">
-      <div class="facets">
-        <div class="facet"><b>Everything is a widget — the chat included.</b><p>antiChat, Claude Code, Codex, OpenCode, terminal, kanban, diff, standup, the code graph, the design system: one catalog. Add any of them to a thread, drag them into place, resize the seams.</p></div>
-        <div class="facet"><b>The Studio shows the real thing before you add it.</b><p>Pick a kind and you see it at full size with a worked example, what it does, how to use it and what it costs — then <i>new thread</i> or <i>add here</i>. No empty panes to figure out.</p></div>
-        <div class="facet"><b>Fuel and the timeline ride the top of every view.</b><p>Two small instruments between <i>Threads</i> and <i>X-ray</i>: the donut is your 5-hour and weekly limits per engine, the clock is the day's record — every row explains itself. Hover for the numbers, click for the window.</p></div>
-        <div class="facet"><b>Two screens, one chat.</b><p><i>Threads</i> for the work, <i>X-ray</i> for the analysis. The chat rides beside both and sees what you see — the thread, or the open file's dossier and the numbers on the dashboard.</p></div>
-      </div>
-      <div class="deskmock" aria-label="the Threads view: threads and the Studio on the left, the active thread's split on the right; fuel and timeline in the top switch">
-        <div class="switch"><span class="on">Threads</span><span class="mid"><i class="ring"></i><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></span><span>X-ray</span></div>
-        <div class="side">
-          <div class="cat">threads</div>
-          <div class="th on"><i></i>auth refresh<small>3</small></div>
-          <div class="member">◆ Claude Code · wt/auth-refresh</div><div class="member">◆ diff</div><div class="member">◆ chat</div>
-          <div class="th"><i></i>design pass<small>2</small></div>
-          <div class="th"><i></i>reading<small>1</small></div>
-          <div class="cat" style="margin-top:8px">studio · agents</div>
-          <div class="studio">
-            <div class="kind a"><svg viewBox="0 0 24 24"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>antiChat</div>
-            <div class="kind a sel"><svg viewBox="0 0 24 24"><path d="M9.9 2.8 11 6l3.2 1.1L11 8.2 9.9 11.4 8.8 8.2 5.6 7.1 8.8 6z"/><path d="M18 12l.9 2.6 2.6.9-2.6.9L18 19l-.9-2.6-2.6-.9 2.6-.9z"/><path d="M5 17l.5 1.5L7 19l-1.5.5L5 21l-.5-1.5L3 19l1.5-.5z"/></svg>Claude Code</div>
-            <div class="kind a"><svg viewBox="0 0 24 24"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>Codex</div>
-          </div>
-          <div class="cat">studio · tools</div>
-          <div class="studio">
-            <div class="kind t"><svg viewBox="0 0 24 24"><path d="m4 17 6-6-6-6M12 19h8"/></svg>Terminal</div>
-            <div class="kind t"><svg viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M8 7v7M12 7v4M16 7v9"/></svg>Kanban</div>
-            <div class="kind t"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="3"/><path d="M12 6h5a2 2 0 0 1 2 2v7"/><path d="m15 9-3-3 3-3"/><circle cx="19" cy="18" r="3"/><path d="M12 18H7a2 2 0 0 1-2-2V9"/><path d="m9 15 3 3-3 3"/></svg>Diff</div>
-          </div>
-        </div>
-        <div class="stage">
-          <div class="cell tall"><div class="hd"><em>✦</em>Claude Code <span style="color:var(--muted)">wt/auth-refresh · src/auth/**</span></div><div class="ln w"></div><div class="ln"></div><div class="ln n"></div><div class="ok">● edit src/auth/session.ts +18 −4</div><div class="ok">● run npm test — 12 passed</div><div class="no">✕ refused · Edit package.json — outside src/**</div><div class="ln n"></div></div>
-          <div class="cell"><div class="hd"><em>◆</em>diff <span style="color:var(--muted)">2 files</span></div><div class="ln w"></div><div class="ok">+ if (s.expiresAt - now() &gt; 60_000) return s;</div><div class="no">− return refresh(s);</div><div class="ok">+ return refresh(s, { retry: 1 });</div></div>
-          <div class="cell"><div class="hd"><em>◆</em>chat <span style="color:var(--muted)">episode #4</span></div><div class="ln w"></div><div class="ln"></div><div style="border:1px solid var(--rule);border-radius:8px;padding:6px 8px;margin-top:auto;color:var(--muted)">Message antiloki… (@ context · # widget)</div></div>
-        </div>
-      </div>
-    </div>
-    <p class="cap">the Threads view · the Studio catalog on the left, the active thread on the right · fuel and the timeline in the switch</p>
-  </div>
-
-  <div class="wrap fit">
-    <h2>Built for the engineer who already pays for two or three agent subscriptions.</h2>
-    <p>You keep your CLIs. Every AI call antiloki itself makes — the chat that sees your screen, the file reviews, the descriptions, the plans, the ultra review — runs on those subscriptions, per tier (high · mid · low), headless and read-only. An OpenRouter key or a local Ollama model are options, never requirements. One Rust binary on your laptop, its state in a folder next to your code, nothing sent anywhere except the calls your CLIs already make.</p>
-    <div class="row"><span>no account</span><span>no telemetry</span><span>works offline</span><span>delete the folder, it's gone</span></div>
   </div>
 
   <!-- PRICING -->
