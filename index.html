@@ -102,6 +102,40 @@
   .benefits b { color: var(--ink); font-weight: 600; }
   @media (max-width: 860px) { .duo { grid-template-columns: 1fr; gap: 44px; } }
   @media (prefers-reduced-motion: reduce) { .duo-card .shot, .duo-card:not(:hover) .shot { animation: none; transform: none; transition: none; } }
+  /* THE STORIES: sticky print, five steps scrolling past it */
+  .duo { grid-template-columns: 1fr; gap: 120px; margin-top: 120px; max-width: 1320px; }
+  .story { display: grid; grid-template-columns: 1.15fr 1fr; grid-template-areas: "head head" "print steps"; column-gap: 56px; row-gap: 28px; align-items: start; }
+  .story.mirror { grid-template-columns: 1fr 1.15fr; grid-template-areas: "head head" "steps print"; }
+  .story .duo-head { grid-area: head; max-width: 60ch; }
+  .story .sticky { grid-area: print; position: sticky; top: 14vh; }
+  .story .steps { grid-area: steps; list-style: none; margin: 0; padding: 6vh 0 10vh; display: flex; flex-direction: column; gap: 0; }
+  .story .step { min-height: 46vh; display: flex; flex-direction: column; justify-content: center; padding: 24px 0 24px 22px; border-left: 1px solid var(--rule); position: relative;
+                 opacity: .28; transform: translateY(18px); transition: opacity .6s ease, transform .7s cubic-bezier(.2,.8,.2,1); }
+  .story .step::before { content: ""; position: absolute; left: -1px; top: 50%; height: 0; width: 2px; background: var(--ember); transform: translateY(-50%); transition: height .5s cubic-bezier(.2,.8,.2,1); }
+  .story .step.is-on { opacity: 1; transform: none; }
+  .story .step.is-on::before { height: 64%; }
+  .story .step i { font-family: var(--mono); font-style: normal; font-size: 11px; letter-spacing: .14em; color: var(--ember); }
+  .story .step h3 { font-size: clamp(19px, 1.7vw, 24px); margin: 8px 0 10px; line-height: 1.15; }
+  .story .step p { margin: 0; color: var(--dim); font-size: 15px; line-height: 1.55; max-width: 46ch; }
+  .story .step p em { font-style: normal; color: var(--ink); }
+  /* the print leans toward the step in view (the pointer tilt still wins while hovering) */
+  .story .shot { transition: transform .9s cubic-bezier(.2,.8,.2,1); }
+  .story:not(:hover) .shot { animation: none; }
+  .story[data-on="1"]:not(:hover) .shot { transform: rotateX(3deg) rotateY(-7deg); }
+  .story[data-on="2"]:not(:hover) .shot { transform: rotateX(-2deg) rotateY(-4deg) scale(1.02); }
+  .story[data-on="3"]:not(:hover) .shot { transform: rotateX(2deg) rotateY(5deg); }
+  .story[data-on="4"]:not(:hover) .shot { transform: rotateX(-3deg) rotateY(7deg) scale(1.02); }
+  .story[data-on="5"]:not(:hover) .shot { transform: rotateX(4deg) rotateY(-3deg); }
+  .story.mirror[data-on="1"]:not(:hover) .shot { transform: rotateX(3deg) rotateY(7deg); }
+  .story.mirror[data-on="3"]:not(:hover) .shot { transform: rotateX(2deg) rotateY(-5deg); }
+  .story.mirror[data-on="4"]:not(:hover) .shot { transform: rotateX(-3deg) rotateY(-7deg) scale(1.02); }
+  @media (max-width: 860px) {
+    .story, .story.mirror { grid-template-columns: 1fr; grid-template-areas: "head" "print" "steps"; }
+    .story .sticky { position: relative; top: auto; }
+    .story .step { min-height: 0; opacity: 1; transform: none; padding: 18px 0 18px 18px; }
+    .story .steps { padding: 8px 0 0; gap: 8px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .story .step { opacity: 1; transform: none; transition: none; } .story .shot { transition: none; } }
   /* THE LIGHTBOX (operator 2026-09-21: "onclick expands beautifully the prints"): the print flies from its
      card to the middle of the screen (FLIP), the page dims and blurs behind it, the whole print is shown
      (no crop), a caption under it; Esc, a click outside or × sends it back the way it came. ← → swap. */
@@ -287,32 +321,38 @@
   <!-- THE DUO — the two screens, each with what you get from it (operator 2026-09-21: "not just a code
        diagnosis project — Threads and X-ray, the two main benefits"). The prints float in 3D: a slow idle drift,
        and they lean toward the pointer; still under prefers-reduced-motion. -->
+  <!-- THE TWO STORIES (operator 2026-09-21: "beautiful animations on scrolling — first Threads and 5
+       functionalities, then the same for X-ray"): each screen is a scrollytelling chapter — the print stays
+       put (sticky) while five functionalities scroll past it; the one in view lights up and the print leans
+       toward it. Threads: print left, steps right. X-ray: mirrored. -->
   <section class="duo wrap" aria-label="Threads and X-ray">
-    <article class="duo-card" data-tilt id="desk">
+    <article class="duo-card story" data-tilt id="desk">
       <div class="duo-head">
         <span class="eyebrow">Threads</span>
         <h2>Speed — agents that work in parallel, each in its own box.</h2>
       </div>
-      <div class="tilt"><div class="shot"><img src="img/10-threads.jpg" alt="Threads: an agent pane with its plan running, a live preview of its worktree beside it, the router and QA on the header"><i class="shine"></i></div></div>
-      <ul class="benefits">
-        <li><b>One job, one thread.</b> The chat, the agents and the tools that job needs, side by side — drag, resize, collapse.</li>
-        <li><b>Boxed, not trusted.</b> Every agent writes only where you allowed; a write anywhere else is refused by the tool, before the file changes.</li>
-        <li><b>Planned, verified, judged.</b> A goal splits into tasks that own disjoint files, each verified against its acceptance; one QA judge reviews the whole run; one PR at the end.</li>
-        <li><b>Cheaper by design.</b> Heimdall routes every ask to the cheapest tier that can do it, and MIN mode replaces exploration with antiloki's own intel — on the subscription you already have.</li>
-      </ul>
+      <div class="sticky"><div class="tilt"><div class="shot"><img src="img/10-threads.jpg" alt="Threads: two agent panes side by side, the scope sentry refusing an out-of-scope edit, a live preview of the worktree in the same thread"><i class="shine"></i></div></div></div>
+      <ol class="steps">
+        <li class="step" data-step="1"><i>01</i><h3>One job, one thread.</h3><p>The chat, the agents and the tools that job needs, side by side — drag, resize, collapse. Leave for X-ray and the agents keep working; a floating stack shows each one's line.</p></li>
+        <li class="step" data-step="2"><i>02</i><h3>Boxed, not trusted.</h3><p>Every agent gets a worktree and a scope. A write anywhere else is refused by the tool itself, before the file changes — and the scope sentry shows the attempt, with one click to widen or keep.</p></li>
+        <li class="step" data-step="3"><i>03</i><h3>Heimdall routes every ask.</h3><p>A high-tier planner reads the ask first: one job or a plan, which model, which tier — the cheapest that can do it. Sub-agents fan out in parallel, each in its own box, on the subscription you already pay.</p></li>
+        <li class="step" data-step="4"><i>04</i><h3>Planned, verified, judged.</h3><p>A goal splits into tasks that own disjoint files; each is verified against its acceptance; an isolated QA judge reviews the whole run; one pull request at the end — sealed if the judge failed it.</p></li>
+        <li class="step" data-step="5"><i>05</i><h3>Preview beside it. MIN when you want it cheap.</h3><p>▶ preview boots the agent's worktree next to the chat, live. MIN mode turns exploration off — the agent navigates by antiloki's own intel (reviews, graph, docs, ASTs) and touches the disk only to edit.</p></li>
+      </ol>
     </article>
-    <article class="duo-card" data-tilt id="xray">
+    <article class="duo-card story mirror" data-tilt id="xray">
       <div class="duo-head">
         <span class="eyebrow">X-ray</span>
         <h2>Safety — every file judged, every number explained, before anything ships.</h2>
       </div>
-      <div class="tilt"><div class="shot"><img src="img/11-xray.jpg" alt="X-ray: the Code tab with a file's measured review beside its source, health, laws broken at their lines, the map of the repository"><i class="shine"></i></div></div>
-      <ul class="benefits">
-        <li><b>The verdict, not a vibe.</b> Health and risk with their trend; the codebase as a map — every file a box, area its mass, colour its health.</li>
-        <li><b>Laws, not lint.</b> The rules your code breaks, at the line; what the tests never reach; the blast radius of a change before it lands.</li>
-        <li><b>The same intel feeds the agents.</b> Reviews, graph, docs and ASTs become the context pack every agent starts from — and what MIN mode navigates by.</li>
-        <li><b>Design too.</b> Your screens captured from the running app, the design system and its drift; an edit becomes a prompt, an RFC or a PR.</li>
-      </ul>
+      <div class="sticky"><div class="tilt"><div class="shot"><img src="img/11-xray.jpg" alt="X-ray: a file's review — its score, why not 100, the law-based and measured health bars, the review over the snapshots"><i class="shine"></i></div></div></div>
+      <ol class="steps">
+        <li class="step" data-step="1"><i>01</i><h3>The verdict, not a vibe.</h3><p>Every file reviewed and scored — and <em>why not 100</em>, axis by axis: coupling, structure, cohesion, defects, tests, change. Deterministic analysis; no AI in the number.</p></li>
+        <li class="step" data-step="2"><i>02</i><h3>Laws, not lint.</h3><p>The rules your codebase lives by, checked at the line: what breaks a law, where, and what compliance is worth. A senior review that reads the same way every time.</p></li>
+        <li class="step" data-step="3"><i>03</i><h3>The codebase as a map.</h3><p>Every file a box, area its mass, colour its health; hubs, orphans, cycles, the most central and the most risky — at a glance, and per folder.</p></li>
+        <li class="step" data-step="4"><i>04</i><h3>What the tests never reach. What a change would touch.</h3><p>Coverage gaps by file, the blast radius before a change lands, and the review over the snapshots — the score's history, scrubbable.</p></li>
+        <li class="step" data-step="5"><i>05</i><h3>The same intel feeds the agents.</h3><p>Reviews, graph, docs and ASTs become the context pack every agent starts from — what MIN mode navigates by. Design too: your screens captured from the running app, the design system and its drift.</p></li>
+      </ol>
     </article>
   </section>
   <div class="wrap"><p class="cap">the real app · the same codebase on both screens · Threads is where the agents work, X-ray is what they know</p>
@@ -411,8 +451,8 @@
   h1.querySelectorAll(".w").forEach((w, i) => { w.style.transitionDelay = `${i * 70}ms`; });
   const timers = []; const at = (ms, fn) => timers.push(setTimeout(fn, ms));
   const settle = () => { timers.forEach(clearTimeout); root.classList.add("formed", "headline", "settled"); setTimeout(() => root.classList.add("gone"), 1800); };
-  let seen = false; try { seen = sessionStorage.getItem("antiloki:revealed") === "1" && !new URLSearchParams(location.search).has("reveal"); sessionStorage.setItem("antiloki:revealed", "1"); } catch {} // ?reveal replays it
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches || seen) { root.classList.add("reduced", "gone"); }
+  // every load plays it (operator 2026-09-21: "on reload the animation should show again")
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { root.classList.add("reduced", "gone"); }
   else {
     at(200, () => root.classList.add("formed"));
     at(2300, () => root.classList.add("headline"));
@@ -430,6 +470,19 @@
     stage.querySelector(".print.b").style.transform = `translate3d(${(px * 14).toFixed(1)}px, calc(6% + ${(py * 10).toFixed(1)}px), 40px) rotateY(${(-22 + px * 8).toFixed(1)}deg) rotateX(${(6 - py * 8).toFixed(1)}deg) rotateZ(1deg)`;
   });
   stage.addEventListener("pointerleave", () => { for (const p of stage.querySelectorAll(".print")) p.style.transform = ""; });
+  // THE STORIES' SCROLL: the step nearest the middle of the viewport is the one on; the chapter's print leans to it
+  for (const story of document.querySelectorAll(".story")) {
+    const steps = Array.from(story.querySelectorAll(".step"));
+    const pick = () => {
+      const mid = innerHeight * 0.5; let best = null, d = Infinity;
+      for (const st of steps) { const r = st.getBoundingClientRect(); const c = r.top + r.height / 2; const dist = Math.abs(c - mid); if (dist < d) { d = dist; best = st; } }
+      const r0 = steps[0].getBoundingClientRect(), rn = steps[steps.length - 1].getBoundingClientRect();
+      const within = r0.top < innerHeight * 0.9 && rn.bottom > innerHeight * 0.1;
+      for (const st of steps) st.classList.toggle("is-on", within && st === best);
+      story.dataset.on = within && best ? best.dataset.step : "";
+    };
+    addEventListener("scroll", pick, { passive: true }); addEventListener("resize", pick); pick();
+  }
   // THE LIGHTBOX: FLIP from the card's print to the centered full print and back
   const lb = document.getElementById("lightbox"), lbImg = lb.querySelector("img"), lbCap = lb.querySelector(".cap b"), lbWhat = lb.querySelector(".cap .what");
   const shots = Array.from(document.querySelectorAll(".duo-card[data-tilt] .shot"));
