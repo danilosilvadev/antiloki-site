@@ -391,4 +391,18 @@
   // light up the visitor's OS
   const ua = navigator.userAgent, os = /Mac/.test(ua) ? "mac" : /Win/.test(ua) ? "win" : /Linux/.test(ua) ? "linux" : null;
   if (os) document.querySelector(`.os[data-os="${os}"]`)?.classList.add("me");
+  // THE DOWNLOAD BUTTONS (2026-09-21): each links straight to the installer of the latest release — resolved from
+  // the public releases repository at load time (the GitHub API answers cross-origin for a public repo); until it
+  // answers, or if it never does, the buttons keep pointing at the releases page itself.
+  const RELEASES = "danilosilvadev/antiloki-releases";
+  const PICK = { mac: [/\.dmg$/], win: [/-setup\.exe$/, /\.msi$/], linux: [/\.AppImage$/, /\.deb$/] };
+  for (const a of document.querySelectorAll(".os, a[href*='/releases/latest']")) if (a.getAttribute("href")?.includes("/releases/latest")) a.href = `https://github.com/${RELEASES}/releases/latest`;
+  fetch(`https://api.github.com/repos/${RELEASES}/releases/latest`, { headers: { accept: "application/vnd.github+json" } }).then((r) => (r.ok ? r.json() : null)).then((rel) => {
+    if (!rel || !Array.isArray(rel.assets)) return;
+    for (const [key, pats] of Object.entries(PICK)) {
+      const a = document.querySelector(`.os[data-os="${key}"]`); if (!a) continue;
+      const asset = pats.map((re) => rel.assets.find((x) => re.test(x.name))).find(Boolean);
+      if (asset) { a.href = asset.browser_download_url; a.querySelector("em").textContent = `Download ${rel.tag_name} ↓`; a.title = `${asset.name} · ${(asset.size / 1048576).toFixed(0)} MB`; }
+    }
+  }).catch(() => {});
 </script>
