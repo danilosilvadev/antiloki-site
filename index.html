@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>antiloki</title>
+<title>antiloki — the desktop workspace for Claude Code, Codex and OpenCode</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23211e1b'/%3E%3Ctext x='10' y='47' font-family='Geist,Helvetica,Arial,sans-serif' font-weight='700' font-size='40' fill='%23efe9e2' letter-spacing='-2'%3Ea%3Ctspan fill='%23c97c5c'%3E.%3C/tspan%3E%3C/text%3E%3C/svg%3E">
 <meta name="description" content="antiloki is the control layer for AI coding agents: Claude Code, Codex and OpenCode in parallel on your machine, boxed to folders, verified before merge, composed in threads, every change and every dollar on one timeline. Free for 7 days.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,7 +35,7 @@
 
   /* hero — one problem, one promise, one proof */
   .hero { padding: 72px 0 0; text-align: center; }
-  .hero h1 { font-size: clamp(38px, 5.2vw, 68px); font-weight: 800; max-width: 20ch; margin: 0 auto; }
+  .hero h1 { font-size: clamp(34px, 4.6vw, 60px); font-weight: 800; max-width: 26ch; margin: 0 auto; }
   .hero h1 em { font-style: normal; color: var(--ember); }
   .hero p { margin: 24px auto 0; max-width: 52ch; font-size: clamp(16px, 1.5vw, 19px); color: var(--dim); }
   .hero .cta { display: flex; justify-content: center; gap: 12px; margin-top: 30px; flex-wrap: wrap; align-items: center; }
@@ -45,7 +45,7 @@
      covers the viewport; the two prints rise out of the deep — far, blurred, dim, turned away — and settle
      into a fanned pair under the headline; the fog thins; the headline rises word by word, then the rest.
      Reduced motion, a repeat visit (sessionStorage), a scroll or a click → straight to the settled state. */
-  .fog { position: fixed; inset: 0; z-index: 55; pointer-events: none; overflow: hidden; background: #0d0b0a; transition: opacity 1.6s ease .1s; }
+  .fog { position: fixed; inset: 0; z-index: 55; pointer-events: none; overflow: hidden; background: #0d0b0a; transition: opacity .9s ease .05s; }
   .fog i { position: absolute; border-radius: 50%; opacity: .9; mix-blend-mode: screen; will-change: transform; } /* soft by gradient, not by filter — a blur this size costs frames on integrated GPUs */
   .fog i:nth-child(1) { width: 70vw; height: 70vw; left: -20vw; top: -10vh; background: radial-gradient(circle, rgba(70,52,44,.9), rgba(70,52,44,.35) 35%, transparent 68%); animation: fogA 14s ease-in-out infinite alternate; }
   .fog i:nth-child(2) { width: 60vw; height: 60vw; right: -15vw; top: 10vh; background: radial-gradient(circle, rgba(52,44,48,.85), rgba(52,44,48,.3) 35%, transparent 68%); animation: fogB 17s ease-in-out infinite alternate; }
@@ -59,8 +59,8 @@
   html.headline .fog, html.reduced .fog { opacity: 0; }
   html.gone .fog { display: none; }
   /* the hero text waits for the prints */
-  .hero .eyebrow, .hero p, .hero .cta, .hero .fine { opacity: 0; transform: translateY(10px); transition: opacity .8s ease, transform .8s ease; }
-  .hero h1 .w { display: inline-block; opacity: 0; transform: translateY(.45em); filter: blur(10px); transition: opacity .7s ease, transform .9s cubic-bezier(.2,.8,.2,1), filter .8s ease; }
+  .hero .eyebrow, .hero p, .hero .cta, .hero .fine { opacity: 0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease; }
+  .hero h1 .w { display: inline-block; opacity: 0; transform: translateY(.45em); filter: blur(10px); transition: opacity .45s ease, transform .6s cubic-bezier(.2,.8,.2,1), filter .5s ease; }
   html.headline .hero h1 .w { opacity: 1; transform: none; filter: none; }
   html.settled .hero .eyebrow, html.settled .hero p, html.settled .hero .cta, html.settled .hero .fine { opacity: 1; transform: none; }
   html.reduced .hero .eyebrow, html.reduced .hero p, html.reduced .hero .cta, html.reduced .hero .fine, html.reduced .hero h1 .w { opacity: 1; transform: none; filter: none; transition: none; }
@@ -70,11 +70,11 @@
   html:not(.headline):not(.reduced) .stage { transform: translateY(clamp(-360px, -38vh, -160px)); }
   .stage .print { position: absolute; top: 0; width: 58%; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,.1); background: var(--panel); cursor: zoom-in;
                   box-shadow: 0 70px 120px -50px rgba(0,0,0,.95), 0 0 0 1px rgba(255,255,255,.03) inset; transform-style: preserve-3d; will-change: transform, filter, opacity;
-                  transition: transform 2.4s cubic-bezier(.16,.84,.24,1), filter 2s ease, opacity 1.6s ease; }
+                  transition: transform 1.3s cubic-bezier(.16,.84,.24,1), filter 1.1s ease, opacity .9s ease; }
   .stage .print img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
   .stage .print::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255,255,255,.12), transparent 40%, transparent 70%, rgba(255,255,255,.05)); pointer-events: none; }
   .stage .print.a { left: 0; transform: translate3d(-42vw, 22vh, -1600px) rotateY(58deg) rotateX(26deg) rotateZ(-8deg); opacity: 0; filter: blur(22px) brightness(.35); }
-  .stage .print.b { right: 0; transform: translate3d(42vw, 26vh, -1900px) rotateY(-62deg) rotateX(22deg) rotateZ(9deg); opacity: 0; filter: blur(22px) brightness(.3); transition-delay: .35s; }
+  .stage .print.b { right: 0; transform: translate3d(42vw, 26vh, -1900px) rotateY(-62deg) rotateX(22deg) rotateZ(9deg); opacity: 0; filter: blur(22px) brightness(.3); transition-delay: .2s; }
   html.formed .stage .print.a, html.reduced .stage .print.a { transform: translate3d(0, 0, 0) rotateY(22deg) rotateX(6deg) rotateZ(-1deg); opacity: 1; filter: none; }
   html.formed .stage .print.b, html.reduced .stage .print.b { transform: translate3d(0, 6%, 40px) rotateY(-22deg) rotateX(6deg) rotateZ(1deg); opacity: 1; filter: none; }
   html.settled .stage .print { transition: transform .35s ease-out; }
@@ -316,10 +316,10 @@
   <!-- HERO — what it is, and the one reason -->
   <div class="wrap hero">
     <span class="eyebrow">antiloki · a desktop app · macOS · Windows · Linux</span>
-    <h1 style="margin-top:14px">Faster with agents. Safer with proof. <em>Local, yours.</em></h1>
-    <p>Work faster — parallel sub-agents, one job per thread, the tools beside it. Work safer — every change on an audit trail, every file judged by deterministic analysis, no AI in the verdict. <b>On your machine, on the subscription you already pay for.</b></p>
+    <h1 style="margin-top:14px">The desktop workspace for Claude Code, Codex and OpenCode. <em>Faster, and with proof.</em></h1>
+    <p><b>One binary. No account, no API key — the subscription you already pay for is the engine.</b> Run your agents in parallel, one job per thread, the tools beside them; every change lands on an audit trail, every file is judged by deterministic analysis — no AI in the verdict.</p>
     <div class="cta"><a class="btn ember" href="#download">Download — free for 7 days</a></div>
-    <span class="fine">one binary · no account · no API key — your subscription is the engine</span>
+    <span class="fine">local, yours — nothing leaves your machine but the calls your agents already make</span>
     <div class="stage" aria-hidden="true">
       <i class="glow"></i>
       <div class="print a" data-lb="0"><img src="img/10-threads.jpg" alt=""></div>
@@ -452,21 +452,22 @@
     });
     card.addEventListener("pointerleave", () => { shot.style.removeProperty("--rx"); shot.style.removeProperty("--ry"); });
   }
-  // THE REVEAL: the sequence, once per visit — fog → the prints form (0.2s) → the fog thins and the headline
-  // rises word by word (2.3s) → the rest (3.1s) → the fog is gone (5s). A scroll, a click or a key cuts to the end.
+  // THE REVEAL: fog → the prints form (0.15s) → the fog thins and the headline rises word by word (0.5s) → the
+  // rest (1.1s) → the fog is gone (1.9s). Short on purpose (feedback 2026-09-21: a five-second opening lost the
+  // low-attention visitor): the headline is readable inside a second. A scroll, a click or a key cuts to the end.
   const root = document.documentElement, h1 = document.querySelector(".hero h1");
   const wrapWords = (el) => { for (const node of Array.from(el.childNodes)) { if (node.nodeType === 3) { const frag = document.createDocumentFragment(); node.textContent.split(/(\s+)/).forEach((t) => { if (!t) return; if (/^\s+$/.test(t)) frag.appendChild(document.createTextNode(t)); else { const w = document.createElement("span"); w.className = "w"; w.textContent = t; frag.appendChild(w); } }); node.replaceWith(frag); } else if (node.nodeType === 1) wrapWords(node); } };
   wrapWords(h1);
-  h1.querySelectorAll(".w").forEach((w, i) => { w.style.transitionDelay = `${i * 70}ms`; });
+  h1.querySelectorAll(".w").forEach((w, i) => { w.style.transitionDelay = `${i * 40}ms`; });
   const timers = []; const at = (ms, fn) => timers.push(setTimeout(fn, ms));
-  const settle = () => { timers.forEach(clearTimeout); root.classList.add("formed", "headline", "settled"); setTimeout(() => root.classList.add("gone"), 1800); };
+  const settle = () => { timers.forEach(clearTimeout); root.classList.add("formed", "headline", "settled"); setTimeout(() => root.classList.add("gone"), 900); };
   // every load plays it (operator 2026-09-21: "on reload the animation should show again")
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) { root.classList.add("reduced", "gone"); }
   else {
-    at(200, () => root.classList.add("formed"));
-    at(2300, () => root.classList.add("headline"));
-    at(3100, () => root.classList.add("settled"));
-    at(5000, () => root.classList.add("gone"));
+    at(150, () => root.classList.add("formed"));
+    at(500, () => root.classList.add("headline"));
+    at(1100, () => root.classList.add("settled"));
+    at(1900, () => root.classList.add("gone"));
     const cut = () => { settle(); for (const ev of ["wheel", "touchstart", "keydown", "pointerdown"]) window.removeEventListener(ev, cut); };
     for (const ev of ["wheel", "touchstart", "keydown", "pointerdown"]) window.addEventListener(ev, cut, { passive: true });
   }
