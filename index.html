@@ -1,9 +1,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>antiloki</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23211e1b'/%3E%3Ctext x='10' y='47' font-family='Geist,Helvetica,Arial,sans-serif' font-weight='700' font-size='40' fill='%23efe9e2' letter-spacing='-2'%3Ea%3Ctspan fill='%23c97c5c'%3E.%3C/tspan%3E%3C/text%3E%3C/svg%3E">
 <meta name="description" content="antiloki is the control layer for AI coding agents: Claude Code, Codex and OpenCode in parallel on your machine, boxed to folders, verified before merge, composed in threads, every change and every dollar on one timeline. Free for 7 days.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Geist:wght@700&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
   :root {
     --bg: #211e1b; --panel: #2a2521; --rule: #3b3530; --rule2: #4a433c; --ink: #efe9e2; --dim: #a3998f; --muted: #6f665e;
@@ -22,8 +23,9 @@
   .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ember); }
 
   nav.top .wrap { display: flex; align-items: center; height: 60px; gap: 20px; }
-  .mark { display: inline-flex; align-items: center; gap: 9px; font-family: var(--display); font-weight: 800; font-size: 19px; text-decoration: none; }
-  .mark i { width: 10px; height: 10px; background: var(--ember); transform: rotate(45deg); display: inline-block; }
+  /* THE MARK = the app's wordmark (shell/logo.tsx): bold lowercase Geist, tight tracking, an ember period */
+  .mark { display: inline-flex; align-items: baseline; font-family: "Geist", -apple-system, system-ui, sans-serif; font-weight: 700; font-size: 20px; letter-spacing: -.035em; text-decoration: none; color: var(--ink); line-height: 1; }
+  .mark em { font-style: normal; color: var(--ember); }
   nav.top .sp { flex: 1; }
   nav.top a.q { text-decoration: none; color: var(--dim); font-size: 14px; } nav.top a.q:hover { color: var(--ink); }
   .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border-radius: 10px; font-family: var(--body); font-weight: 500; font-size: 15px; text-decoration: none; border: 1px solid var(--rule2); color: var(--ink); background: transparent; cursor: pointer; transition: transform .15s ease, border-color .15s ease; }
@@ -301,7 +303,7 @@
 </style>
 
 <nav class="top"><div class="wrap">
-  <a class="mark" href="#top"><i></i>antiloki</a>
+  <a class="mark" href="#top" aria-label="antiloki">antiloki<em>.</em></a>
   <span class="sp"></span>
   <a class="q" href="#desk">Threads</a>
   <a class="q" href="#xray">X-ray</a>
