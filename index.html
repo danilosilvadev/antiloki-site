@@ -41,6 +41,16 @@
   .hero p.why { max-width: 66ch; text-align: left; font-size: clamp(15px, 1.3vw, 17.5px); line-height: 1.55; } .hero p.why b { color: var(--ink); } .hero p.why span { display: block; } .hero p.why span + span { margin-top: 9px; }
   .hero .cta { display: flex; justify-content: center; gap: 12px; margin-top: 30px; flex-wrap: wrap; align-items: center; }
   .hero .fine { display: block; margin-top: 12px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+  /* the proof: three rows, raw Opus against antiloki, the numbers the benches produced */
+  .hero .proof { margin: 26px auto 0; max-width: 760px; text-align: left; border: 1px solid var(--line, rgba(255,255,255,.12)); border-radius: 12px; padding: 10px 14px 9px; font-size: clamp(12.5px, 1.05vw, 14px); }
+  .hero .proof-h, .hero .proof-r { display: grid; grid-template-columns: 1.25fr 1fr 1fr 1.15fr; gap: 10px; align-items: baseline; padding: 6px 0; }
+  .hero .proof-h { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line, rgba(255,255,255,.12)); }
+  .hero .proof-r + .proof-r { border-top: 1px dashed var(--line, rgba(255,255,255,.1)); }
+  .hero .proof-r span:first-child { color: var(--dim); }
+  .hero .proof-r b { color: var(--ink); font-weight: 700; }
+  .hero .proof-r em { font-style: normal; color: var(--ember); font-weight: 700; }
+  .hero .proof-f { display: block; margin-top: 7px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+  @media (max-width: 640px) { .hero .proof-h { display: none; } .hero .proof-r { grid-template-columns: 1fr 1fr; } .hero .proof-r span:first-child { grid-column: 1 / -1; } }
   /* THE REVEAL (operator 2026-09-21: "the headline appears after an animation, the prints forming themselves
      in 3D out of a dark fog, like an Apple commercial"): once per visit. A fog of slow blurred blobs and grain
      covers the viewport; the two prints rise out of the deep — far, blurred, dim, turned away — and settle
@@ -60,11 +70,11 @@
   html.headline .fog, html.reduced .fog { opacity: 0; }
   html.gone .fog { display: none; }
   /* the hero text waits for the prints */
-  .hero .eyebrow, .hero p, .hero .cta, .hero .fine { opacity: 0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease; }
+  .hero .eyebrow, .hero p, .hero .proof, .hero .cta, .hero .fine { opacity: 0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease; }
   .hero h1 .w { display: inline-block; opacity: 0; transform: translateY(.45em); filter: blur(10px); transition: opacity .45s ease, transform .6s cubic-bezier(.2,.8,.2,1), filter .5s ease; }
   html.headline .hero h1 .w { opacity: 1; transform: none; filter: none; }
-  html.settled .hero .eyebrow, html.settled .hero p, html.settled .hero .cta, html.settled .hero .fine { opacity: 1; transform: none; }
-  html.reduced .hero .eyebrow, html.reduced .hero p, html.reduced .hero .cta, html.reduced .hero .fine, html.reduced .hero h1 .w { opacity: 1; transform: none; filter: none; transition: none; }
+  html.settled .hero .eyebrow, html.settled .hero p, html.settled .hero .proof, html.settled .hero .cta, html.settled .hero .fine { opacity: 1; transform: none; }
+  html.reduced .hero .eyebrow, html.reduced .hero p, html.reduced .hero .proof, html.reduced .hero .cta, html.reduced .hero .fine, html.reduced .hero h1 .w { opacity: 1; transform: none; filter: none; transition: none; }
   /* the stage: two prints fanned in 3D under the headline; they rise out of the deep on the first visit */
   .stage { position: relative; z-index: 56; height: clamp(220px, 34vw, 430px); margin: 56px auto 0; perspective: 1500px; perspective-origin: 50% 40%; transition: transform 1.5s cubic-bezier(.2,.8,.2,1); }
   /* while the prints form they sit where the headline will be — mid-screen; they glide down as the words rise */
@@ -318,7 +328,16 @@
   <div class="wrap hero">
     <span class="eyebrow">antiloki · a desktop app · macOS · Windows · Linux</span>
     <h1 style="margin-top:14px">The desktop workspace for Claude Code, Codex and OpenCode. <em>Faster, cheaper, and auditable.</em></h1>
-    <p class="why"><span><b>Faster</b> because each agent runs up to 8 sub-agents in parallel on its task — and you run as many agents as you like.</span><span><b>Cheaper</b> because every ask is routed by complexity to the cheapest model that can do it.</span><span><b>Auditable</b> because every action an agent takes on your machine and your repository is on the record — and every verdict comes from deterministic analysis, not from an AI that can hallucinate.</span></p>
+    <p class="why"><span><b>Faster</b> because Heimdall, the router, projects every ask and gives it the shape that wins it — one cheap worker under a verifier, or up to 8 sub-agents in parallel when the projection clears fifteen minutes.</span><span><b>Cheaper</b> because every job — planning, writing, checking — goes to the cheapest model measured to do it, across providers: the same result for a fifth of the bill.</span><span><b>Auditable</b> because every action an agent takes on your machine and your repository is on the record — and every verdict comes from deterministic analysis, not from an AI that can hallucinate.</span></p>
+    <!-- THE PROOF (2026-09-22): raw Claude Opus against antiloki on the same task, same fresh clone, the same evening; quality by the same
+         behavioural audit / test suite on both sides. bench/ladder/ONE-WORKER-RESULTS.md and bench/ladder/RESULTS.md in antiloki-core-rust. -->
+    <div class="proof" aria-label="measured against raw Claude Opus">
+      <div class="proof-h"><span>measured, same task, same evening</span><span>raw Claude Opus</span><span>antiloki</span><span></span></div>
+      <div class="proof-r"><span>8 modules, must build</span><span>303 s · $1.28 · 37/37</span><span><b>249 s · $0.25 · 37/37</b></span><span><em>5× cheaper</em>, 18% faster, same score</span></div>
+      <div class="proof-r"><span>11-part feature, 70 tests</span><span>926 s · $6.47</span><span><b>677 s · $1.02</b></span><span><em>6× cheaper</em>, 1.4× faster</span></div>
+      <div class="proof-r"><span>one function, one file</span><span>24 s · $0.18</span><span><b>22 s · $0.02–0.09</b></span><span><em>2–9× cheaper</em>, same speed</span></div>
+      <span class="proof-f">dollars are each engine's own accounting · antiloki's rows include the planner, the worker and the verifier · full tables in the repo</span>
+    </div>
     <div class="cta"><a class="btn ember" href="#download">Download — free for 7 days</a></div>
     <span class="fine">one binary · no account · your current subscription is the engine</span>
     <div class="stage" aria-hidden="true">
