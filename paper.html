@@ -84,12 +84,12 @@
     <span><b>System</b> antiloki-serve (Rust) · antiloki desktop (Tauri)</span>
     <span><b>Engines</b> Claude Code · Codex · OpenCode (DeepSeek, Kimi, Qwen)</span>
     <span><b>Corpus</b> ministore (TypeScript), the S · L · XXL asks</span>
-    <span><b>Status</b> measured on 2026-09-22/23, one box, same evening per comparison</span>
+    <span><b>Status</b> measured 2026-09-22/23 · one box · 60+ arms, same evening per comparison</span>
   </div>
 
   <div class="abstract">
     <span class="eyebrow">Abstract</span>
-    <p>A coding agent's behaviour is decided by three things: which model answers each kind of question, what that model is shown about the codebase, and how the whole is judged. antiloki fixes all three without training a weight. A <em>merge</em> assigns every job of a coding run — planning, editing, verifying, judging, reading, reporting — to one side of a brain × hands pair; a deterministic <em>adapter</em> (X-ray) conditions each call on facts computed from the repository rather than on what the model remembers; and a <em>benchmark</em> re-weights every combination from measured outcomes, so the assignment learns. The result behaves like a new model with its own score, price and speed. On an eight-module task the best merge (Claude Sonnet planning, DeepSeek V4 Flash editing, Sonnet verifying) delivered 36 of 37 behavioural checks in 130 s for $0.25 against raw Claude Opus at 37/37, 303 s, $1.28 — 5× cheaper, 57% faster; with the QA gate on, three merges reached 37/37. On a one-file task the merge is slower than a raw session and the router sends such asks raw. We give every rule, formula, price and number the system uses, the results so far, and where the analogy to a trained merge breaks.</p>
+    <p>A coding agent's behaviour is decided by three things: which model answers each kind of question, what that model is shown about the codebase, and how the whole is judged. antiloki fixes all three without training a weight. A <em>merge</em> assigns every job of a coding run — planning, editing, verifying, judging, reading, reporting — to one side of a brain × hands pair; a deterministic <em>adapter</em> (X-ray) conditions each call on facts computed from the repository rather than on what the model remembers; and a <em>benchmark</em> re-weights every combination from measured outcomes, so the assignment learns. The result behaves like a new model, with its own score, price and speed. The central result is a controlled one: on an eight-module task a single Qwen session passes 35 of 37 behavioural checks and misses the same two every time, while <em>the same model</em> — planning for itself and verifying its own diff — passes all 37, three runs out of three. What a merge sells is not a better model but a checked one, at the cheap model's price. Around that: a Codex brain over four different cheap workers scored 37/37 at 0.6–1.5 cents of worker cost against ~$0.12 for the same task in one raw Codex session; on the isolated QA gate the cheap models out-judged the expensive ones (Haiku, Qwen, two Codex models 4/4; Claude Sonnet 2/4), and more reasoning effort made Codex worse, not better. We give every rule, formula, price and number the system uses, the results, and where the analogy to a trained merge breaks.</p>
   </div>
 
   <h2><span class="n">1</span>The claim, stated carefully</h2>
@@ -215,20 +215,24 @@ weight   = 0.5 + (raw − 0.5) · n / (n + 1)                  (n = 1 → halfwa
   <h2><span class="n">8</span>Results</h2>
   <p>All runs on one machine, a fresh clone of ministore per arm, the raw comparison re-run the same evening as its merge. Dollars are the deterministic cost of every call the serve made for that arm (planner, worker, verifier, gate); a raw row is the CLI's own total. Audit is the same 37-check behavioural script for every L row.</p>
   <div class="tbl"><table>
-    <caption>Table 4 · L — eight independent modules, npm run build must pass (2026-09-22/23)</caption>
-    <thead><tr><th>arm</th><th class="num">wall s</th><th class="num">$</th><th class="num">audit /37</th><th>note</th></tr></thead>
+    <caption>Table 4 · L — eight independent modules, npm run build must pass, 37 behavioural checks (2026-09-22/23)</caption>
+    <thead><tr><th>arm</th><th class="num">wall s</th><th class="num">worker $</th><th class="num">audit /37</th><th>note</th></tr></thead>
     <tbody>
-      <tr><td>raw Claude Opus, one session</td><td class="num">303</td><td class="num">1.28</td><td class="num">37</td><td>26 turns; the same goal took 112 s / $0.61 the day before — same-day is the fair row</td></tr>
-      <tr class="lead"><td>Claude Seek — Sonnet plans · Flash edits · Sonnet verifies (QA off)</td><td class="num">130</td><td class="num">0.25</td><td class="num">36</td><td class="win">5× cheaper · 57% faster</td></tr>
-      <tr><td>Claude Seek, QA on</td><td class="num">187</td><td class="num">0.30</td><td class="num">37</td><td>gate: unproven (placeholder claim)</td></tr>
-      <tr><td>DeepSeek × DeepSeek — Pro plans · Flash edits (QA off)</td><td class="num">131</td><td class="num">0.27</td><td class="num">36</td><td class="win">no Claude at all · 4.8× cheaper</td></tr>
-      <tr><td>DeepSeek × DeepSeek, QA on</td><td class="num">455</td><td class="num">0.11</td><td class="num">36</td><td>one verifier send-back</td></tr>
-      <tr><td>Claude Qwen — Sonnet plans · Qwen edits, QA on</td><td class="num">302</td><td class="num">0.37</td><td class="num">37</td><td>QA off, the verifier's window rejected an 8-file diff it could not see → failed</td></tr>
-      <tr><td>Opus plans · Flash edits (QA off)</td><td class="num">249</td><td class="num">0.25</td><td class="num">37</td><td>24 tools, first pass; planner ≈ $0.20 of the bill</td></tr>
-      <tr><td>Sonnet plans · Flash edits, QA on</td><td class="num">179</td><td class="num">0.42</td><td class="num">36</td><td>the fastest of the first matrix</td></tr>
-      <tr><td>Kimi plans · Flash edits (QA off)</td><td class="num">163</td><td class="num">0.04</td><td class="num">37</td><td>Kimi as a brain works; as hands it hit gateway 404s</td></tr>
+      <tr><td>raw Claude Opus, one session</td><td class="num">303</td><td class="num">1.28</td><td class="num">37</td><td>26 turns; the baseline the merges are measured against</td></tr>
+      <tr><td>raw Codex gpt-5.6-terra @ low, one session</td><td class="num">93</td><td class="num">0.12</td><td class="num">36</td><td>the fastest single session measured; Codex's own accounting</td></tr>
+      <tr><td>raw Qwen 3.6 Plus, one session</td><td class="num">146</td><td class="num">0.038</td><td class="num">35</td><td>misses the same two checks every run (§8.2)</td></tr>
+      <tr class="lead"><td>Codex gpt-5.6-terra × DeepSeek Flash</td><td class="num">305</td><td class="num">0.012</td><td class="num">37</td><td class="win">a frontier brain over the cheapest hands</td></tr>
+      <tr><td>Codex gpt-5.6-sol × DeepSeek Flash</td><td class="num">273</td><td class="num">0.017</td><td class="num">37</td><td>sol ties terra on quality, costs more</td></tr>
+      <tr><td>Codex gpt-5.6-luna × DeepSeek Flash</td><td class="num">171</td><td class="num">0.010</td><td class="num">36</td><td>the weak one of the three — also 3/4 on the gate bench</td></tr>
+      <tr><td>Codex × Qwen 3.6 Plus</td><td class="num">253</td><td class="num">0.007</td><td class="num">37</td><td></td></tr>
+      <tr><td>Codex × GLM 5.3</td><td class="num">249</td><td class="num">0.006</td><td class="num">37</td><td></td></tr>
+      <tr><td>DeepSeek Pro × <em>Codex hands</em></td><td class="num">196</td><td class="num">0.010</td><td class="num">37</td><td>the inversion: Codex writes as well as it plans</td></tr>
+      <tr class="lead"><td>Qwen × Qwen — the same model, through the pipeline</td><td class="num">339</td><td class="num">0.015</td><td class="num">37</td><td class="win">3 of 3 runs; raw Qwen gets 35 (§8.2)</td></tr>
+      <tr><td>Claude Sonnet × DeepSeek Flash (“Claude Seek”)</td><td class="num">130</td><td class="num">0.25</td><td class="num">36</td><td>the first matrix; full-run cost, not worker-only</td></tr>
+      <tr><td>Kimi K2.7 × DeepSeek Flash</td><td class="num">163</td><td class="num">0.040</td><td class="num">37</td><td>Kimi as a brain works; as hands every arm failed</td></tr>
     </tbody>
   </table></div>
+  <p class="note">Worker $ is the deterministic cost of the calls the serve made for the fills; the raw rows are each CLI's own accounting for the whole session. Most merge rows are one sample — see §9.</p>
   <div class="tbl"><table>
     <caption>Table 5 · S — one function in one file, ×5 raw (2026-09-22/23)</caption>
     <thead><tr><th>model, raw</th><th class="num">right /5</th><th class="num">built /5</th><th class="num">median s</th><th class="num">mean $</th></tr></thead>
@@ -263,23 +267,61 @@ weight   = 0.5 + (raw − 0.5) · n / (n + 1)                  (n = 1 → halfwa
     </tbody>
   </table></div>
   <p class="note">Pro wins lookup (the three-point rule: one point behind Sonnet, 10× cheaper); Sonnet keeps synthesis (two points of twenty is outside the band). Haiku fabricates on synthesis and is the lookup fallback only.</p>
+  <div class="tbl"><table>
+    <caption>Table 4b · the controlled test — does the pipeline buy anything, or is it just a cheaper model? (2026-09-23)</caption>
+    <thead><tr><th>arm, L, three repeats</th><th class="num">run 1</th><th class="num">run 2</th><th class="num">run 3</th></tr></thead>
+    <tbody>
+      <tr><td>A · raw Qwen 3.6 Plus — one session, no planner, no verifier</td><td class="num">35/37</td><td class="num">35/37</td><td class="num">35/37</td></tr>
+      <tr class="lead"><td>B · Qwen × Qwen — <em>the same model</em>, planning and verifying itself</td><td class="num">37/37</td><td class="num">37/37</td><td class="num">37/37</td></tr>
+      <tr><td>C · Claude Sonnet × DeepSeek Flash</td><td class="num">37/37</td><td class="num">37/37</td><td class="num">37/37</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout"><p><b>The pipeline, not the model.</b> Raw Qwen misses the same two checks in every run; the identical model, briefed by a planner and checked by a verifier, gets all thirty-seven in every run. B ≈ C, and both beat A. What a merge sells is not a better model — it is a model that is planned for and checked, at the price of the cheap one.</p></div>
+  <div class="tbl"><table>
+    <caption>Table 4c · the job bench — the brain jobs, graded directly against known truth (2026-09-23)</caption>
+    <thead><tr><th>model</th><th class="num">verifier /5</th><th class="num">qa-gate /4</th><th class="num">gate s</th></tr></thead>
+    <tbody>
+      <tr><td>Claude Haiku</td><td class="num">5</td><td class="num">4</td><td class="num">38</td></tr>
+      <tr><td>Qwen 3.6 Plus</td><td class="num">5</td><td class="num">4</td><td class="num">74</td></tr>
+      <tr class="lead"><td>Codex gpt-5.6-sol</td><td class="num">5</td><td class="num">4</td><td class="num">21</td></tr>
+      <tr><td>Codex gpt-5.6-terra</td><td class="num">5</td><td class="num">4</td><td class="num">18</td></tr>
+      <tr><td>DeepSeek V4 Pro</td><td class="num">5</td><td class="num">3</td><td class="num">39</td></tr>
+      <tr><td>DeepSeek V4 Flash</td><td class="num">5</td><td class="num">3</td><td class="num">42</td></tr>
+      <tr><td>Codex gpt-5.6-luna</td><td class="num">5</td><td class="num">3</td><td class="num">24</td></tr>
+      <tr><td>Codex gpt-5.6-terra @ <em>high</em> effort</td><td class="num">5</td><td class="num">3</td><td class="num">23</td></tr>
+      <tr><td>Claude Sonnet</td><td class="num">5</td><td class="num" style="color:var(--bad)">2</td><td class="num">24</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">A whole-run bench can only score the jobs that write code; the verifier and the gate never touch a file, so their rows carried a time and a price and no quality at all. The job bench renders the product's own prompt from the serve's catalog and compares the verdict to a fixture whose truth is known. Two results: the verifier fixtures do not discriminate (every model caught every defect — that job needs harder cases), and on the gate the cheap models beat the expensive ones. Sonnet's two misses are both hedges — <code>null</code> on a claim plainly met, <code>false</code> on one that cannot be settled. Raising Codex's reasoning effort made it worse, not better.</p>
   <h3>8.1 What the numbers say</h3>
   <ul>
-    <li><b>On L the merge beats a raw Opus session on every axis at once.</b> Same audit within one check, a third to half the wall time, a fifth of the money. Three merges reach 37/37 with the QA gate on.</li>
-    <li><b>The planner's model does not move L quality; the verifier does.</b> Opus and Sonnet planners scored the same; every difference between arms came from a rejection the verifier made or did not make. That is why the planner is bound to DeepSeek Pro and the verifier to Sonnet.</li>
-    <li><b>The bill is the brain.</b> On the Opus-planner L arm: planner ≈ $0.20, worker ≈ $0.02, verifier ≈ $0.03. Moving the brain to a cheap model is where the 5× comes from; moving the hands is where the speed comes from.</li>
-    <li><b>Small asks go raw.</b> On S the merge loses time and wins little money; the classifier routes them to one session.</li>
-    <li><b>The worker's variance is the gateway's tail, not the model's.</b> The same one-line task took Flash 30 s and 393 s; the stall watchdog needs a floor near 240 s for single-file tasks.</li>
+    <li><b>The pipeline is the product, not the model.</b> Table 4b is the cleanest result we have: the same Qwen that
+      misses two of thirty-seven checks alone gets all thirty-seven when a planner briefs it and a verifier checks it,
+      three times out of three. A merge sells a checked model at the price of a cheap one.</li>
+    <li><b>Codex is a strong brain over cheap hands.</b> gpt-5.6-terra scored 37/37 over four different cheap workers
+      (DeepSeek Flash, DeepSeek Pro, Qwen, GLM) at 0.6–1.5 cents of worker cost, against ~$0.12 for the same task in
+      one raw Codex session. It writes as well as it plans: under a DeepSeek Pro brain, Codex as the hands also
+      scored 37/37.</li>
+    <li><b>The frontier models are not better at judging.</b> On the gate, Haiku, Qwen, terra and sol all score 4/4
+      while Sonnet scores 2/4, and Codex at <em>high</em> reasoning effort scores worse than at medium. The expensive
+      models hedge where the cheap ones commit. The gate is bound to Opus by default; on this evidence it should not be.</li>
+    <li><b>Small asks go raw.</b> On S the merge wins a little money and loses time; the classifier routes them to one
+      session, and the editor-s winner in our own table is a raw Qwen run.</li>
+    <li><b>The planner's model does not move quality; the verifier does.</b> Every difference between L arms came from
+      a rejection the verifier made or did not make.</li>
+    <li><b>The worker's variance is the gateway's tail.</b> The same one-file task took Flash 30 s and 393 s; a one-file
+      low task is now abandoned at four minutes.</li>
   </ul>
-
   <h2><span class="n">9</span>Limitations and threats to validity</h2>
   <ul>
     <li><b>n is small.</b> Most L rows are one run; S rows are five. The weight's shrink (§7.1) is the honest answer, not a fix. The matrix now running adds raw Sonnet, Pro, Qwen and Kimi on L and S, and six further pairs.</li>
     <li><b>One repository.</b> Every number is ministore, a small TypeScript app. The merge's advantage on a large, old codebase is the claim we most want to test and have not.</li>
     <li><b>Same-day variance is large.</b> Raw Opus did the L goal in 112 s one day and 303 s the next; every comparison here is same-evening, and the landing says so.</li>
     <li><b>Cost accounting differs by side.</b> A merged row prices every call from list prices; a raw Claude row uses the CLI's own total. Both are stated, neither is a subscription's marginal cost.</li>
-    <li><b>The QA gate on one-worker runs measures nothing yet.</b> The always-branch discards the planner's acceptance lines; until it keeps them the gate reports unproven and its rows carry only cost and time.</li>
-    <li><b>Screening has no row of its own</b> because it is not a call of its own; test-writer only fires in blueprint mode and report only on multi-task runs — their experiments are separate and in progress.</li>
+    <li><b>The QA gate on one-worker runs measured nothing until 2026-09-23.</b> The collapse discarded the planner's acceptance lines, so the gate judged a placeholder and answered <code>unproven</code> every time. It keeps them now; the gate rows from before that fix carry only cost and time.</li>
+    <li><b>Screening has no row of its own</b> because it is not a call of its own — the planner's call screens and plans together, so the planner's winner is its winner. Test-writer (blueprint mode) and report (a multi-task join) each have their own rows now.</li>
+    <li><b>The verifier fixtures do not discriminate.</b> All nine models graded scored 5/5. Until harder cases exist, the verifier winner is decided on cost and speed, which is how a cheap model holds that job.</li>
+    <li><b>Codex's cost is its own accounting.</b> <code>codex exec</code> reports a single token total, split 50/50 between input and output at the gpt list price. The merge rows' worker cost is the serve's deterministic figure; the two are not the same kind of number.</li>
     <li><b>The verifier's window.</b> An eight-file diff can exceed what the verifier is shown; one Claude Qwen run failed on "no diff evidence" for files it never saw. Per-file evidence is queued.</li>
     <li><b>The ceiling is the parts'.</b> Nothing here teaches a model a skill it lacks; a repository whose conventions no frontier model can follow when shown them would defeat the adapter. We have not met one.</li>
   </ul>

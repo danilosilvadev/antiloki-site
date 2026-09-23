@@ -381,12 +381,13 @@
   <section class="method wrap" id="method" aria-label="How a merge is made">
     <div class="head"><span class="eyebrow">The method</span></div>
     <h2>Compiled, not trained.</h2>
+    <p class="lede"><b>The same model, checked.</b> One Qwen session passes 35 of 37 behavioural checks on an eight-module task and misses the same two every time. The <em>identical</em> model — planning for itself, verifying its own diff — passes all 37, three runs out of three. That is what a merge sells: not a better model, a checked one, at the cheap model's price.</p>
     <p class="lede">No weights change. A merge binds the model measured best for each job — <b>planning, editing, verifying, judging, reading</b> — and X-ray supplies what a fine-tune would have to learn: the laws, the graph, the reviews and the blast radius of <b>your</b> codebase, recomputed every commit. The result behaves like a new model, with its own score, price and speed.</p>
     <div class="steps3">
       <div>
         <i>01 · measure</i>
         <h3>Every run is scored.</h3>
-        <p>The behavioural audit of the result, a deterministic cost (model × tokens, cache at a tenth), a real timer. One row per job × size × combination — ours shipped with the app, yours added as you work.</p>
+        <p>The behavioural audit of the result, a deterministic cost (model × tokens, cache at a tenth), a real timer. One row per job × size × combination — ours shipped with the app, yours added as you work. Sixty arms so far, on one box, same evening per comparison.</p>
       </div>
       <div>
         <i>02 · rank</i>
@@ -401,10 +402,10 @@
     </div>
     <div class="board" aria-label="first place per job, from the benchmark">
       <div class="bh"><span>first place</span><span>composition</span><span>audit</span><span>time</span><span>cost / run</span></div>
-      <div class="br"><b><span class="stamp">EL</span>ClaudeSeek Builder</b><span class="who">Claude Sonnet plans · DeepSeek Flash writes</span><span class="n">36/37</span><span class="n">130 s</span><span class="n">$0.25</span></div>
-      <div class="br"><b><span class="stamp">PL</span>KimiSeek Architect</b><span class="who">Kimi K2.7 plans · DeepSeek Flash writes</span><span class="n">37/37</span><span class="n">163 s</span><span class="n">$0.04</span></div>
-      <div class="br"><b><span class="stamp">ES</span>Qwen Tinker</b><span class="who">no merge — one Qwen session, five for five</span><span class="n">5/5</span><span class="n">34 s</span><span class="n">$0.011</span></div>
-      <div class="br"><b><span class="stamp">VF</span>DeepSeek Inspector</b><span class="who">DeepSeek Pro verifies every diff against its acceptance</span><span class="n">—</span><span class="n">32 s</span><span class="n">$0.012</span></div>
+      <div class="br"><b><span class="stamp">EL</span>CodexSeek Builder</b><span class="who">Codex gpt-5.6-terra plans · OpenCode DeepSeek v4 Flash writes</span><span class="n">37/37</span><span class="n">305 s</span><span class="n">$0.012</span></div>
+      <div class="br"><b><span class="stamp">EL</span>CodexQwen Builder</b><span class="who">Codex gpt-5.6-terra plans · OpenCode Qwen 3.6 Plus writes</span><span class="n">37/37</span><span class="n">253 s</span><span class="n">$0.007</span></div>
+      <div class="br"><b><span class="stamp">ES</span>Qwen Tinker</b><span class="who">no merge — one OpenCode Qwen 3.6 Plus session, five for five</span><span class="n">5/5</span><span class="n">34 s</span><span class="n">$0.011</span></div>
+      <div class="br"><b><span class="stamp">QA</span>Codex Judge</b><span class="who">Codex gpt-5.6-sol checks each claim against the diff</span><span class="n">4/4</span><span class="n">21 s</span><span class="n">$0.001</span></div>
       <div class="foot"><span>The third row is the point: on a one-file change the benchmark says <b style="color:var(--ink)">don't merge</b> — and the router obeys it.</span><a href="/paper.html">Read the paper →</a></div>
     </div>
   </section>
