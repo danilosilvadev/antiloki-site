@@ -1,8 +1,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>antiloki — merge models into specialized coding agents: up to 6× cheaper and 41% faster, measured</title>
+<title>antiloki — merge models into specialized coding agents: up to 6× cheaper and 57% faster, measured</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23211e1b'/%3E%3Ctext x='10' y='47' font-family='Geist,Helvetica,Arial,sans-serif' font-weight='700' font-size='40' fill='%23efe9e2' letter-spacing='-2'%3Ea%3Ctspan fill='%23c97c5c'%3E.%3C/tspan%3E%3C/text%3E%3C/svg%3E">
-<meta name="description" content="Claude Seek, Kimi Codex… antiloki merges models into specialized coding agents: a router gives each job — planning, writing, verifying, judging — to the model measured best for it. Up to 6× cheaper and 41% faster than raw Claude Opus on the same tasks, at the same quality, measured. A desktop app for Claude Code, Codex and DeepSeek via OpenCode; your subscriptions are the engines. Free for 7 days.">
+<meta name="description" content="Claude Seek, Kimi Codex… antiloki merges models into specialized coding agents: a router gives each job — planning, writing, verifying, judging — to the model measured best for it. Up to 6× cheaper and 57% faster than raw Claude Opus on the same tasks, at the same quality, measured. A desktop app for Claude Code, Codex and DeepSeek via OpenCode; your subscriptions are the engines. Free for 7 days.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Geist:wght@700&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
@@ -327,15 +327,16 @@
   <!-- HERO — what it is, and the one reason -->
   <div class="wrap hero">
     <span class="eyebrow">A desktop app for merging different models into coding agents.<br>macOS · Windows · Linux</span>
-    <h1 style="margin-top:14px">Claude Seek, Kimi Codex… <em>Merge models into specialized coding agents — up to 6× cheaper and 41% faster, measured.</em></h1>
+    <h1 style="margin-top:14px">Claude Seek, Kimi Codex… <em>Merge models into specialized coding agents — up to 6× cheaper and 57% faster, measured.</em></h1>
     <!-- THE PROOF (2026-09-22): raw Claude Opus against antiloki on the same task, same fresh clone, the same evening; quality by the same
          behavioural audit / test suite on both sides. bench/ladder/ONE-WORKER-RESULTS.md and bench/ladder/RESULTS.md in antiloki-core-rust. -->
     <div class="proof" aria-label="measured against raw Claude Opus">
-      <div class="proof-h"><span>measured, same task, same evening</span><span>raw Claude Opus</span><span>antiloki</span><span></span></div>
-      <div class="proof-r"><span>8 modules, must build</span><span>303 s · $1.28 · 37/37</span><span><b>249 s · $0.25 · 37/37</b></span><span><em>5× cheaper</em>, 18% faster, same score</span></div>
+      <div class="proof-h"><span>measured, same task, same box</span><span>raw Claude Opus</span><span>antiloki · merged</span><span></span></div>
+      <div class="proof-r"><span>8 modules, must build</span><span>303 s · $1.28 · 37/37</span><span><b>130 s · $0.25 · 36/37</b> Claude Seek</span><span><em>5× cheaper</em>, 57% faster</span></div>
+      <div class="proof-r"><span>same 8 modules, no Claude at all</span><span>303 s · $1.28 · 37/37</span><span><b>131 s · $0.27 · 36/37</b> DeepSeek × DeepSeek</span><span><em>4.8× cheaper</em>, 57% faster</span></div>
       <div class="proof-r"><span>11-part feature, 70 tests</span><span>926 s · $6.47</span><span><b>677 s · $1.02</b></span><span><em>6× cheaper</em>, 1.4× faster</span></div>
-      <div class="proof-r"><span>one function, one file</span><span>24 s · $0.18</span><span><b>22 s · $0.02–0.09</b></span><span><em>2–9× cheaper</em>, same speed</span></div>
-      <span class="proof-f">dollars are each engine's own accounting · antiloki's rows include the planner, the worker and the verifier · full tables in the repo</span>
+      <div class="proof-r"><span>one function, one file</span><span>24 s · $0.18 · 5/5</span><span><b>42 s · $0.023 · 5/5</b> Claude Qwen</span><span><em>8× cheaper</em>, slower — small asks go raw</span></div>
+      <span class="proof-f">dollars are deterministic (model × tokens) · a merged row is the planner, the worker and the verifier together · the score is the same 37-check audit · full tables in the repo</span>
     </div>
     <div class="cta"><a class="btn ember" href="#download">Download — free for 7 days</a></div>
     <span class="fine">one binary · no account · your current subscription is the engine</span>
