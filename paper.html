@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Heimdall, the merge and the X-ray adapter: how antiloki builds a specialised coding model out of measured parts — every rule, formula and number.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2213%22 font-size=%2213%22>⚡</text></svg>">
+<title>Compiled, Not Trained — antiloki</title>
+</head><body>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root {
+    --ground: #f6f7f9; --paper: #ffffff; --ink: #1c2129; --muted: #5c6673; --faint: #9aa3ae; --line: #d9dee5; --tint: #eef1f5;
+    --ember: #c9552e; --ember-soft: #f3ded3; --ok: #2f7d57; --bad: #b2402e;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif; --display: "Newsreader", "Source Serif 4", Georgia, serif; --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --ground: #0f1215; --paper: #14181d; --ink: #e6e9ed; --muted: #a2abb6; --faint: #6b7480; --line: #2a3138; --tint: #1a1f25;
+    --ember: #e07a52; --ember-soft: #3a2519; --ok: #6fbf95; --bad: #e0705a;
+  } }
+  :root[data-theme="dark"] {
+    --ground: #0f1215; --paper: #14181d; --ink: #e6e9ed; --muted: #a2abb6; --faint: #6b7480; --line: #2a3138; --tint: #1a1f25;
+    --ember: #e07a52; --ember-soft: #3a2519; --ok: #6fbf95; --bad: #e0705a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--serif); font-size: 17px; line-height: 1.6; font-variant-numeric: tabular-nums; }
+  a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
+  .sheet { max-width: 1040px; margin: 0 auto; padding: 48px 24px 96px; }
+  .paper { background: var(--paper); border: 1px solid var(--line); padding: 64px 72px 80px; }
+  @media (max-width: 720px) { .paper { padding: 36px 20px 56px; } .sheet { padding: 16px 8px 48px; } }
+  .eyebrow { font-family: var(--mono); font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  h1 { font-family: var(--display); font-weight: 500; font-size: clamp(34px, 4.4vw, 50px); line-height: 1.08; margin: 10px 0 8px; letter-spacing: -.01em; text-wrap: balance; max-width: 22ch; }
+  .sub { font-family: var(--display); font-size: 21px; color: var(--muted); margin: 0 0 22px; max-width: 40ch; text-wrap: balance; line-height: 1.3; }
+  .byline { display: flex; flex-wrap: wrap; gap: 18px 28px; font-family: var(--mono); font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 12px 0; margin: 0 0 40px; }
+  .byline b { color: var(--ink); font-weight: 600; }
+  .abstract { border-left: 3px solid var(--ember); padding: 4px 0 4px 22px; margin: 0 0 40px; max-width: 68ch; }
+  .abstract p { margin: 0; font-size: 16.5px; }
+  .abstract .eyebrow { display: block; margin-bottom: 8px; color: var(--ember); }
+  h2 { font-family: var(--display); font-weight: 500; font-size: 28px; line-height: 1.15; margin: 56px 0 14px; letter-spacing: -.005em; text-wrap: balance; }
+  h2 .n { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--ember); display: block; margin-bottom: 6px; font-weight: 600; }
+  h3 { font-family: var(--display); font-weight: 600; font-size: 19px; margin: 30px 0 8px; }
+  p, li { max-width: 68ch; }
+  p { margin: 0 0 16px; }
+  ul, ol { padding-left: 22px; margin: 0 0 16px; }
+  li { margin-bottom: 6px; }
+  code, .k { font-family: var(--mono); font-size: 0.86em; background: var(--tint); padding: 1px 5px; border-radius: 3px; color: var(--ink); }
+  pre { font-family: var(--mono); font-size: 13px; line-height: 1.55; background: var(--tint); border: 1px solid var(--line); padding: 14px 16px; overflow-x: auto; margin: 0 0 18px; max-width: 100%; }
+  .formula { font-family: var(--mono); font-size: 14px; background: var(--tint); border: 1px solid var(--line); padding: 14px 18px; margin: 12px 0 18px; overflow-x: auto; white-space: pre; line-height: 1.7; }
+  .tbl { overflow-x: auto; margin: 14px 0 22px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  caption { text-align: left; font-family: var(--mono); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 0 0 8px; caption-side: top; }
+  th { text-align: left; font-family: var(--mono); font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--ink); padding: 6px 10px 8px 0; white-space: nowrap; }
+  td { padding: 7px 10px 7px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.num, th.num { text-align: right; padding-right: 14px; }
+  td.mono { font-family: var(--mono); font-size: 12.5px; }
+  tr.lead td { font-weight: 600; }
+  .win { color: var(--ok); font-weight: 600; }
+  .lose { color: var(--bad); }
+  .note { font-size: 14px; color: var(--muted); margin: -10px 0 18px; max-width: 68ch; }
+  .defs { display: grid; grid-template-columns: max-content 1fr; gap: 8px 18px; margin: 0 0 20px; max-width: 68ch; font-size: 15.5px; }
+  .defs dt { font-family: var(--mono); font-size: 12.5px; color: var(--ember); padding-top: 3px; white-space: nowrap; }
+  .defs dd { margin: 0; }
+  .fig { border: 1px solid var(--line); background: var(--tint); padding: 18px 20px; margin: 14px 0 22px; font-family: var(--mono); font-size: 12.5px; line-height: 1.7; overflow-x: auto; white-space: pre; color: var(--ink); }
+  .fig b { color: var(--ember); font-weight: 600; }
+  .flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 16px 0 26px; }
+  .flow > div { border: 1px solid var(--line); padding: 14px 16px; background: var(--paper); }
+  .flow h4 { font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ember); margin: 0 0 6px; }
+  .flow p { font-size: 14.5px; margin: 0; }
+  @media (max-width: 720px) { .flow { grid-template-columns: 1fr; } }
+  .refs { font-size: 14px; }
+  .refs li { margin-bottom: 8px; }
+  .refs .id { font-family: var(--mono); color: var(--ember); margin-right: 6px; }
+  .hr { border: 0; border-top: 1px solid var(--line); margin: 48px 0; }
+  .callout { background: var(--ember-soft); border-left: 3px solid var(--ember); padding: 12px 18px; margin: 18px 0 22px; max-width: 68ch; font-size: 15.5px; }
+  .callout p { margin: 0; }
+  @media (prefers-reduced-motion: no-preference) { .paper { animation: rise .5s ease both; } @keyframes rise { from { transform: translateY(6px); } to { transform: none; } } }
+</style>
+
+<div class="sheet"><p style="max-width:1040px;margin:0 auto 18px;font-family:var(--mono);font-size:12px"><a href="/" style="color:var(--muted);text-decoration:none">← antiloki.com</a></p><div class="paper">
+  <span class="eyebrow">antiloki · technical report · 2026-09-23</span>
+  <h1>Compiled, Not Trained</h1>
+  <p class="sub">Heimdall, the merge and the X-ray adapter: how antiloki builds a specialised coding model out of measured parts.</p>
+  <div class="byline">
+    <span><b>System</b> antiloki-serve (Rust) · antiloki desktop (Tauri)</span>
+    <span><b>Engines</b> Claude Code · Codex · OpenCode (DeepSeek, Kimi, Qwen)</span>
+    <span><b>Corpus</b> ministore (TypeScript), the S · L · XXL asks</span>
+    <span><b>Status</b> measured on 2026-09-22/23, one box, same evening per comparison</span>
+  </div>
+
+  <div class="abstract">
+    <span class="eyebrow">Abstract</span>
+    <p>A coding agent's behaviour is decided by three things: which model answers each kind of question, what that model is shown about the codebase, and how the whole is judged. antiloki fixes all three without training a weight. A <em>merge</em> assigns every job of a coding run — planning, editing, verifying, judging, reading, reporting — to one side of a brain × hands pair; a deterministic <em>adapter</em> (X-ray) conditions each call on facts computed from the repository rather than on what the model remembers; and a <em>benchmark</em> re-weights every combination from measured outcomes, so the assignment learns. The result behaves like a new model with its own score, price and speed. On an eight-module task the best merge (Claude Sonnet planning, DeepSeek V4 Flash editing, Sonnet verifying) delivered 36 of 37 behavioural checks in 130 s for $0.25 against raw Claude Opus at 37/37, 303 s, $1.28 — 5× cheaper, 57% faster; with the QA gate on, three merges reached 37/37. On a one-file task the merge is slower than a raw session and the router sends such asks raw. We give every rule, formula, price and number the system uses, the results so far, and where the analogy to a trained merge breaks.</p>
+  </div>
+
+  <h2><span class="n">1</span>The claim, stated carefully</h2>
+  <p>"Model merging" in machine learning means arithmetic on the weights of checkpoints that share a base (task vectors, TIES, DARE; mergekit is the tool). antiloki does none of that: the models are frozen, hosted by their vendors, reached through the vendors' own CLIs on the operator's subscription. What antiloki merges is <em>behaviour</em>: the answer to "which model does which job, shown what, judged how" — and that answer is learned from outcomes.</p>
+  <p>The analogy we defend is narrower and, we think, exact in practice. A LoRA adapter specialises a frozen model for a task by adding a small learned component in front of it. X-ray is a small deterministic component in front of every call that supplies what a coding fine-tune would otherwise have to learn — the structure, laws, risks and history of <em>this</em> repository — and it is recomputed at each commit instead of going stale. The merge table plays the role of the training loop: an outcome-weighted selection over roles, updated by every benchmark row and every audited use. The difference from a trained merge is the ceiling: no role can exceed what its base model can do when shown the right evidence. For code, where the missing knowledge is almost always the codebase and not the craft, that ceiling has not been the binding constraint in any measurement below.</p>
+  <div class="flow">
+    <div><h4>the merge</h4><p>brain × hands. The brain plans, verifies, judges, reads and screens; the hands edit, write tests and report. Each side is one engine and, for OpenCode, one model.</p></div>
+    <div><h4>the adapter</h4><p>X-ray: deterministic code intelligence — reviews scored axis by axis, the laws, the graph, blast radius, coverage gaps — packed into every call's context.</p></div>
+    <div><h4>the training loop</h4><p>the benchmark: every run and every audited call becomes a row per job × size × planner × worker × QA, re-weighted by quality, cost and time.</p></div>
+  </div>
+
+  <h2><span class="n">2</span>Related work</h2>
+  <p>Query routing between a strong and a weak model is well studied. RouteLLM (LMSYS, 2024) trains routers on Chatbot Arena preferences and reports cost reductions of over 85% on MT Bench at 95% of GPT-4's quality [1]. Commercial routers — Martian [2], Not Diamond [3], and the OpenRouter aggregator now processing 25 trillion tokens a week [4] — sell the same lever per request. Heimdall differs in what it routes over: not a request, but a <em>job inside a run</em>, with the job's own acceptance and its own measured winner.</p>
+  <p>The brain × hands split is aider's architect/editor mode [5]: a reasoning model describes the change, a cheaper model writes the edit. aider reported a new state of the art on its polyglot benchmark with DeepSeek R1 as architect and Claude Sonnet as editor at 14× less cost than the previous o1 result [6]. Cline and Roo Code let users bind different models to Plan and Act modes by hand [7]. antiloki generalises the split from two roles to ten jobs and makes the binding measured rather than chosen.</p>
+  <p>That a composition of models can behave as a new, better model was shown by Mixture-of-Agents (Together, 2024): layered open models reached 65.1% on AlpacaEval 2.0 against GPT-4o's 57.5% [8]. The "compound AI systems" position from Berkeley [9] argues the unit of capability is now the system. We take both as the frame: the merged agent is the model; its card is its benchmark row.</p>
+
+  <h2><span class="n">3</span>The jobs</h2>
+  <p>Every call antiloki makes on a coding run belongs to one of ten jobs. A job has a side (brain or hands), a prompt template, and — the point of the system — its own winner and fallback per engine and globally.</p>
+  <div class="tbl"><table>
+    <caption>Table 1 · the ten jobs and their sides</caption>
+    <thead><tr><th>job</th><th>side</th><th>what the call does</th><th>fires when</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">planner</td><td>brain</td><td>screens the ask and writes the plan: tasks that own disjoint files, each with acceptance lines</td><td>every goal run (one call screens <em>and</em> plans)</td></tr>
+      <tr><td class="mono">screening</td><td>brain</td><td>the blocking/assumable questions before a plan</td><td>inside the planner's call — no call of its own</td></tr>
+      <tr><td class="mono">editor-s</td><td>hands</td><td>a change to one file, an ask under 400 characters</td><td>a task that owns one file</td></tr>
+      <tr><td class="mono">editor-l</td><td>hands</td><td>a change across files or a long ask</td><td>every other task</td></tr>
+      <tr><td class="mono">verifier</td><td>brain</td><td>checks a task's diff against its acceptance; may send it back once</td><td>after every task</td></tr>
+      <tr><td class="mono">test-writer</td><td>hands</td><td>writes the tests a contract's acceptance lines imply</td><td>blueprint mode</td></tr>
+      <tr><td class="mono">qa-gate</td><td>brain</td><td>checks each acceptance claim against the final diff; the isolated judge</td><td>QA on</td></tr>
+      <tr><td class="mono">report</td><td>hands</td><td>consolidates the tasks' reports into one</td><td>a multi-task run (a single task's report stands)</td></tr>
+      <tr><td class="mono">lookup</td><td>brain</td><td>a factual question about the code: where, which, who</td><td>a chat turn the classifier reads as a lookup</td></tr>
+      <tr><td class="mono">synthesis</td><td>brain</td><td>why, how, compare, in which order — an answer that reasons</td><td>a chat turn the classifier reads as synthesis</td></tr>
+    </tbody>
+  </table></div>
+  <p>The classifier is deterministic (<code>cli::classify_ask</code>): a question mark or an interrogative first word makes a read; among reads, the words <em>why, how, explain, describe, compare, difference, trade-off, should, in which order</em> make it synthesis, else lookup. A write that names at most one file and is under 400 characters is editor-s, else editor-l. Sizes for the benchmark follow the plan, not the ask: two or more tasks is XXL; one task owning one file with a goal under 400 characters is S; else L.</p>
+
+  <h2><span class="n">4</span>Heimdall, the router</h2>
+  <h3>4.1 Resolving a binding</h3>
+  <p>For a job on a run, Heimdall produces a <em>binding</em> (engine, model) and a fallback, in this order:</p>
+  <ol>
+    <li><b>The merge.</b> If the run carries a pair, the job's side decides the engine and, when the side names one, the model. <code>job_binding_paired</code>.</li>
+    <li><b>The learned table.</b> For a solo run, if the merge table holds a row for this job and size with at least three samples, its best row outranks the static table. <code>job_binding_learned</code>, <code>merges::best_for(job, size, 3)</code>.</li>
+    <li><b>The static table.</b> The winner and fallback measured for the job (Table 2), taken globally if the winner's CLI is installed (<code>which</code>), else the run engine's own cell. <code>job_binding_any</code>.</li>
+    <li><b>The effort dial.</b> CHEAPER moves every role one rung down its engine's price ladder; SMARTER one rung up; BALANCED leaves the bound models. AUTO lets steps 1–3 stand; ON obeys the dial; OFF routes nothing.</li>
+    <li><b>The price rule.</b> A worker is never dearer than its planner: <code>worker_under_planner</code> walks the worker down its ladder until its list price is under the planner's, and logs why.</li>
+    <li><b>Failure.</b> A binding whose engine fails is retried once on the fallback, at the fill for workers and in <code>run_job</code> for every other job.</li>
+  </ol>
+  <div class="tbl"><table>
+    <caption>Table 2 · the global winner and fallback per job (the static table, 2026-09-23)</caption>
+    <thead><tr><th>job</th><th>winner</th><th>fallback</th><th>the measurement behind it</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">lookup</td><td class="mono">opencode · deepseek-v4-pro</td><td class="mono">claude-code · haiku</td><td>readers /50: Sonnet 42, Pro 41 at $0.13, Qwen 38, Haiku 36 (strong on lookup, fabricates on synthesis)</td></tr>
+      <tr><td class="mono">synthesis</td><td class="mono">claude-code · sonnet</td><td class="mono">opencode · qwen3.6-plus</td><td>synthesis /20: Sonnet 16, Qwen 14, Pro 13 — outside the band, Sonnet keeps it</td></tr>
+      <tr><td class="mono">screening</td><td class="mono">opencode · deepseek-v4-flash</td><td class="mono">claude-code · haiku</td><td>part of the planner call; cheap by design</td></tr>
+      <tr><td class="mono">planner</td><td class="mono">opencode · deepseek-v4-pro</td><td class="mono">claude-code · sonnet</td><td>the planner's model did not move L quality (Opus 37, 36 · Sonnet 35, 36); Pro is within the band and 5× cheaper</td></tr>
+      <tr><td class="mono">editor-s</td><td class="mono">opencode · qwen3.6-plus</td><td class="mono">claude-code · sonnet</td><td>S ×5 raw: Qwen 5/5 · 34 s · $0.011; Sonnet 5/5 · $0.093; Pro 4/5; Flash 2/5</td></tr>
+      <tr><td class="mono">editor-l</td><td class="mono">opencode · deepseek-v4-flash</td><td class="mono">opencode · deepseek-v4-pro</td><td>L one-worker: Flash under a planner 36–37/37 at $0.02 of worker cost</td></tr>
+      <tr><td class="mono">verifier</td><td class="mono">claude-code · sonnet</td><td class="mono">opencode · deepseek-v4-pro</td><td>both L rejections it made were real (missing JSDoc; a wrong money format)</td></tr>
+      <tr><td class="mono">test-writer</td><td class="mono">claude-code · sonnet</td><td class="mono">opencode · deepseek-v4-pro</td><td>blueprint runs — being measured</td></tr>
+      <tr><td class="mono">qa-gate</td><td class="mono">claude-code · opus</td><td class="mono">opencode · deepseek-v4-pro</td><td>the judge is the one place the dearest model is bound by default</td></tr>
+      <tr><td class="mono">report</td><td class="mono">opencode · deepseek-v4-flash</td><td class="mono">claude-code · haiku</td><td>a consolidation; cheap by design</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout"><p><b>The three-point rule.</b> The operator's rule for every table above: when two candidates are within three points of each other on the job's score, the cheaper one is the winner. Three points of fifty is 0.06 on the unit scale, and that number reappears as the band in §7.</p></div>
+
+  <h3>4.2 Prices and the deterministic cost</h3>
+  <p>Every cost antiloki reports is computed, never read from a vendor's estimate: input and output tokens times the model's list price per million, with cache reads at one tenth of input and cache writes at 1.25× (<code>cli::price_tokens</code>). The same table gives the ladder each engine's effort dial walks.</p>
+  <div class="tbl"><table>
+    <caption>Table 3 · list prices per million tokens (cli::prices_of)</caption>
+    <thead><tr><th>model</th><th class="num">input $</th><th class="num">output $</th><th>model</th><th class="num">input $</th><th class="num">output $</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">claude opus</td><td class="num">5.00</td><td class="num">25.00</td><td class="mono">deepseek v4 pro</td><td class="num">0.55</td><td class="num">2.19</td></tr>
+      <tr><td class="mono">claude sonnet</td><td class="num">3.00</td><td class="num">15.00</td><td class="mono">deepseek v4 flash</td><td class="num">0.14</td><td class="num">0.28</td></tr>
+      <tr><td class="mono">claude haiku</td><td class="num">1.00</td><td class="num">5.00</td><td class="mono">qwen 3.6 plus</td><td class="num">0.40</td><td class="num">1.20</td></tr>
+      <tr><td class="mono">codex / gpt</td><td class="num">1.25</td><td class="num">10.00</td><td class="mono">kimi k2.7</td><td class="num">0.60</td><td class="num">2.50</td></tr>
+      <tr><td class="mono">glm 5.x</td><td class="num">0.60</td><td class="num">2.20</td><td class="mono">minimax</td><td class="num">0.30</td><td class="num">1.20</td></tr>
+    </tbody>
+  </table></div>
+  <div class="formula">cost = tin·p_in + tout·p_out + cache_read·0.1·p_in + cache_write·1.25·p_in      (per 10⁶ tokens)</div>
+  <p>Each call is also timed on the serve's own clock and its tokens counted from the engine's stream; the triple (cost, ms, tokens) lands on the pane's timeline as an audit line and in the <code>ai_calls</code> table, and — through <code>merges::record_use</code> — as a benchmark row of size <code>call</code>.</p>
+
+  <h3>4.3 Modes and the merge in Studio</h3>
+  <p>A merged agent in Studio is a recipe with a pair: a name, a brain side, a hands side, a theme, a scope, its specialists and skills. The built-in pairs are Claude × DeepSeek (Sonnet plans, Flash edits — the "Claude Seek" of the landing), Claude × Kimi, Claude × Qwen, Claude × GLM, Codex × DeepSeek, and DeepSeek × DeepSeek (Pro plans, Flash edits). The base agents are Claude Code, Codex, and three OpenCode presets — DeepSeek V4 Pro, Kimi K2.7, Qwen 3.6 Plus — each a pane started on that model. Heimdall's chip on a pane shows the mode and the money the router saved on that pane, computed as API-equivalent dollars against one high-tier session doing the same tokens.</p>
+
+  <h2><span class="n">5</span>The pipeline a goal runs through</h2>
+  <p>A goal run is the unit the benchmark measures. Its stages, and the model that answers each, are what the merge assigns.</p>
+  <div class="fig"><b>ask</b> → planner (screens: blocking / assumable questions; one answer round) → <b>plan</b> (tasks · owns · needs · acceptance)
+      → ratify → <b>projection</b> (one worker, or a wave?) → fills, in waves → <b>verify</b> each task (once back at most)
+      → <b>join</b> (a report call on multi-task runs) → <b>QA gate</b> (claims vs the final diff; on request) → baseline · savings · the merge row</div>
+  <p><b>The projection.</b> Before a plan fans out, antiloki estimates whether a wave beats one worker. A single session doing <em>k</em> parts is projected at <code>SERIAL_FACTOR = 1.5</code> times the parallel per-part time; the wave's concurrency is bounded by the depth of the plan's dependency chain (<code>effective_concurrency = ceil(fills / chain)</code>, clamped to the operator's cap); and a plan whose single-session projection is under the parallel floor — 900 s by default, <code>ANTILOKI_PARALLEL_FLOOR_S</code>, 0 = off — collapses to one worker. With no history the medians assumed are 120 s per fill and 150 s of orchestration. This is why every S and L row below is a one-worker run: the wave only pays above fifteen minutes of projected serial work.</p>
+  <p><b>The verifier's one send-back.</b> A task the verifier rejects goes back to its worker once with the rejection as the brief; a second rejection fails the task. Both rejections observed on L were real defects a compile gate would not catch.</p>
+  <p><b>The QA gate.</b> An isolated judge checks each acceptance claim against the final diff and answers met / unmet / unproven; on a one-worker run the always-branch currently keeps a placeholder claim, so the gate reports <em>unproven</em> — a known gap (§9), not a verdict about the model.</p>
+
+  <h2><span class="n">6</span>X-ray, the adapter</h2>
+  <p>X-ray is antiloki's deterministic analysis of the repository. Nothing in it is generated by a model; all of it is computed from the files, the ASTs, the tests and the git history, and it is what every call is shown before it explores.</p>
+  <dl class="defs">
+    <dt>reviews</dt><dd>every file scored, and <em>why not 100</em> axis by axis — coupling, structure, cohesion, defects, tests, change — with the comment at the line that carries the move.</dd>
+    <dt>laws</dt><dd>the rules the codebase lives by, checked at the line (for TypeScript: no <code>any</code>, no <code>var</code>, no loose equality, no <code>debugger</code>, no <code>@ts-ignore</code>, no swallowed errors), with what compliance is worth.</dd>
+    <dt>graph</dt><dd>every file a node, imports the edges: hubs, orphans, cycles, the most central and the most risky, per folder.</dd>
+    <dt>blast radius</dt><dd>what a change to a file would touch, before it lands.</dd>
+    <dt>coverage gaps</dt><dd>what the tests never reach, by file; the score's history over snapshots.</dd>
+    <dt>context pack</dt><dd>the bundle a pane boots with: <code>laws · folder · file · graph · tests · blast · doc</code> items, derived from the pane's scope by default, or custom, under a character budget (200 000 by default).</dd>
+    <dt>the retriever</dt><dd>for a chat turn, <code>chat_auto::compose_for</code> picks from the workspace's intel and prior runs — the chat's own log excluded — under an 8 000-character cap, and rides in front of the text.</dd>
+    <dt>MIN mode</dt><dd>exploration off: the agent navigates by the pack instead of reading the tree, and touches the disk only to edit inside its scope. Fewer tokens, less cognition; a chat is a MIN turn always.</dd>
+  </dl>
+  <p>The adapter is why the analogy in §1 holds for code specifically. What a repository-specific fine-tune would teach — where things are, what the conventions are, which files are dangerous — is exactly the content of the pack, and the pack is true at the commit the agent is working on. The worker in every L row below wrote eight modules against a codebase it had never seen, and 36–37 of 37 behavioural checks passed on the first or second attempt.</p>
+
+  <h2><span class="n">7</span>The benchmark, and how it learns</h2>
+  <p>The merge table (<code>~/.antiloki/merges.sqlite</code>, <code>merge_scores</code>) has one row per <code>job × size × planner × worker × qa</code>. Sizes are <code>s · l · xxl</code> for runs and <code>call</code> for audited single calls. A row accumulates:</p>
+  <div class="formula">n · pass_first · retries · failed · gate_met · gate_unmet · audit_sum / audit_n · ms_total · usd_total · source</div>
+  <p>where <em>audit</em> is the external behavioural score a bench posts after the run (L: 37 checks of the eight modules; S: a five-case check of the function the ask names) and <em>source</em> says who measured it: <code>bench</code> (antiloki's own runs, shipped as the seed), <code>run</code> (the user's goal runs), <code>use</code> (audited calls). A user's table is therefore the shipped base plus their own rows, weighted together; nothing is collected back.</p>
+  <h3>7.1 The weight</h3>
+  <p>Every record re-weights all rows of that job and size against each other (<code>merges::reweigh</code>):</p>
+  <div class="formula">quality  = mean( audit, pass_first / tasks, gate_met / gate )  ×  (1 − failed / tasks)
+band     = quality ≥ best_quality − 0.06                      (three points of fifty)
+cost     = band ? best_usd / usd : 0        time = band ? best_ms / ms : 0
+raw      = 0.7·quality + 0.2·cost + 0.1·time
+weight   = 0.5 + (raw − 0.5) · n / (n + 1)                  (n = 1 → halfway to 0.5)</div>
+  <p>The band is the three-point rule made literal: a row more than 0.06 behind the best quality gets no credit for being cheap or fast, so price never buys back a real quality gap. The shrink toward 0.5 keeps a single lucky run from ranking first; a row earns its place by repeating. The weights 0.7 / 0.2 / 0.1 were tuned once, after DeepSeek Pro out-ranked Sonnet on synthesis with a two-point deficit and a tenfold price advantage — which the rule says it should — and a test pins that a one-point gap loses to a tenfold price while a four-point gap does not.</p>
+  <h3>7.2 Winners</h3>
+  <p>A job's winner is its best sized row; a job the benches never sized falls back to its best audited-call row with at least two samples; else it has no winner yet, and the Studio says so. Each winner is named by composition and role — the brain's brand and the hands' suffix as one word, then the job's title: <em>KimiSeek Builder</em>, <em>Qwen Tinker</em>, <em>ClaudeSeek Architect</em> — and can be made an agent in one click, carrying its pair. For solo runs the learned table outranks Table 2 once a row has three samples, which is how the static table is meant to retire.</p>
+
+  <h2><span class="n">8</span>Results</h2>
+  <p>All runs on one machine, a fresh clone of ministore per arm, the raw comparison re-run the same evening as its merge. Dollars are the deterministic cost of every call the serve made for that arm (planner, worker, verifier, gate); a raw row is the CLI's own total. Audit is the same 37-check behavioural script for every L row.</p>
+  <div class="tbl"><table>
+    <caption>Table 4 · L — eight independent modules, npm run build must pass (2026-09-22/23)</caption>
+    <thead><tr><th>arm</th><th class="num">wall s</th><th class="num">$</th><th class="num">audit /37</th><th>note</th></tr></thead>
+    <tbody>
+      <tr><td>raw Claude Opus, one session</td><td class="num">303</td><td class="num">1.28</td><td class="num">37</td><td>26 turns; the same goal took 112 s / $0.61 the day before — same-day is the fair row</td></tr>
+      <tr class="lead"><td>Claude Seek — Sonnet plans · Flash edits · Sonnet verifies (QA off)</td><td class="num">130</td><td class="num">0.25</td><td class="num">36</td><td class="win">5× cheaper · 57% faster</td></tr>
+      <tr><td>Claude Seek, QA on</td><td class="num">187</td><td class="num">0.30</td><td class="num">37</td><td>gate: unproven (placeholder claim)</td></tr>
+      <tr><td>DeepSeek × DeepSeek — Pro plans · Flash edits (QA off)</td><td class="num">131</td><td class="num">0.27</td><td class="num">36</td><td class="win">no Claude at all · 4.8× cheaper</td></tr>
+      <tr><td>DeepSeek × DeepSeek, QA on</td><td class="num">455</td><td class="num">0.11</td><td class="num">36</td><td>one verifier send-back</td></tr>
+      <tr><td>Claude Qwen — Sonnet plans · Qwen edits, QA on</td><td class="num">302</td><td class="num">0.37</td><td class="num">37</td><td>QA off, the verifier's window rejected an 8-file diff it could not see → failed</td></tr>
+      <tr><td>Opus plans · Flash edits (QA off)</td><td class="num">249</td><td class="num">0.25</td><td class="num">37</td><td>24 tools, first pass; planner ≈ $0.20 of the bill</td></tr>
+      <tr><td>Sonnet plans · Flash edits, QA on</td><td class="num">179</td><td class="num">0.42</td><td class="num">36</td><td>the fastest of the first matrix</td></tr>
+      <tr><td>Kimi plans · Flash edits (QA off)</td><td class="num">163</td><td class="num">0.04</td><td class="num">37</td><td>Kimi as a brain works; as hands it hit gateway 404s</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tbl"><table>
+    <caption>Table 5 · S — one function in one file, ×5 raw (2026-09-22/23)</caption>
+    <thead><tr><th>model, raw</th><th class="num">right /5</th><th class="num">built /5</th><th class="num">median s</th><th class="num">mean $</th></tr></thead>
+    <tbody>
+      <tr><td>Claude Sonnet</td><td class="num">5</td><td class="num">5</td><td class="num">22</td><td class="num">0.09</td></tr>
+      <tr><td>Claude Opus</td><td class="num">5</td><td class="num">5</td><td class="num">26</td><td class="num">0.19</td></tr>
+      <tr class="lead"><td>Qwen 3.6 Plus</td><td class="num">5</td><td class="num">5</td><td class="num">34</td><td class="num">0.011</td></tr>
+      <tr><td>DeepSeek V4 Pro</td><td class="num">4</td><td class="num">5</td><td class="num">22</td><td class="num">0.021</td></tr>
+      <tr><td>DeepSeek V4 Flash</td><td class="num lose">2</td><td class="num">5</td><td class="num">31</td><td class="num">0.002</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Every miss is the same defect (<code>18.5 → "$18.5"</code>: <code>minimumFractionDigits: 0</code> strips the zero) and every one of them built — only the verifier or a behavioural check catches it. Merged on S: Claude Qwen 42 s / $0.023 / 5-5; DeepSeek × DeepSeek 145 s / $0.021 / 5-5. The merge is 8× cheaper than raw Opus on S and slower; the router sends S asks raw.</p>
+  <div class="tbl"><table>
+    <caption>Table 6 · XXL — an 11-part feature, and what the projection decided</caption>
+    <thead><tr><th>arm</th><th class="num">wall s</th><th class="num">$</th><th>result</th></tr></thead>
+    <tbody>
+      <tr><td>raw Claude Opus</td><td class="num">795</td><td class="num">5.30</td><td>169 tests, build ✓</td></tr>
+      <tr><td>AUTO, Opus plans · Sonnet edits, one worker (the projection's choice: 732 s projected, under the floor)</td><td class="num">921</td><td class="num">2.64</td><td>112 tests, build ✓</td></tr>
+      <tr><td>AUTO, Sonnet · Haiku, wave of 8</td><td class="num">327</td><td class="num">1.30</td><td class="lose">3/8 — Haiku's id generator failed the verifier twice</td></tr>
+      <tr><td>AUTO, Sonnet · Flash, wave of 8, floor off</td><td class="num">1 884</td><td class="num">0.18</td><td class="lose">7/8 — a 5-deep chain, no test runner installed</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Both XXL failures were antiloki's, not the models': the projection now folds the dependency chain into its concurrency, and the orchestrator installs the test runner the goal names at approval. The earlier XXL row on the landing (926 s / $6.47 vs 677 s / $1.02) is from the prior day's wave and is kept as measured.</p>
+  <div class="tbl"><table>
+    <caption>Table 7 · readers — 50 questions on react-main, blind Opus grader (2026-09-22)</caption>
+    <thead><tr><th>model</th><th class="num">score /50</th><th class="num">lookup /30</th><th class="num">synthesis /20</th><th class="num">$</th></tr></thead>
+    <tbody>
+      <tr><td>Claude Sonnet</td><td class="num">42</td><td class="num">26</td><td class="num">16</td><td class="num">—</td></tr>
+      <tr><td>DeepSeek V4 Pro</td><td class="num">41</td><td class="num">28</td><td class="num">13</td><td class="num">0.13</td></tr>
+      <tr><td>Qwen 3.6 Plus</td><td class="num">38</td><td class="num">24</td><td class="num">14</td><td class="num">—</td></tr>
+      <tr><td>Claude Haiku</td><td class="num">36</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td></td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Pro wins lookup (the three-point rule: one point behind Sonnet, 10× cheaper); Sonnet keeps synthesis (two points of twenty is outside the band). Haiku fabricates on synthesis and is the lookup fallback only.</p>
+  <h3>8.1 What the numbers say</h3>
+  <ul>
+    <li><b>On L the merge beats a raw Opus session on every axis at once.</b> Same audit within one check, a third to half the wall time, a fifth of the money. Three merges reach 37/37 with the QA gate on.</li>
+    <li><b>The planner's model does not move L quality; the verifier does.</b> Opus and Sonnet planners scored the same; every difference between arms came from a rejection the verifier made or did not make. That is why the planner is bound to DeepSeek Pro and the verifier to Sonnet.</li>
+    <li><b>The bill is the brain.</b> On the Opus-planner L arm: planner ≈ $0.20, worker ≈ $0.02, verifier ≈ $0.03. Moving the brain to a cheap model is where the 5× comes from; moving the hands is where the speed comes from.</li>
+    <li><b>Small asks go raw.</b> On S the merge loses time and wins little money; the classifier routes them to one session.</li>
+    <li><b>The worker's variance is the gateway's tail, not the model's.</b> The same one-line task took Flash 30 s and 393 s; the stall watchdog needs a floor near 240 s for single-file tasks.</li>
+  </ul>
+
+  <h2><span class="n">9</span>Limitations and threats to validity</h2>
+  <ul>
+    <li><b>n is small.</b> Most L rows are one run; S rows are five. The weight's shrink (§7.1) is the honest answer, not a fix. The matrix now running adds raw Sonnet, Pro, Qwen and Kimi on L and S, and six further pairs.</li>
+    <li><b>One repository.</b> Every number is ministore, a small TypeScript app. The merge's advantage on a large, old codebase is the claim we most want to test and have not.</li>
+    <li><b>Same-day variance is large.</b> Raw Opus did the L goal in 112 s one day and 303 s the next; every comparison here is same-evening, and the landing says so.</li>
+    <li><b>Cost accounting differs by side.</b> A merged row prices every call from list prices; a raw Claude row uses the CLI's own total. Both are stated, neither is a subscription's marginal cost.</li>
+    <li><b>The QA gate on one-worker runs measures nothing yet.</b> The always-branch discards the planner's acceptance lines; until it keeps them the gate reports unproven and its rows carry only cost and time.</li>
+    <li><b>Screening has no row of its own</b> because it is not a call of its own; test-writer only fires in blueprint mode and report only on multi-task runs — their experiments are separate and in progress.</li>
+    <li><b>The verifier's window.</b> An eight-file diff can exceed what the verifier is shown; one Claude Qwen run failed on "no diff evidence" for files it never saw. Per-file evidence is queued.</li>
+    <li><b>The ceiling is the parts'.</b> Nothing here teaches a model a skill it lacks; a repository whose conventions no frontier model can follow when shown them would defeat the adapter. We have not met one.</li>
+  </ul>
+
+  <h2><span class="n">10</span>What follows</h2>
+  <ul>
+    <li><b>A model card per merged agent</b> — composition, adapter packs, the benchmark row, a version that bumps when the table re-ranks it. The Merged Winners tile is half of it.</li>
+    <li><b>Retire the static table.</b> Once every job has three samples per size, Table 2 becomes a seed and the learned table rules.</li>
+    <li><b>Per-file verifier evidence</b>, and the QA gate reading the planner's acceptance lines on one-worker runs.</li>
+    <li><b>Codex as a brain</b> after the October CLI lands its real turn; Codex × DeepSeek is already a built-in pair.</li>
+    <li><b>Larger corpora.</b> The same S · L · XXL ladder on a codebase with history, laws violated, and cycles — where X-ray has something to say.</li>
+  </ul>
+
+  <hr class="hr">
+  <h2><span class="n">A</span>Reproducing a row</h2>
+  <pre>bench/merges/run.sh L claude-deepseek false     # one arm: pair · size · QA — clones ministore, drives /cockpit/goals/plan,
+                                                  # audits with bench/ladder/audit-dir.sh, POSTs the audit to /settings/merges/record
+bench/merges/matrix.sh                            # the built-in pairs × S · L, own serve on :41941, its own home
+bench/merges/jobs.sh · jobs2.sh · jobs3.sh · jobs4.sh   # QA-on runs · blueprint (tests) · a wave of 3 (report) · raw singles + six pairs
+GET  /api/v1/settings/merges                      # the table, weights included
+POST /api/v1/settings/merges/record               # an Outcome; audit_only joins an existing row
+GET  /api/v1/settings/audit                       # every call: model · ms · tokens · deterministic cost</pre>
+
+  <h2><span class="n">R</span>References</h2>
+  <ol class="refs">
+    <li><span class="id">[1]</span>LMSYS, <a href="https://www.lmsys.org/blog/2024-07-01-routellm/">RouteLLM: an open-source framework for cost-effective LLM routing</a>, July 2024.</li>
+    <li><span class="id">[2]</span><a href="https://techcrunch.com/2023/11/15/martians-tool-automatically-switches-between-llms-to-reduce-costs/">Martian's tool automatically switches between LLMs to reduce costs</a>, TechCrunch, Nov 2023.</li>
+    <li><span class="id">[3]</span><a href="https://www.notdiamond.ai/">Not Diamond — model routing for coding agents</a>.</li>
+    <li><span class="id">[4]</span><a href="https://techcrunch.com/2026/05/26/openrouter-more-than-doubles-valuation-to-1-3b-in-a-year/">OpenRouter more than doubles valuation to $1.3B in a year</a>, TechCrunch, May 2026; <a href="https://sacra.com/c/openrouter/">Sacra</a> for volume.</li>
+    <li><span class="id">[5]</span>aider, <a href="https://aider.chat/2024/09/26/architect.html">Separating code reasoning and editing</a>, Sept 2024.</li>
+    <li><span class="id">[6]</span>aider, <a href="https://aider.chat/2025/01/24/r1-sonnet.html">R1 + Sonnet set SOTA on aider's polyglot benchmark</a>, Jan 2025; <a href="https://github.com/Aider-AI/aider/pull/2998">R1 + V3 benchmark</a>.</li>
+    <li><span class="id">[7]</span><a href="https://docs.cline.bot/core-workflows/plan-and-act">Cline: Plan &amp; Act</a>; <a href="https://docs.roocode.com/basic-usage/using-modes">Roo Code: using modes</a>.</li>
+    <li><span class="id">[8]</span>Wang et al., <a href="https://arxiv.org/abs/2406.04692">Mixture-of-Agents enhances large language model capabilities</a>, 2024.</li>
+    <li><span class="id">[9]</span>Zaharia et al., <a href="https://bair.berkeley.edu/blog/2024/02/18/compound-ai-systems/">The shift from models to compound AI systems</a>, BAIR, Feb 2024.</li>
+    <li><span class="id">[10]</span><a href="https://github.com/arcee-ai/mergekit">mergekit</a> — what "model merging" means in ML, and what this paper does not do.</li>
+  </ol>
+</div></div>
+</body></html>

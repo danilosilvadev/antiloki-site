@@ -310,12 +310,41 @@
     .problem, .fit, .pricing, .download, .bridge { padding-top: 80px; }
     nav.top a.q { display: none; }
   }
+
+  /* THE METHOD (operator 2026-09-23: focus the whole pitch on measured merges) — benchmark → winner → agent.
+     A numbered sequence because it IS a sequence: nothing is built before it is measured and ranked. */
+  .method { margin-top: 72px; }
+  .method .head { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+  .method h2 { font-size: clamp(26px, 3vw, 38px); }
+  .method .lede { color: var(--dim); max-width: 62ch; margin: 10px 0 30px; font-size: 17px; }
+  .method .lede b { color: var(--ink); font-weight: 600; }
+  .steps3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; }
+  .steps3 > div { background: var(--panel); padding: 22px 22px 24px; display: flex; flex-direction: column; gap: 8px; }
+  .steps3 i { font-family: var(--mono); font-style: normal; font-size: 11px; letter-spacing: .14em; color: var(--ember); }
+  .steps3 h3 { font-size: 19px; }
+  .steps3 p { margin: 0; color: var(--dim); font-size: 14.5px; line-height: 1.55; }
+  .steps3 code { font-family: var(--mono); font-size: .85em; color: var(--ink); background: rgba(0,0,0,.25); padding: 1px 5px; border-radius: 4px; }
+  @media (max-width: 860px) { .steps3 { grid-template-columns: 1fr; } }
+  /* the winners board: the table's own rows, as the app shows them */
+  .board { margin-top: 26px; border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; }
+  .board .bh, .board .br { display: grid; grid-template-columns: 1.5fr 1.6fr .7fr .7fr .8fr; gap: 14px; padding: 11px 20px; align-items: baseline; }
+  .board .bh { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); background: var(--panel); border-bottom: 1px solid var(--rule); }
+  .board .br + .br { border-top: 1px solid var(--rule); }
+  .board .br { font-size: 14.5px; }
+  .board .br b { font-weight: 600; }
+  .board .who { font-family: var(--mono); font-size: 12.5px; color: var(--dim); }
+  .board .n { font-family: var(--mono); font-size: 13px; font-variant-numeric: tabular-nums; }
+  .board .stamp { display: inline-block; min-width: 22px; text-align: center; font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: var(--ember); border: 1px solid var(--ember); border-radius: 999px; padding: 1px 0; margin-right: 8px; }
+  .board .foot { padding: 11px 20px; background: var(--panel); border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 11.5px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline; }
+  .board .foot a { color: var(--ember); }
+  @media (max-width: 720px) { .board .bh { display: none; } .board .br { grid-template-columns: 1fr 1fr; row-gap: 4px; } .board .br .who { grid-column: 1 / -1; } }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } html { scroll-behavior: auto; } .bar .fill { transition: none; } }
 </style>
 
 <nav class="top"><div class="wrap">
   <a class="mark" href="#top" aria-label="antiloki">antiloki<em>.</em></a>
   <span class="sp"></span>
+  <a class="q" href="#method">How it works</a>
   <a class="q" href="#desk">Threads</a>
   <a class="q" href="#xray">X-ray</a>
   <a class="q" href="#pricing">Pricing</a>
@@ -346,6 +375,39 @@
       <div class="print b" data-lb="1"><img src="img/11-xray.jpg" alt=""></div>
     </div>
   </div>
+
+
+  <!-- THE METHOD — the pitch is not "we route", it is "we measure, then we build the winner" (2026-09-23). -->
+  <section class="method wrap" id="method" aria-label="How a merge is made">
+    <div class="head"><span class="eyebrow">The method</span></div>
+    <h2>Compiled, not trained.</h2>
+    <p class="lede">No weights change. A merge binds the model measured best for each job — <b>planning, editing, verifying, judging, reading</b> — and X-ray supplies what a fine-tune would have to learn: the laws, the graph, the reviews and the blast radius of <b>your</b> codebase, recomputed every commit. The result behaves like a new model, with its own score, price and speed.</p>
+    <div class="steps3">
+      <div>
+        <i>01 · measure</i>
+        <h3>Every run is scored.</h3>
+        <p>The behavioural audit of the result, a deterministic cost (model × tokens, cache at a tenth), a real timer. One row per job × size × combination — ours shipped with the app, yours added as you work.</p>
+      </div>
+      <div>
+        <i>02 · rank</i>
+        <h3>Quality first, then price.</h3>
+        <p><code>0.7 quality + 0.2 cost + 0.1 time</code>, and a candidate more than three points behind the best gets no credit for being cheap. A row earns its place by repeating — one lucky run ranks nothing.</p>
+      </div>
+      <div>
+        <i>03 · build</i>
+        <h3>The winner becomes an agent.</h3>
+        <p>First place for each job, one click, and you have <b>KimiSeek Builder</b> or <b>ClaudeSeek Architect</b> — with a model card: composition, adapter, score, and a version that moves when the benchmark learns.</p>
+      </div>
+    </div>
+    <div class="board" aria-label="first place per job, from the benchmark">
+      <div class="bh"><span>first place</span><span>composition</span><span>audit</span><span>time</span><span>cost / run</span></div>
+      <div class="br"><b><span class="stamp">EL</span>ClaudeSeek Builder</b><span class="who">Claude Sonnet plans · DeepSeek Flash writes</span><span class="n">36/37</span><span class="n">130 s</span><span class="n">$0.25</span></div>
+      <div class="br"><b><span class="stamp">PL</span>KimiSeek Architect</b><span class="who">Kimi K2.7 plans · DeepSeek Flash writes</span><span class="n">37/37</span><span class="n">163 s</span><span class="n">$0.04</span></div>
+      <div class="br"><b><span class="stamp">ES</span>Qwen Tinker</b><span class="who">no merge — one Qwen session, five for five</span><span class="n">5/5</span><span class="n">34 s</span><span class="n">$0.011</span></div>
+      <div class="br"><b><span class="stamp">VF</span>DeepSeek Inspector</b><span class="who">DeepSeek Pro verifies every diff against its acceptance</span><span class="n">—</span><span class="n">32 s</span><span class="n">$0.012</span></div>
+      <div class="foot"><span>The third row is the point: on a one-file change the benchmark says <b style="color:var(--ink)">don't merge</b> — and the router obeys it.</span><a href="/paper.html">Read the paper →</a></div>
+    </div>
+  </section>
 
   <!-- THE DUO — the two screens, each with what you get from it (operator 2026-09-21: "not just a code
        diagnosis project — Threads and X-ray, the two main benefits"). The prints float in 3D: a slow idle drift,
