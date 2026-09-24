@@ -1,0 +1,462 @@
+<title>The 1×1 Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Same tokens as marketing-kit.html so this reads as part of the kit, not a
+   visitor to it. Single committed world — every colour painted explicitly. */
+:root{
+  color-scheme: dark;
+  --bg:#211e1b; --panel:#2a2521; --panel2:#322c27; --rule:#3b3530; --rule2:#4a433c;
+  --ink:#efe9e2; --dim:#a3998f; --muted:#6f665e;
+  --ember:#c97c5c; --ember-soft:rgba(201,124,92,.14);
+  --ok:#7fc48f; --warn:#d9b45a; --bad:#d9705a;
+  --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --body:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px 90px}
+h1,h2,h3{font-family:var(--display);font-weight:800;margin:0;text-wrap:balance;letter-spacing:-.01em}
+a{color:var(--ember)}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.001ms!important}}
+:where(button):focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+
+header{border-bottom:1px solid var(--rule);background:var(--panel);margin-bottom:34px}
+header .wrap{padding-top:30px;padding-bottom:26px}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ember)}
+header h1{font-size:40px;line-height:1.05;margin:10px 0 12px}
+header p{margin:0;color:var(--dim);max-width:68ch;font-size:15.5px}
+.strip{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.pill{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;padding:5px 10px;border:1px solid var(--rule2);border-radius:3px;color:var(--dim)}
+.pill b{color:var(--ink);font-weight:600}
+
+section{margin:0 0 42px}
+h2{font-size:23px;margin-bottom:6px}
+h2 .n{font-family:var(--mono);font-size:12px;color:var(--ember);margin-right:10px;letter-spacing:.1em}
+.lede{color:var(--dim);margin:0 0 18px;max-width:72ch}
+h3{font-size:15px;margin:22px 0 8px;color:var(--ink)}
+
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:7px;padding:18px 20px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+.scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:7px;background:var(--panel)}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);background:var(--panel2);position:sticky;top:0}
+tbody tr:last-child td{border-bottom:0}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.win{color:var(--ok)} .hold{color:var(--warn)} .no{color:var(--bad)}
+
+.copy{position:relative;background:#1b1916;border:1px solid var(--rule2);border-radius:6px;padding:13px 15px;margin:9px 0}
+.copy pre{margin:0;font-family:var(--mono);font-size:12.5px;line-height:1.62;white-space:pre-wrap;color:var(--ink)}
+.copy button{position:absolute;top:8px;right:8px;font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;
+  background:var(--panel2);color:var(--dim);border:1px solid var(--rule2);border-radius:3px;padding:3px 8px;cursor:pointer}
+.copy button:hover{color:var(--ink);border-color:var(--muted)}
+.copy .lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+
+ul,ol{margin:8px 0;padding-left:20px}
+li{margin:5px 0}
+.tight li{margin:3px 0}
+.rule-box{border-left:2px solid var(--ember);background:var(--ember-soft);padding:12px 16px;border-radius:0 5px 5px 0;margin:14px 0}
+.rule-box b{color:var(--ember)}
+.never{border-left:2px solid var(--bad);background:rgba(217,112,90,.10);padding:12px 16px;border-radius:0 5px 5px 0;margin:14px 0}
+.never b{color:var(--bad)}
+.kicker{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:8px}
+.big{font-family:var(--display);font-size:30px;font-weight:800;line-height:1.1}
+.big.em{color:var(--ember)}
+.statlabel{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.step{display:flex;gap:13px;padding:11px 0;border-bottom:1px solid var(--rule)}
+.step:last-child{border-bottom:0}
+.step .mark{font-family:var(--mono);font-size:11px;color:var(--ember);flex:0 0 58px;padding-top:2px}
+.step .what{min-width:0}
+.step .what b{display:block;margin-bottom:2px}
+.step .what span{color:var(--dim);font-size:13.5px}
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">antiloki · selling · companion to the marketing kit</div>
+    <h1>The 1×1 Motion</h1>
+    <p>How to sell antiloki one conversation at a time — who is worth a call, what to ask before you demo anything, what to show and in which order, and what to send after. Built on the kit's positioning, pricing and three provable claims. Nothing here contradicts it.</p>
+    <div class="strip">
+      <span class="pill"><b>$200</b> / yr</span>
+      <span class="pill"><b>$500</b> lifetime</span>
+      <span class="pill"><b>$800</b> 5 seats</span>
+      <span class="pill">trial <b>7 days</b></span>
+      <span class="pill">blended ARPU <b>$330</b></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section>
+  <h2><span class="n">01</span>The decision this whole page rests on</h2>
+  <p class="lede">A 1×1 motion is expensive — roughly 45 minutes of your life per live conversation once you count research, the thread, the call and the follow-up. So the first question is not "how do I sell 1×1", it is "which conversations are worth having at all". The pricing answers it for you.</p>
+
+  <div class="grid g3">
+    <div class="card"><div class="big">$20</div><div class="statlabel">value of a call to close one $200 yearly licence at 10%</div></div>
+    <div class="card"><div class="big">$125</div><div class="statlabel">value of a call to close one $500 lifetime at 25%</div></div>
+    <div class="card"><div class="big em">$200+</div><div class="statlabel">value of a call to close 5 seats at $800 at 25%</div></div>
+  </div>
+
+  <div class="rule-box">
+    <b>So: 1×1 selling is a team motion.</b> Individual buyers are a self-serve funnel — trial, sequence, checkout — and putting a call in front of a $200 licence destroys the economics of your week. Your calendar belongs to people who can put seats on a card. Everyone else gets a key, not a meeting.
+  </div>
+
+  <p>That gives you two tracks, with different goals, different scripts and different definitions of success. Run both — they feed each other.</p>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3 style="margin-top:0">Track A · Seeding <span class="kicker">segments 1 &amp; 3</span></h3>
+      <p style="color:var(--dim);font-size:14px;margin:0 0 8px">Power users and agency folk. You are <b style="color:var(--ink)">not</b> trying to close them.</p>
+      <ul class="tight" style="font-size:14px">
+        <li><b>Goal:</b> 30 lifetime keys given away in month 1.</li>
+        <li><b>Ask for:</b> one line of honest feedback, and permission to quote it.</li>
+        <li><b>Win looks like:</b> 5 usable quotes, 3 clips someone else recorded, and referrals into Track B.</li>
+        <li><b>Never:</b> book a 30-minute call for this. It happens in DMs.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Track B · Closing <span class="kicker">segment 2</span></h3>
+      <p style="color:var(--dim);font-size:14px;margin:0 0 8px">Tech leads with 3–10 devs and a budget line. This is where the money is.</p>
+      <ul class="tight" style="font-size:14px">
+        <li><b>Goal:</b> one team deal a week by week 6.</li>
+        <li><b>Path:</b> trigger → DM → 20-min call → 7-day pilot → readout → invoice.</li>
+        <li><b>Win looks like:</b> $800–$3,200 invoiced with VAT details, and a named champion inside.</li>
+        <li><b>Never:</b> demo before discovery. Never discount the yearly.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="rule-box">
+    <b>The bridge between them is one question.</b> Every person you hand a key to in Track A works somewhere. At the end of the thread, ask: <i>"who else on your team runs more than one agent at a time?"</i> That single sentence converts a free key into a qualified Track B lead, and it is the highest-leverage thing in this document.
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">02</span>Who gets a call</h2>
+  <p class="lede">A named human, with a trigger, who can spend $800 without a committee. All three, or it is not a Track B lead — it is a Track A key.</p>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Test</th><th>Passes</th><th>Fails</th></tr></thead>
+      <tbody>
+        <tr><td><b>Named</b></td><td>A person with a title, a repo and a face. "Eng lead, 6 devs, fintech, posts about Codex."</td><td>A company. A list. An email pattern you guessed.</td></tr>
+        <tr><td><b>Triggered</b></td><td>Something happened in the last 30 days: they posted about agents, complained about a merge, asked about worktrees, announced AI tooling spend.</td><td>"They look like they'd need it." No trigger means no first line, which means no reply.</td></tr>
+        <tr><td><b>Able to buy</b></td><td>They say yes to a $800 tool, or they can walk it to whoever does and be believed.</td><td>An IC at a 2,000-person company with procurement. Park them in Track A.</td></tr>
+        <tr><td><b>In pain now</b></td><td>Runs 2+ agents a day. Has already been burned once.</td><td>Curious about AI. Evaluating "AI strategy". Not a buyer this quarter.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Where the triggers actually are — 30 minutes a day, 10 new names</h3>
+  <ul class="tight">
+    <li><b>X search, daily:</b> <span class="kicker" style="display:inline">"claude code" (parallel OR worktree OR "two sessions" OR overwrote OR cost)</span> — reply usefully in public first, DM only people who engaged back.</li>
+    <li><b>LinkedIn:</b> title is Engineering Manager / Tech Lead / Staff Engineer <i>and</i> they posted in the last 30 days about Claude Code, Codex, Cursor or agents. The post is your opening line.</li>
+    <li><b>Reddit:</b> r/ClaudeAI and r/ChatGPTCoding — answer the question properly, in public, with a number. The DM comes later and only to repliers.</li>
+    <li><b>Discord (Claude, OpenCode, Cursor):</b> answer three questions a day with the product unmentioned. Keep a list of who asked good questions — that list is worth more than any scrape.</li>
+    <li><b>Your own GitHub:</b> anyone who opened an issue or starred the repo has already raised their hand. Highest reply rate you will get.</li>
+  </ul>
+
+  <div class="never"><b>Do not buy a list.</b> Every number in section 06 assumes a real trigger in the first line. Cold-blast outreach converts at roughly a tenth of this and burns the accounts you need for the next 90 days.</div>
+</section>
+
+<section>
+  <h2><span class="n">03</span>The call · 20 minutes, in four movements</h2>
+  <p class="lede">Twenty minutes, not thirty. A short meeting gets accepted, forces you to cut, and ends before the energy drops. The order below is the whole method: you do not show anything until they have told you what hurts.</p>
+
+  <div class="card">
+    <div class="step"><div class="mark">0–2 min</div><div class="what"><b>Frame it and give them the exit</b><span>Say how long it will take and that "this isn't for you" is a fine outcome. It lowers the defence more than any rapport-building does.</span></div></div>
+    <div class="step"><div class="mark">2–8 min</div><div class="what"><b>Discovery — five questions, and you shut up</b><span>You are listening for two things: the collision story, and who signs. If you leave without both, the call was a demo, not a sale.</span></div></div>
+    <div class="step"><div class="mark">8–17 min</div><div class="what"><b>Demo only what they named</b><span>Three beats, each tied to something they just said. A feature they did not complain about does not get shown.</span></div></div>
+    <div class="step"><div class="mark">17–20 min</div><div class="what"><b>One ask, with a date on it</b><span>Never "I'll send some info". A pilot with two names, one repo and a readout already in the calendar.</span></div></div>
+  </div>
+
+  <h3>The five questions</h3>
+  <div class="copy">
+    <div class="lbl">discovery · ask in this order, do not lead the witness</div>
+    <button onclick="cp(this)">copy</button>
+<pre>1. On a normal day, how many agent sessions are running at once across the team?
+
+2. Tell me about the last time two of them collided. What actually happened?
+
+3. When someone asks "what did the agent change last sprint" — where do you look?
+
+4. Do you know what you spent on agents last month? Per repo, or per person?
+
+5. If you wanted this for the team, is that your call or does it go to someone else?</pre>
+  </div>
+  <p class="kicker">Q2 is the one that sells. Let the silence sit after it — people talk themselves into the problem far better than you can. Q5 is the one everyone skips and then wonders why the deal stalls in week three.</p>
+
+  <h3>The demo · three beats, twelve minutes, no tour</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Beat</th><th>Show</th><th>Say</th><th>Only if they said…</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="num"><b>1 · the gate</b><br><span class="kicker">2 min</span></td>
+          <td>Scope an agent to one folder. Give it an ask that needs a file outside. The write is refused before the file changes.</td>
+          <td>"Reads everything, writes only where you said. Refused at the tool call, not cleaned up afterwards."</td>
+          <td>anything about collisions, overwrites, or an agent touching the wrong thing</td>
+        </tr>
+        <tr>
+          <td class="num"><b>2 · the goal run</b><br><span class="kicker">5 min</span></td>
+          <td>One goal, split into parallel tasks with owners, a verifier per task, one join. The strip animates, verdicts land.</td>
+          <td><b>All three numbers, every time:</b> 380 s vs 513 s, 4/4 PASS, and about 2× the tokens.</td>
+          <td>speed, throughput, "we can't parallelise safely"</td>
+        </tr>
+        <tr>
+          <td class="num"><b>3 · the record</b><br><span class="kicker">3 min</span></td>
+          <td>The timeline, read like a stack trace. The fuel line with real dollars ticking during the run.</td>
+          <td>"This is the answer to 'what did the AI change' — and the bill is on screen while it runs, not at month end."</td>
+          <td>audit, review, compliance, "I find out the cost later"</td>
+        </tr>
+        <tr>
+          <td class="num"><b>4 · antiIDE</b><br><span class="kicker">2 min, optional</span></td>
+          <td>Score a repo. Laws they ratify, every file judged, score and line number.</td>
+          <td>"No model call. It costs nothing to run on every repo you own."</td>
+          <td>code quality, onboarding, "how do we review what it wrote"</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="rule-box"><b>Say the token number out loud.</b> "Faster and verified, for roughly twice the tokens" is the most persuasive sentence in the demo, because nobody selling AI tooling volunteers the cost side. It buys you the benefit of the doubt on everything else you claim.</div>
+
+  <div class="never"><b>Never in a call:</b> "10× faster" · "autonomous" · "replaces your engineers" · "AI-powered". Say parallel, scoped, verified, on the record, on your machine. And claim only the three things the kit says you can prove — if they ask for a fourth, say you have not measured it yet and offer to.</div>
+</section>
+
+<section>
+  <h2><span class="n">04</span>Objections, answered live</h2>
+  <p class="lede">Each of these is a real position, not a brush-off. Answer the strongest version of it, then hand back control with a question.</p>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th style="width:26%">They say</th><th>You say</th></tr></thead>
+      <tbody>
+        <tr><td><b>"We already use worktrees."</b></td><td>Good — then you are halfway. A worktree isolates a checkout; it does not stop a write. The agent can still edit anything inside its tree, and you find out at diff time. This refuses the write at the tool call. <i>Want me to show the refusal on a folder you pick?</i></td></tr>
+        <tr><td><b>"Isn't this a wrapper around Claude Code?"</b></td><td>It is a control layer over the CLIs you already pay for, and deliberately so — we do not want to be your model vendor. You keep your subscriptions; we box them, verify them and record them. <i>Which CLIs are you on today?</i></td></tr>
+        <tr><td><b>"What leaves our machines?"</b></td><td>Three things, and this is the whole list: your CLIs' own calls to their providers, exactly as today; a daily licence check, a key and a machine id; an update check against a static file on GitHub. No account, no telemetry, state sits in <span class="kicker" style="display:inline">.antiloki/</span> next to the code. <i>Do you need that in writing for security review?</i></td></tr>
+        <tr><td><b>"It's too expensive."</b></td><td>Against what? Five seats is $800 a year — less than one Max seat. You are already spending more than that on the agents themselves; this is the layer that tells you where it went. <i>What did the team spend on agents last month?</i></td></tr>
+        <tr><td><b>"Anthropic or OpenAI will just build this."</b></td><td>One of them might build it for their own CLI. Neither will build the one that runs their competitor's agent next to theirs on your laptop, and that is the whole point of a desk. <i>How many vendors are you running right now?</i></td></tr>
+        <tr><td><b>"No budget this quarter."</b></td><td>Then do not buy anything this quarter. Trial is seven days and free — run it on one real ticket, keep the timeline, and put it in the budget conversation with evidence. <i>When does the next budget cycle open?</i></td></tr>
+        <tr><td><b>"Send me something and I'll look."</b></td><td>I will, but the written version is the weakest version of this — the refusal has to be watched. <i>Fifteen minutes on Thursday and I will run it on a repo shaped like yours?</i></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">05</span>The pilot — what actually closes a team</h2>
+  <p class="lede">Nobody buys seats off a demo. They buy off their own timeline, from their own repo, with their own ticket in it. The pilot exists to manufacture that artifact, and it has to be designed or it drifts into a free trial nobody finishes.</p>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3 style="margin-top:0">Four conditions, agreed on the call</h3>
+      <ol class="tight" style="font-size:14px">
+        <li><b>Two or three named devs.</b> Not "the team" — names. Anything broader and nobody owns it.</li>
+        <li><b>One real repo and one real ticket.</b> A sandbox proves nothing and everyone knows it.</li>
+        <li><b>A written success criterion.</b> Theirs, in their words, before it starts. Usually: "one goal run on a real ticket, verified, and a timeline we can paste into the PR."</li>
+        <li><b>A readout in the calendar now.</b> 15 minutes, day 7, invite sent before you hang up. Without the date the pilot dies quietly.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">The readout, and the ask</h3>
+      <p style="font-size:14px;color:var(--dim);margin:0 0 8px">Open <b style="color:var(--ink)">their</b> timeline, not your slides. Walk the run they did. Then:</p>
+      <div class="copy" style="margin:0">
+        <button onclick="cp(this)">copy</button>
+<pre>That's your run, on your repo — 
+the refusals, the verdicts, the cost.
+
+Five seats is $800 for the year, 
+invoiced with your VAT details. 
+
+Shall I send it today, or is there 
+someone who needs to see this first?</pre>
+      </div>
+      <p class="kicker">"Or is there someone who needs to see this first" surfaces the real approver without making them admit they are not it.</p>
+    </div>
+  </div>
+
+  <h3>The ladder — know which rung you are on before you quote</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Rung</th><th>Price</th><th>When</th><th>Motion</th></tr></thead>
+      <tbody>
+        <tr><td>Lifetime key, free</td><td class="num">$0</td><td>Track A seeding, creators, loud power users, anyone who will give you a quote or a clip</td><td class="hold">DM only — never a call</td></tr>
+        <tr><td>Individual yearly</td><td class="num">$200</td><td>They asked how to pay. Send the link.</td><td class="hold">Self-serve — never a call</td></tr>
+        <tr><td>Individual lifetime</td><td class="num">$500</td><td>Power user who has already used the trial properly</td><td class="hold">Self-serve; a call only if they ask for one</td></tr>
+        <tr><td><b>Team · 5 seats</b></td><td class="num"><b>$800</b></td><td>The standard Track B close, after a pilot</td><td class="win">Worth every minute of a call</td></tr>
+        <tr><td><b>Team · 10+ seats</b></td><td class="num"><b>$1,600+</b></td><td>Two pilots inside one org, or a lead with real headcount</td><td class="win">Worth two calls and a security questionnaire</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="never"><b>Never discount the yearly.</b> The launch discount belongs to lifetime and to a 72-hour window only. Discounting a recurring price teaches every future buyer to wait for a sale, and you will be living with that decision for years.</div>
+</section>
+
+<section>
+  <h2><span class="n">06</span>The numbers — working back from a target</h2>
+  <p class="lede">Here is the engine at the kit's own rule of twenty touches a day. Treat every rate below as a placeholder: replace each one with your real number after two weeks, because the whole plan turns on which of them is actually worst.</p>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Stage</th><th>Rate</th><th>Per week</th><th>Where it breaks</th></tr></thead>
+      <tbody>
+        <tr><td>Connection requests with a trigger line</td><td class="num">—</td><td class="num">100</td><td>20/day, 5 days. More than this and quality drops before volume helps.</td></tr>
+        <tr><td>Accepted</td><td class="num">35%</td><td class="num">35</td><td>If under 20%, your first line is generic — you are not referencing their post.</td></tr>
+        <tr><td>Replied to the question</td><td class="num">40%</td><td class="num">14</td><td>If under 25%, you pitched in message two instead of asking about their setup.</td></tr>
+        <tr><td>Agreed to 15 minutes</td><td class="num">25%</td><td class="num">3.5</td><td>If under 15%, you are asking before they have described a problem.</td></tr>
+        <tr><td>Pilot started</td><td class="num">60%</td><td class="num">2.1</td><td>If low, you demoed a tour instead of their named pain.</td></tr>
+        <tr><td><b>Team deal closed</b></td><td class="num"><b>45%</b></td><td class="num"><b>~1</b></td><td>If low, the pilot had no written success criterion or no readout date.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid g3" style="margin-top:14px">
+    <div class="card"><div class="big em">~1</div><div class="statlabel">team deal per week, from week 6</div></div>
+    <div class="card"><div class="big">$800</div><div class="statlabel">typical invoice · 5 seats</div></div>
+    <div class="card"><div class="big">~$9k</div><div class="statlabel">from the 1×1 motion over 13 weeks</div></div>
+  </div>
+  <p class="kicker">Weeks 1–5 build pipeline and produce almost no revenue. That is the shape of this motion, not a sign it is failing — the first deal lands around week 5 or 6 and the rate is steady after. Judge it at week 8, not week 3.</p>
+
+  <h3>The week, as a calendar</h3>
+  <div class="card">
+    <div class="step"><div class="mark">Daily<br>90 min</div><div class="what"><b>30 min list · 40 min touches · 20 min replies</b><span>Ten new named targets with a trigger. Twenty touches total, new and follow-up combined. Then clear the inbox and book anything that moved.</span></div></div>
+    <div class="step"><div class="mark">Tue + Thu</div><div class="what"><b>Call blocks, 2 hours each</b><span>All calls live here. Batching protects the other four days; context-switching between building and selling costs more than the call does.</span></div></div>
+    <div class="step"><div class="mark">Friday<br>30 min</div><div class="what"><b>Pipeline review</b><span>Every deal moves a stage or gets a reason why not. Anything untouched for 14 days is closed-lost — say so out loud and stop thinking about it.</span></div></div>
+  </div>
+
+  <h3>Pipeline stages — one sheet, seven columns</h3>
+  <div class="copy">
+    <div class="lbl">paste as the header row</div>
+    <button onclick="cp(this)">copy</button>
+<pre>name | company | seats | trigger (their post/issue, with link) | stage | next action + date | notes</pre>
+  </div>
+  <ul class="tight" style="font-size:14px">
+    <li><b>0 Target</b> — named, triggered, plausibly able to buy.</li>
+    <li><b>1 Contacted</b> — first touch sent, referencing the trigger.</li>
+    <li><b>2 Replied</b> — they answered a question. Not "they accepted".</li>
+    <li><b>3 Call booked</b> — a time in the calendar with an invite.</li>
+    <li><b>4 Discovery done</b> — you have the collision story <i>and</i> you know who signs.</li>
+    <li><b>5 Pilot running</b> — names, repo, criterion, readout date, all four.</li>
+    <li><b>6 Readout done</b> — you have walked their timeline with them.</li>
+    <li><b>7 Won / Lost</b> — with a one-line reason. The reasons are the product roadmap.</li>
+  </ul>
+  <div class="rule-box"><b>A stage is a thing that happened, not a feeling.</b> "Seems keen" is not a stage. If you cannot name the event that moved it, it did not move.</div>
+</section>
+
+<section>
+  <h2><span class="n">07</span>The scripts</h2>
+  <p class="lede">The kit's DM playbooks cover the opening. These are the ones it does not have — the moments where a 1×1 deal is actually won or lost.</p>
+
+  <h3>Booking the call, after they describe the problem</h3>
+  <div class="copy">
+    <div class="lbl">track b · the ask that gets a yes</div><button onclick="cp(this)">copy</button>
+<pre>That's the exact pattern I built this for.
+
+Rather than describe it: 15 minutes, I run it on a repo shaped like yours,
+and you tell me where it breaks. If it's not useful you've lost a quarter
+of an hour and I'll send the benchmark write-up anyway.
+
+Thursday 10:00 or 16:00?</pre>
+  </div>
+  <p class="kicker">Two specific times, never "does some time work". Naming the exit ("if it's not useful") raises acceptance more than any benefit you could add.</p>
+
+  <h3>The seeding DM — Track A, no call, no pitch</h3>
+  <div class="copy">
+    <div class="lbl">track a · after they engaged with something you said in public</div><button onclick="cp(this)">copy</button>
+<pre>Hey — you replied on the worktree/scope thread.
+
+I package that setup as a local app: Claude Code, Codex and OpenCode side
+by side, each boxed to the folders you allow, one timeline with the cost.
+
+Want a lifetime key? No strings and nothing to cancel — I want one honest
+line about what's wrong with it, and that's the whole deal.</pre>
+  </div>
+
+  <h3>The referral bridge — send this to every Track A key holder</h3>
+  <div class="copy">
+    <div class="lbl">the highest-leverage message in this document</div><button onclick="cp(this)">copy</button>
+<pre>Thanks — that's genuinely useful, I'll fix the {thing they flagged}.
+
+One last thing and then I'll leave you alone: who else where you work runs
+more than one agent at a time? The folder-box thing lands differently with
+whoever has to answer "what did the AI change last sprint".
+
+Happy to hand them a key too, or stay out of it entirely — your call.</pre>
+  </div>
+  <p class="kicker">"Or stay out of it entirely" is doing the work. It makes the intro voluntary, which is the only kind that ever arrives warm.</p>
+
+  <h3>The security-review reply</h3>
+  <div class="copy">
+    <div class="lbl">send as plain text, not a PDF — it gets forwarded</div><button onclick="cp(this)">copy</button>
+<pre>Short list of everything that leaves the machine:
+
+1. Your CLIs' own calls to their providers — unchanged, exactly as today.
+2. A daily licence check: a key and a machine id.
+3. An update check against a static file on GitHub.
+
+That's the list. No account, no telemetry. State lives in .antiloki/ next
+to your code, so it's yours and it's inspectable. Happy to walk your
+security reviewer through it on a call if that's faster.</pre>
+  </div>
+
+  <h3>The stall — day 10, no reply after a pilot</h3>
+  <div class="copy">
+    <div class="lbl">the close-out. send it, then actually stop.</div><button onclick="cp(this)">copy</button>
+<pre>I think this one didn't land, which is fine — closing it on my side so
+I stop cluttering your inbox.
+
+If it was the price, the timing or just that it didn't fit how the team
+works, I'd genuinely like to know which. One word is plenty and it goes
+straight into what I build next.
+
+Your keys keep working either way.</pre>
+  </div>
+  <p class="kicker">This is the highest-reply-rate message you will send. It gets answers because it asks for nothing and it is visibly the last one.</p>
+</section>
+
+<section>
+  <h2><span class="n">08</span>First 30 days</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Week</th><th>Do</th><th>Done means</th></tr></thead>
+      <tbody>
+        <tr><td class="num"><b>1</b></td><td>Build the sheet. 50 named targets with triggers: 30 Track A, 20 Track B. Write your two opening lines. Answer 3 questions a day in Discord with the product unmentioned.</td><td class="num">50 rows, 100 touches sent</td></tr>
+        <tr><td class="num"><b>2</b></td><td>First calls. Run the five questions exactly as written and resist demoing early. Record them if the other side agrees — you will hear yourself pitching too soon.</td><td class="num">3–4 calls, 10 keys out</td></tr>
+        <tr><td class="num"><b>3</b></td><td>First pilots, all four conditions enforced. Replace every guessed rate in section 06 with your real one. Whichever is worst is the only thing you work on next week.</td><td class="num">2 pilots running, real funnel</td></tr>
+        <tr><td class="num"><b>4</b></td><td>First readouts and first invoice. Send the referral bridge to every key holder from weeks 1–3. Collect 5 quotes for the kit.</td><td class="num"><b>1 team deal, 5 quotes</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="rule-box">
+    <b>The one measurement that matters in month 1</b> is not revenue — it is which stage in section 06 is worst against its placeholder. Everything else is noise until you know whether you have an opening problem, a discovery problem or a pilot problem. They have completely different fixes, and guessing wrong costs you the month.
+  </div>
+
+  <div class="never">
+    <b>Three ways this motion dies.</b> Demoing before discovery, so you show the wrong thing to someone who never told you what hurt. Taking calls for $200 licences, so your week fills with work worth $20 an hour. And letting pilots run without a readout date, so they decay into abandoned trials that no follow-up can rescue.
+  </div>
+</section>
+
+<footer style="border-top:1px solid var(--rule);padding-top:18px;color:var(--muted);font-size:12.5px">
+  Companion to <b style="color:var(--dim)">marketing-kit.html</b> · positioning, pricing, segments and the three provable claims all come from there — if the two ever disagree, the kit wins.
+</footer>
+
+</div>
+
+<script>
+function cp(btn){
+  const pre = btn.parentElement.querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(function(){
+    const was = btn.textContent;
+    btn.textContent = 'copied';
+    setTimeout(function(){ btn.textContent = was; }, 1200);
+  }).catch(function(){ btn.textContent = 'select it'; });
+}
+</script>
