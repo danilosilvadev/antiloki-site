@@ -325,22 +325,15 @@
   .steps3 p { margin: 0; color: var(--dim); font-size: 14.5px; line-height: 1.55; }
   .steps3 code { font-family: var(--mono); font-size: .85em; color: var(--ink); background: rgba(0,0,0,.25); padding: 1px 5px; border-radius: 4px; }
   @media (max-width: 860px) { .steps3 { grid-template-columns: 1fr; } }
-  /* WHAT IT IS (2026-09-24): the widening paragraph after the hero, and its four words in the order work happens */
-  .whatis { margin-top: 68px; }
-  .whatis h2 { font-size: clamp(26px, 3vw, 38px); margin: 8px 0 0; }
-  .whatis .lede { color: var(--dim); max-width: 66ch; margin: 12px 0 26px; font-size: 17px; line-height: 1.6; }
-  .whatis .lede b { color: var(--ink); font-weight: 600; }
-  .four { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; }
-  .four > div { background: var(--panel); padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 7px; min-width: 0; }
-  .four i { font-family: var(--mono); font-style: normal; font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ember); }
-  .four h3 { font-size: 16px; margin: 0; line-height: 1.25; }
-  .four p { margin: 0; color: var(--dim); font-size: 13.5px; line-height: 1.55; }
-  @media (max-width: 980px) { .four { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 560px) { .four { grid-template-columns: 1fr; } }
-  /* THE THREE (2026-09-24): benefit before mechanism — the mental model the systems below hang on */
-  .three { margin-top: 72px; }
-  .three .head { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
-  .three h2 { font-size: clamp(26px, 3vw, 38px); margin: 0 0 24px; }
+  /* WHY IT EXISTS (2026-09-24): one section between the hook and the systems — the frame, the problem, the three
+     things antiloki does about it, and the outside research underneath as evidence rather than as a chapter */
+  .premise { margin-top: 68px; }
+  .premise h2 { font-size: clamp(26px, 3vw, 38px); margin: 8px 0 0; }
+  .premise .lede { color: var(--dim); max-width: 66ch; margin: 14px 0 0; font-size: 17px; line-height: 1.6; }
+  .premise .lede + .lede { margin-top: 12px; }
+  .premise .lede b { color: var(--ink); font-weight: 600; }
+  .premise .steps3 { margin-top: 28px; }
+  .premise .stats { margin-top: 22px; }
   /* the winners board: the table's own rows, as the app shows them */
   .board { margin-top: 26px; border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; }
   .board .bh, .board .br { display: grid; grid-template-columns: 1.5fr 1.6fr .7fr .7fr .8fr; gap: 14px; padding: 11px 20px; align-items: baseline; }
@@ -395,69 +388,48 @@
 
 
 
-  <!-- WHAT IT IS (2026-09-24) — the turn from "antiloki merges models" to "antiloki is the system that decides how
-       coding agents work". The hero's job is curiosity and one big measured number; this paragraph's job is to widen
-       the frame before the page starts naming its own machinery. Four words, in the order the work happens. -->
-  <section class="wrap whatis" id="whatis" aria-label="What antiloki is">
+  <!-- WHY IT EXISTS (2026-09-24) — ONE section between the hook and the systems. It was three (what it is · the
+       research · the three things it does) and the operator's verdict was that they were too big: three headlines and
+       ten cards to walk before the product appeared. The argument only ever had three beats, so it is three
+       paragraphs and three cards now, and the research sits under them as evidence rather than as its own chapter.
+       The order is still the one that matters: widen the frame, name the problem, name what antiloki does about it. -->
+  <section class="wrap premise" id="whatis" aria-label="Why antiloki exists">
     <span class="eyebrow">what it actually is</span>
     <h2>Merging is one part of it.</h2>
-    <p class="lede">Run Claude, Codex and the open models side by side on one repo. antiloki <b>routes</b> the work to
-      the model measured best for it, <b>controls</b> what each agent may touch, <b>verifies</b> the result before you
-      see it, and <b>measures</b> every task in seconds and dollars. The merge is what routing produces. The rest is
-      why it can be trusted.</p>
-    <div class="four">
-      <div><i>route</i><h3>The right model per job</h3><p>An ask is not one job. Planning, editing, verifying and judging are four, and the benchmark has a different winner for each.</p></div>
-      <div><i>control</i><h3>What it may write, enforced</h3><p>A scope is a rule the tool holds, checked at the tool call — not a sentence in a prompt the model may or may not honour.</p></div>
-      <div><i>verify</i><h3>Checked before you see it</h3><p>Every task is judged against its own acceptance by a second call, and a strict reject sends it back once.</p></div>
-      <div><i>measure</i><h3>Seconds and dollars, per task</h3><p>Deterministic cost — model × tokens — and a real timer on every run. The table is the product; the numbers on this page come out of it.</p></div>
+    <p class="lede">Run Claude, Codex and the open models side by side on one repo. antiloki <b>routes</b> each job to
+      the model measured best for it, <b>controls</b> what every agent may touch, <b>verifies</b> the result before
+      you see it, and <b>measures</b> the whole thing in seconds and dollars. The merge is what routing produces —
+      the rest is why it can be trusted.</p>
+    <p class="lede">Which matters because adoption is finished and control never arrived. Nine in ten developers use
+      coding agents; fewer than three in ten trust the output. An agent quoted the rule that forbade it and deleted
+      the production database nine seconds later. <b>Rules in a prompt are not enforcement.</b></p>
+    <div class="steps3">
+      <div>
+        <i>control</i>
+        <h3>Many agents, each fenced in.</h3>
+        <p>Decide per agent which folders it may write. The gate sits at the tool call, outside the model — a change
+          beyond the fence is refused, shown, and undone in one click.</p>
+      </div>
+      <div>
+        <i>verify</i>
+        <h3>Nothing merges on trust.</h3>
+        <p>Every task carries its own acceptance criteria, and a second call at a higher tier judges the diff against
+          them before anything joins. A verdict and the reasoning, not a green tick.</p>
+      </div>
+      <div>
+        <i>route</i>
+        <h3>Frontier money only where it earns it.</h3>
+        <p>Most of an ask is not hard. The router splits it into jobs and binds each to the model the benchmark
+          measured best on that work — usually not the expensive one. That is where the numbers above come from.</p>
+      </div>
     </div>
-  </section>
-
-  <!-- HOW TEAMS WORK TODAY — the research -->
-  <div class="wrap problem">
-    <span class="eyebrow">how teams work today</span>
-    <h2 style="margin-top:12px">Adoption is done. Trust and control never arrived.</h2>
+    <!-- the outside evidence, kept — it is the only research on the page and it is what makes the middle paragraph
+         a fact rather than an assertion -->
     <div class="stats">
       <div class="stat"><b>90 %</b><span>of professional developers use coding agents weekly; 68 % daily.</span><a href="https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/" target="_blank" rel="noopener">JetBrains, 2026</a></div>
       <div class="stat"><b>29 %</b><span>trust what the agent produces — down from 40 %. 3 % "highly trust" it. 7 in 10 won't merge without a manual review.</span><a href="https://byteiota.com/stack-overflow-dev-survey-2026-ai-at-84-trust-at-3/" target="_blank" rel="noopener">Stack Overflow, 2026</a></div>
       <div class="stat"><b>+200 %</b><span>code output per engineer in a year. Review throughput: flat. Review — not generation — is the bottleneck.</span><a href="https://www.contextstudios.ai/blog/run-10-claude-code-agents-review-is-your-real-bottleneck" target="_blank" rel="noopener">Anthropic, internal</a></div>
       <div class="stat"><b>9 s</b><span>for an agent to delete a production database and its backups — after quoting the rule that forbade it. 93 % of orgs have had an AI-caused incident; 19 % have governance for the next one.</span><a href="https://bex.co/blog/2026/07/11/vibe-coding-incident-guardrails" target="_blank" rel="noopener">PocketOS · Spacelift, 2026</a></div>
-    </div>
-    <div class="pains">
-      <div class="pain"><div class="q">Rules in a prompt are not enforcement.</div><p>"Don't touch production" lived in the agent's instructions. It read them, and ran the delete anyway. What an agent <b>may</b> do has to be enforced by the tool, not requested of the model.</p></div>
-      <div class="pain"><div class="q">More agents means more to supervise, not less.</div><p>At five or six agents on one repo the questions become: which one is blocked, which one changed the wrong file, which branch is safe to merge. The operator becomes the bottleneck.</p></div>
-      <div class="pain"><div class="q">Nobody can say what it changed or what it cost.</div><p>Review finds it late, production finds it later, the invoice finds it at month end. Trust stays at 29 % because there is no record to check.</p></div>
-    </div>
-  </div>
-
-  <!-- THE THREE (2026-09-24) — the mental model the rest of the page hangs on. Benefit first, mechanism second: a
-       visitor should never need antiloki's vocabulary to understand why a thing matters. The systems below are
-       introduced only after these three are understood. -->
-  <section class="wrap three" id="three" aria-label="Control, verify, route">
-    <div class="head"><span class="eyebrow">three things it does</span></div>
-    <h2>Control. Verify. Route.</h2>
-    <div class="steps3">
-      <div>
-        <i>control</i>
-        <h3>Many agents, each fenced in.</h3>
-        <p>Run them at once on the same repo and decide, per agent, which folders it may write. The gate sits at the
-          tool call, outside the model — the agent that quoted the rule and deleted the database had read the rule.
-          A change outside the fence is refused, shown, and undoable in one click.</p>
-      </div>
-      <div>
-        <i>verify</i>
-        <h3>Nothing merges on trust.</h3>
-        <p>Each task carries its own acceptance criteria, and a second call at a higher tier judges the diff against
-          them before anything joins. You get a verdict and the reasoning, not a green tick — and the cost of the
-          check is on the same receipt as the work.</p>
-      </div>
-      <div>
-        <i>route</i>
-        <h3>Frontier money only where it earns it.</h3>
-        <p>Most of an ask is not hard. The router reads it, splits it into jobs, and binds each job to the model the
-          benchmark measured best on that kind of work — which is usually not the expensive one. That is where the
-          numbers at the top of this page come from.</p>
-      </div>
     </div>
   </section>
 
