@@ -593,9 +593,9 @@
   <div class="wrap download" id="download">
     <h2>Install. Open a repo. Hire an agent.</h2>
     <div class="dl">
-      <a class="os" data-os="mac" href="https://github.com/danilosilvadev/antiloki-core-rust/releases/latest"><b>macOS</b><span>Apple silicon · Intel · .dmg</span><em>Download ↓</em></a>
-      <a class="os" data-os="win" href="https://github.com/danilosilvadev/antiloki-core-rust/releases/latest"><b>Windows</b><span>.exe · .msi · x64</span><em>Download ↓</em></a>
-      <a class="os" data-os="linux" href="https://github.com/danilosilvadev/antiloki-core-rust/releases/latest"><b>Linux</b><span>.deb · .AppImage · x64</span><em>Download ↓</em></a>
+      <a class="os" data-os="mac" href="https://github.com/danilosilvadev/antiloki-releases/releases/latest"><b>macOS</b><span>Apple silicon · .dmg · older 0.1.0 build</span><em>Download ↓</em></a>
+      <a class="os" data-os="win" href="https://github.com/danilosilvadev/antiloki-releases/releases/latest"><b>Windows</b><span>.exe · x64 · signed installer</span><em>Download ↓</em></a>
+      <a class="os" data-os="linux" href="https://github.com/danilosilvadev/antiloki-releases/releases/latest"><b>Linux</b><span>.deb · x64 · Debian, Ubuntu, Mint</span><em>Download ↓</em></a>
     </div>
     <p class="needs">needs git and at least one of <b>claude</b> · <b>codex</b> · <b>opencode</b> signed in — a <b>merge</b> wants two: a frontier subscription for the brain and <b>opencode</b> for the cheap hands. With one, agents run solo and the router still picks per job.</p>
   </div>
@@ -615,7 +615,7 @@
   <span>antiloki · Agents · X-ray</span>
   <a href="/blog/">blog</a>
   <a href="/blog/every-run.html">the benchmark</a>
-  <a href="https://github.com/danilosilvadev/antiloki-core-rust/releases/latest">releases</a>
+  <a href="https://github.com/danilosilvadev/antiloki-releases/releases/latest">releases</a>
   <a href="mailto:support@antiloki.dev">support@antiloki.dev</a>
   <span class="r">© 2026 antiloki</span>
 </div></footer>
@@ -749,7 +749,6 @@
   // the releases page itself.
   const RELEASES = "danilosilvadev/antiloki-releases";
   const PICK = { mac: [/\.dmg$/], win: [/-setup\.exe$/, /\.msi$/], linux: [/\.AppImage$/, /\.deb$/] };
-  for (const a of document.querySelectorAll(".os, a[href*='/releases/latest']")) if (a.getAttribute("href")?.includes("/releases/latest")) a.href = `https://github.com/${RELEASES}/releases/latest`;
   fetch(`https://api.github.com/repos/${RELEASES}/releases?per_page=10`, { headers: { accept: "application/vnd.github+json" } }).then((r) => (r.ok ? r.json() : null)).then((rels) => {
     if (!Array.isArray(rels)) return;
     for (const [key, pats] of Object.entries(PICK)) {
