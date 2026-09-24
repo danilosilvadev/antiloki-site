@@ -49,8 +49,50 @@
   .hero .proof-r span:first-child { color: var(--dim); }
   .hero .proof-r b { color: var(--ink); font-weight: 700; }
   .hero .proof-r em { font-style: normal; color: var(--ember); font-weight: 700; }
-  .hero .proof-f { display: block; margin-top: 7px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+  .hero .proof-f, .hero .chart .proof-f { display: block; margin-top: 7px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); line-height: 1.6; }
+  .hero .proof-f b { color: var(--dim); font-weight: 700; }
+  .hero .proof-f a { color: var(--ember); text-decoration: underline; text-underline-offset: 2px; }
   @media (max-width: 640px) { .hero .proof-h { display: none; } .hero .proof-r { grid-template-columns: 1fr 1fr; } .hero .proof-r span:first-child { grid-column: 1 / -1; } }
+  /* THE COST CHART (2026-09-24) — the claim, with the table underneath as the receipt. Bars are the one channel an
+     engineer reads as a ratio without effort, so cost gets the bars and nothing else does: charting time would halve
+     the impact and charting quality on a 0–37 axis draws two identical bars.
+     ZERO-BASED, always. Each task is scaled to ITS OWN baseline because $0.023 and $6.47 cannot share an axis and
+     stay legible — that is stated on the chart, because a reader who thinks the rows are comparable has been misled
+     as surely as by a truncated axis. Absolute dollars are printed on every bar: the number is the thing that gets
+     screenshotted, and a bar nobody can check is a bar nobody believes. */
+  .chart { margin: 22px auto 0; max-width: 760px; text-align: left; display: flex; flex-direction: column; gap: 13px; }
+  .chart-row { display: grid; grid-template-columns: 1fr; gap: 5px; }
+  .chart-task { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .04em; display: flex; align-items: baseline; gap: 8px; }
+  .chart-task em { font-style: normal; color: var(--ember); font-weight: 700; margin-left: auto; }
+  /* who | the number and its ticks | the rail. All three are fixed except the rail, so every label aligns down the
+     column and a 100%-wide bar can never push its own number out of the frame. */
+  .chart .crow { display: grid; grid-template-columns: 74px 168px 1fr; gap: 10px; align-items: center; }
+  .chart .crow span.cwho { font-family: var(--mono); font-size: 10px; color: var(--muted); text-align: right; }
+  /* the rail owns the width the bar is measured against; the label lives in its own column so a 100% bar cannot
+     push its own number off the edge */
+  .chart .crow .cmeta { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; justify-content: flex-end; }
+  .chart .crow .crail { height: 17px; display: block; min-width: 0; }
+  .chart .crow .cfill { height: 17px; border-radius: 3px; background: rgba(255,255,255,.14); display: block; min-width: 2px; }
+  .chart .crow.cwin .cfill { background: var(--ember); }
+  .chart .crow .cval { font-family: var(--mono); font-size: 11.5px; color: var(--dim); white-space: nowrap; }
+  .chart .crow.cwin .cval { color: var(--ink); font-weight: 700; }
+  /* the quality strip: one tick per check, hollow where a check was missed. The reader SEES one missing tick out of
+     37 instead of being told two scores are close — which is what defeats "cheaper because it is worse". */
+  .chart .ctick { display: inline-flex; gap: 1.5px; align-items: center; margin-left: 2px; }
+  .chart .ctick i { width: 2px; height: 9px; border-radius: 1px; background: var(--ember); opacity: .75; }
+  .chart .ctick i.cmiss { background: transparent; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35); }
+  .chart .ctick + .q { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-left: 5px; }
+  .chart .cnote { font-family: var(--mono); font-size: 10px; color: var(--muted); padding: 3px 0 0 84px; }
+  @media (max-width: 640px) {
+    /* the hero drops its side padding on mobile so the headline can run wide — the chart has to bring its own */
+    .chart { padding: 0 16px; }
+    .chart .crow { grid-template-columns: 54px auto 1fr; gap: 8px; }
+    .chart .crow .cval { font-size: 10.5px; }
+    /* the ticks need 37 legible marks; below this they are mush, so they go — and so does the sentence about them.
+       Quality is still on the page: it is in the table underneath, at full precision. */
+    .chart .ctick, .chart .ticknote { display: none; }
+    .chart .cnote { padding-left: 62px; }
+  }
   /* THE REVEAL (operator 2026-09-21: "the headline appears after an animation, the prints forming themselves
      in 3D out of a dark fog, like an Apple commercial"): once per visit. A fog of slow blurred blobs and grain
      covers the viewport; the two prints rise out of the deep — far, blurred, dim, turned away — and settle
@@ -369,13 +411,46 @@
     <h1 style="margin-top:14px">Claude Seek, Kimi Codex… <em>Merge models into specialized coding agents — up to 6× cheaper and 57% faster, measured.</em></h1>
     <!-- THE PROOF (2026-09-22): raw Claude Opus against antiloki on the same task, same fresh clone, the same evening; quality by the same
          behavioural audit / test suite on both sides. bench/ladder/ONE-WORKER-RESULTS.md and bench/ladder/RESULTS.md in antiloki-core-rust. -->
+    <!-- THE CLAIM, AS A PICTURE. The table below is the same numbers at full precision; this is the one of them
+         that sells, and cost is the only metric that gets bars. -->
+    <div class="chart" aria-label="cost per task, raw Claude Opus against antiloki merged">
+      <div class="chart-row">
+        <div class="chart-task"><span>8 modules, must build</span><em>5× cheaper</em></div>
+<div class="crow "><span class="cwho">raw Opus</span><span class="cmeta"><span class="cval">$1.28</span><span class="ctick" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></span><span class="crail"><span class="cfill" style="width:100.0%"></span></span></div>
+<div class="crow cwin"><span class="cwho">Claude Seek</span><span class="cmeta"><span class="cval">$0.25</span><span class="ctick" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="cmiss"></i></span></span><span class="crail"><span class="cfill" style="width:19.5%"></span></span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-task"><span>same 8 modules, no Claude at all</span><em>4.8× cheaper</em></div>
+<div class="crow "><span class="cwho">raw Opus</span><span class="cmeta"><span class="cval">$1.28</span><span class="ctick" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></span><span class="crail"><span class="cfill" style="width:100.0%"></span></span></div>
+<div class="crow cwin"><span class="cwho">DeepSeek ×2</span><span class="cmeta"><span class="cval">$0.27</span><span class="ctick" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="cmiss"></i></span></span><span class="crail"><span class="cfill" style="width:21.1%"></span></span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-task"><span>11-part feature, 70 tests</span><em>6.4× cheaper</em></div>
+<div class="crow"><span class="cwho">raw Opus</span><span class="cmeta"><span class="cval">$6.47</span></span><span class="crail"><span class="cfill" style="width:100.0%"></span></span></div>
+<div class="crow cwin"><span class="cwho">merged</span><span class="cmeta"><span class="cval">$1.02</span></span><span class="crail"><span class="cfill" style="width:15.8%"></span></span></div>
+        <div class="cnote">both suites pass — 70 tests against 167, so there is no common score for this row</div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-task"><span>one function, one file</span><em>8× cheaper</em></div>
+<div class="crow "><span class="cwho">raw Opus</span><span class="cmeta"><span class="cval">$0.18</span><span class="ctick" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></span><span class="crail"><span class="cfill" style="width:100.0%"></span></span></div>
+<div class="crow cwin"><span class="cwho">Claude Qwen</span><span class="cmeta"><span class="cval">$0.023</span><span class="ctick" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></span><span class="crail"><span class="cfill" style="width:12.8%"></span></span></div>
+      </div>
+      <span class="proof-f">dollars per task, zero-based · <b>each task is scaled to its own baseline</b> — $0.023 and
+        $6.47 cannot share an axis and stay readable, so the rows are not comparable to one another · the ticks are
+        the behavioural audit, one per check, hollow where a check was missed</span>
+    </div>
     <div class="proof" aria-label="measured against raw Claude Opus">
       <div class="proof-h"><span>measured, same task, same box</span><span>raw Claude Opus</span><span>antiloki · merged</span><span></span></div>
       <div class="proof-r"><span>8 modules, must build</span><span>303 s · $1.28 · 37/37</span><span><b>130 s · $0.25 · 36/37</b> Claude Seek</span><span><em>5× cheaper</em>, 57% faster</span></div>
       <div class="proof-r"><span>same 8 modules, no Claude at all</span><span>303 s · $1.28 · 37/37</span><span><b>131 s · $0.27 · 36/37</b> DeepSeek × DeepSeek</span><span><em>4.8× cheaper</em>, 57% faster</span></div>
-      <div class="proof-r"><span>11-part feature, 70 tests</span><span>926 s · $6.47</span><span><b>677 s · $1.02</b></span><span><em>6× cheaper</em>, 1.4× faster</span></div>
+      <div class="proof-r"><span>11-part feature</span><span>926 s · $6.47 · its 167 tests pass</span><span><b>677 s · $1.02</b> · its 70 tests pass</span><span><em>6.4× cheaper</em>, 1.4× faster</span></div>
       <div class="proof-r"><span>one function, one file</span><span>24 s · $0.18 · 5/5</span><span><b>42 s · $0.023 · 5/5</b> Claude Qwen</span><span><em>8× cheaper</em>, slower — small asks go raw</span></div>
-      <span class="proof-f">dollars are deterministic (model × tokens) · a merged row is the planner, the worker and the verifier together · the score is the same 37-check audit · full tables in the repo</span>
+      <span class="proof-f">One machine, one evening, one run per arm — not a best-of-N. Dollars are deterministic
+        (model × tokens, cache at a tenth); the score is the same 37-check behavioural audit on both sides; a merged
+        row is the planner, the worker and the verifier together. The first two rows share one measured raw-Opus run
+        as their baseline. Raw Opus moves between days — the same goal took it 112 s and $0.61 the day before, and
+        that run is in the repo too.
+        <a href="https://github.com/danilosilvadev/antiloki-core-rust/blob/rust-all-the-way/bench/ladder/RESULTS.md" target="_blank" rel="noopener">Every run, with the scripts →</a></span>
     </div>
     <div class="cta"><a class="btn ember" href="#download">Download — free for 14 days</a></div>
     <span class="fine">one binary · no account · your current subscription is the engine</span>
