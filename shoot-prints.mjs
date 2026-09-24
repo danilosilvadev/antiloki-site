@@ -81,7 +81,16 @@ await page.mouse.move(W / 2, 40);
 await settle(page);
 
 // ── 03 · a widget beside the conversation ──────────────────────────────────
+// Pick an agent whose chat is CLEAN first. Several of them have a transcript whose last reply is the specialist's
+// raw JSON — which is a real flaw worth fixing, but a landing print should not be the place it is advertised.
 console.log("· agents-3 — a widget beside the chat");
+for (const row of await page.locator('[data-testid^="agent-row-"]').all()) {
+  await row.click();
+  await settle(page, 1400);
+  const body = await page.locator('body').innerText();
+  if (!body.includes('{"summary"') && !body.includes('"confidence":')) break;
+}
+await settle(page, 600);
 const diff = page.locator('[data-testid="studio-kind-shared-diff"]').first();
 if (await diff.count()) {
   await diff.click();
