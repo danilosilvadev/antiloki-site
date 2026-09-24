@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>antiloki — merge models into specialized coding agents: up to 6× cheaper and 57% faster, measured</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23211e1b'/%3E%3Ctext x='10' y='47' font-family='Geist,Helvetica,Arial,sans-serif' font-weight='700' font-size='40' fill='%23efe9e2' letter-spacing='-2'%3Ea%3Ctspan fill='%23c97c5c'%3E.%3C/tspan%3E%3C/text%3E%3C/svg%3E">
-<meta name="description" content="Claude Seek, Kimi Codex… antiloki merges models into specialized coding agents: a router gives each job — planning, writing, verifying, judging — to the model measured best for it. Up to 6× cheaper and 57% faster than raw Claude Opus on the same tasks, at the same quality, measured. A desktop app for Claude Code, Codex and DeepSeek via OpenCode; your subscriptions are the engines. Free for 7 days.">
+<meta name="description" content="Claude Seek, Kimi Codex… antiloki merges models into specialized coding agents: a router gives each job — planning, writing, verifying, judging — to the model measured best for it. Up to 6× cheaper and 57% faster than raw Claude Opus on the same tasks, at the same quality, measured. A desktop app for Claude Code, Codex and DeepSeek via OpenCode; your subscriptions are the engines. Free for 14 days.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Geist:wght@700&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
@@ -325,6 +325,22 @@
   .steps3 p { margin: 0; color: var(--dim); font-size: 14.5px; line-height: 1.55; }
   .steps3 code { font-family: var(--mono); font-size: .85em; color: var(--ink); background: rgba(0,0,0,.25); padding: 1px 5px; border-radius: 4px; }
   @media (max-width: 860px) { .steps3 { grid-template-columns: 1fr; } }
+  /* WHAT IT IS (2026-09-24): the widening paragraph after the hero, and its four words in the order work happens */
+  .whatis { margin-top: 68px; }
+  .whatis h2 { font-size: clamp(26px, 3vw, 38px); margin: 8px 0 0; }
+  .whatis .lede { color: var(--dim); max-width: 66ch; margin: 12px 0 26px; font-size: 17px; line-height: 1.6; }
+  .whatis .lede b { color: var(--ink); font-weight: 600; }
+  .four { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; }
+  .four > div { background: var(--panel); padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+  .four i { font-family: var(--mono); font-style: normal; font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ember); }
+  .four h3 { font-size: 16px; margin: 0; line-height: 1.25; }
+  .four p { margin: 0; color: var(--dim); font-size: 13.5px; line-height: 1.55; }
+  @media (max-width: 980px) { .four { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .four { grid-template-columns: 1fr; } }
+  /* THE THREE (2026-09-24): benefit before mechanism — the mental model the systems below hang on */
+  .three { margin-top: 72px; }
+  .three .head { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+  .three h2 { font-size: clamp(26px, 3vw, 38px); margin: 0 0 24px; }
   /* the winners board: the table's own rows, as the app shows them */
   .board { margin-top: 26px; border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; }
   .board .bh, .board .br { display: grid; grid-template-columns: 1.5fr 1.6fr .7fr .7fr .8fr; gap: 14px; padding: 11px 20px; align-items: baseline; }
@@ -344,11 +360,12 @@
 <nav class="top"><div class="wrap">
   <a class="mark" href="#top" aria-label="antiloki">antiloki<em>.</em></a>
   <span class="sp"></span>
-  <a class="q" href="#method">How it works</a>
+  <a class="q" href="#whatis">What it is</a>
   <a class="q" href="#desk">Agents</a>
   <a class="q" href="#xray">X-ray</a>
+  <a class="q" href="#method">The method</a>
   <a class="q" href="#pricing">Pricing</a>
-  <a class="btn sm ember" href="#download">Download · free 7 days</a>
+  <a class="btn sm ember" href="#download">Download · free 14 days</a>
 </div></nav>
 
 <main id="top">
@@ -367,7 +384,7 @@
       <div class="proof-r"><span>one function, one file</span><span>24 s · $0.18 · 5/5</span><span><b>42 s · $0.023 · 5/5</b> Claude Qwen</span><span><em>8× cheaper</em>, slower — small asks go raw</span></div>
       <span class="proof-f">dollars are deterministic (model × tokens) · a merged row is the planner, the worker and the verifier together · the score is the same 37-check audit · full tables in the repo</span>
     </div>
-    <div class="cta"><a class="btn ember" href="#download">Download — free for 7 days</a></div>
+    <div class="cta"><a class="btn ember" href="#download">Download — free for 14 days</a></div>
     <span class="fine">one binary · no account · your current subscription is the engine</span>
     <div class="stage" aria-hidden="true">
       <i class="glow"></i>
@@ -377,36 +394,70 @@
   </div>
 
 
-  <!-- THE METHOD — the pitch is not "we route", it is "we measure, then we build the winner" (2026-09-23). -->
-  <section class="method wrap" id="method" aria-label="How a merge is made">
-    <div class="head"><span class="eyebrow">The method</span></div>
-    <h2>Compiled, not trained.</h2>
-    <p class="lede"><b>The same model, checked.</b> One Qwen session passes 35 of 37 behavioural checks on an eight-module task and misses the same two every time. The <em>identical</em> model — planning for itself, verifying its own diff — passes all 37, three runs out of three. That is what a merge sells: not a better model, a checked one, at the cheap model's price.</p>
-    <p class="lede">No weights change. A merge binds the model measured best for each job — <b>planning, editing, verifying, judging, reading</b> — and the adapter supplies what a fine-tune would have to learn: the laws, the graph, the reviews and the blast radius of <b>your</b> codebase, recomputed every commit — plus the skills, the specialists and the tools that role works with. The result behaves like a new model, with its own score, price and speed.</p>
+
+  <!-- WHAT IT IS (2026-09-24) — the turn from "antiloki merges models" to "antiloki is the system that decides how
+       coding agents work". The hero's job is curiosity and one big measured number; this paragraph's job is to widen
+       the frame before the page starts naming its own machinery. Four words, in the order the work happens. -->
+  <section class="wrap whatis" id="whatis" aria-label="What antiloki is">
+    <span class="eyebrow">what it actually is</span>
+    <h2>Merging is one part of it.</h2>
+    <p class="lede">Run Claude, Codex and the open models side by side on one repo. antiloki <b>routes</b> the work to
+      the model measured best for it, <b>controls</b> what each agent may touch, <b>verifies</b> the result before you
+      see it, and <b>measures</b> every task in seconds and dollars. The merge is what routing produces. The rest is
+      why it can be trusted.</p>
+    <div class="four">
+      <div><i>route</i><h3>The right model per job</h3><p>An ask is not one job. Planning, editing, verifying and judging are four, and the benchmark has a different winner for each.</p></div>
+      <div><i>control</i><h3>What it may write, enforced</h3><p>A scope is a rule the tool holds, checked at the tool call — not a sentence in a prompt the model may or may not honour.</p></div>
+      <div><i>verify</i><h3>Checked before you see it</h3><p>Every task is judged against its own acceptance by a second call, and a strict reject sends it back once.</p></div>
+      <div><i>measure</i><h3>Seconds and dollars, per task</h3><p>Deterministic cost — model × tokens — and a real timer on every run. The table is the product; the numbers on this page come out of it.</p></div>
+    </div>
+  </section>
+
+  <!-- HOW TEAMS WORK TODAY — the research -->
+  <div class="wrap problem">
+    <span class="eyebrow">how teams work today</span>
+    <h2 style="margin-top:12px">Adoption is done. Trust and control never arrived.</h2>
+    <div class="stats">
+      <div class="stat"><b>90 %</b><span>of professional developers use coding agents weekly; 68 % daily.</span><a href="https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/" target="_blank" rel="noopener">JetBrains, 2026</a></div>
+      <div class="stat"><b>29 %</b><span>trust what the agent produces — down from 40 %. 3 % "highly trust" it. 7 in 10 won't merge without a manual review.</span><a href="https://byteiota.com/stack-overflow-dev-survey-2026-ai-at-84-trust-at-3/" target="_blank" rel="noopener">Stack Overflow, 2026</a></div>
+      <div class="stat"><b>+200 %</b><span>code output per engineer in a year. Review throughput: flat. Review — not generation — is the bottleneck.</span><a href="https://www.contextstudios.ai/blog/run-10-claude-code-agents-review-is-your-real-bottleneck" target="_blank" rel="noopener">Anthropic, internal</a></div>
+      <div class="stat"><b>9 s</b><span>for an agent to delete a production database and its backups — after quoting the rule that forbade it. 93 % of orgs have had an AI-caused incident; 19 % have governance for the next one.</span><a href="https://bex.co/blog/2026/07/11/vibe-coding-incident-guardrails" target="_blank" rel="noopener">PocketOS · Spacelift, 2026</a></div>
+    </div>
+    <div class="pains">
+      <div class="pain"><div class="q">Rules in a prompt are not enforcement.</div><p>"Don't touch production" lived in the agent's instructions. It read them, and ran the delete anyway. What an agent <b>may</b> do has to be enforced by the tool, not requested of the model.</p></div>
+      <div class="pain"><div class="q">More agents means more to supervise, not less.</div><p>At five or six agents on one repo the questions become: which one is blocked, which one changed the wrong file, which branch is safe to merge. The operator becomes the bottleneck.</p></div>
+      <div class="pain"><div class="q">Nobody can say what it changed or what it cost.</div><p>Review finds it late, production finds it later, the invoice finds it at month end. Trust stays at 29 % because there is no record to check.</p></div>
+    </div>
+  </div>
+
+  <!-- THE THREE (2026-09-24) — the mental model the rest of the page hangs on. Benefit first, mechanism second: a
+       visitor should never need antiloki's vocabulary to understand why a thing matters. The systems below are
+       introduced only after these three are understood. -->
+  <section class="wrap three" id="three" aria-label="Control, verify, route">
+    <div class="head"><span class="eyebrow">three things it does</span></div>
+    <h2>Control. Verify. Route.</h2>
     <div class="steps3">
       <div>
-        <i>01 · measure</i>
-        <h3>Every run is scored.</h3>
-        <p>The behavioural audit of the result, a deterministic cost (model × tokens, cache at a tenth), a real timer. One row per job × size × combination — ours shipped with the app, yours added as you work. Sixty arms so far, on one box, same evening per comparison.</p>
+        <i>control</i>
+        <h3>Many agents, each fenced in.</h3>
+        <p>Run them at once on the same repo and decide, per agent, which folders it may write. The gate sits at the
+          tool call, outside the model — the agent that quoted the rule and deleted the database had read the rule.
+          A change outside the fence is refused, shown, and undoable in one click.</p>
       </div>
       <div>
-        <i>02 · rank</i>
-        <h3>Quality first, then price.</h3>
-        <p><code>0.7 quality + 0.2 cost + 0.1 time</code>, and a candidate more than three points behind the best gets no credit for being cheap. A row earns its place by repeating — one lucky run ranks nothing.</p>
+        <i>verify</i>
+        <h3>Nothing merges on trust.</h3>
+        <p>Each task carries its own acceptance criteria, and a second call at a higher tier judges the diff against
+          them before anything joins. You get a verdict and the reasoning, not a green tick — and the cost of the
+          check is on the same receipt as the work.</p>
       </div>
       <div>
-        <i>03 · hire</i>
-        <h3>You hire a role, not a stage.</h3>
-        <p>Nobody hires a verifier. You pick a <b>Backender</b>, a <b>Frontend designer</b>, a <b>Tester</b> — and it arrives with the merge that won <em>its</em> kind of work, plus the skills, specialists and tools that role carries. Three of each: <b>cheaper</b>, <b>faster</b>, <b>best</b>.</p>
+        <i>route</i>
+        <h3>Frontier money only where it earns it.</h3>
+        <p>Most of an ask is not hard. The router reads it, splits it into jobs, and binds each job to the model the
+          benchmark measured best on that kind of work — which is usually not the expensive one. That is where the
+          numbers at the top of this page come from.</p>
       </div>
-    </div>
-    <div class="board" aria-label="first place per job, from the benchmark">
-      <div class="bh"><span>the role you hire</span><span>its merge, measured on its own work</span><span>score</span><span>time</span><span>cost / run</span></div>
-      <div class="br"><b><span class="stamp">BE</span>Backender</b><span class="who">Codex gpt-5.6-terra decides · OpenCode DeepSeek v4 Flash produces</span><span class="n">37/37</span><span class="n">305 s</span><span class="n">$0.012</span></div>
-      <div class="br"><b><span class="stamp">FE</span>Frontender</b><span class="who">Codex gpt-5.6-terra decides · OpenCode Qwen 3.6 Plus produces</span><span class="n">100%</span><span class="n">620 s</span><span class="n">$0.043</span></div>
-      <div class="br"><b><span class="stamp">QA</span>Reviewer</b><span class="who">Codex gpt-5.6-sol checks every claim against the diff</span><span class="n">4/4</span><span class="n">21 s</span><span class="n">$0.001</span></div>
-      <div class="br"><b><span class="stamp">ES</span>one-file change</b><span class="who">no merge — one OpenCode Qwen 3.6 Plus session, five for five</span><span class="n">5/5</span><span class="n">34 s</span><span class="n">$0.011</span></div>
-      <div class="foot"><span>Two rows are the method proving itself: the cheap hands that win on <b style="color:var(--ink)">backend</b> came last on the <b style="color:var(--ink)">screens</b>, and on a one-file change the benchmark says <b style="color:var(--ink)">don't merge</b> — the router obeys both.</span><a href="/paper.html">Read the paper →</a></div>
     </div>
   </section>
 
@@ -451,31 +502,51 @@
   </section>
   <div class="wrap"><p class="cap">the real app · the same codebase on both screens · Agents is where the work happens, X-ray is what they know</p>
   </div>
-
-  <!-- HOW TEAMS WORK TODAY — the research -->
-  <div class="wrap problem">
-    <span class="eyebrow">how teams work today</span>
-    <h2 style="margin-top:12px">Adoption is done. Trust and control never arrived.</h2>
-    <div class="stats">
-      <div class="stat"><b>90 %</b><span>of professional developers use coding agents weekly; 68 % daily.</span><a href="https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/" target="_blank" rel="noopener">JetBrains, 2026</a></div>
-      <div class="stat"><b>29 %</b><span>trust what the agent produces — down from 40 %. 3 % "highly trust" it. 7 in 10 won't merge without a manual review.</span><a href="https://byteiota.com/stack-overflow-dev-survey-2026-ai-at-84-trust-at-3/" target="_blank" rel="noopener">Stack Overflow, 2026</a></div>
-      <div class="stat"><b>+200 %</b><span>code output per engineer in a year. Review throughput: flat. Review — not generation — is the bottleneck.</span><a href="https://www.contextstudios.ai/blog/run-10-claude-code-agents-review-is-your-real-bottleneck" target="_blank" rel="noopener">Anthropic, internal</a></div>
-      <div class="stat"><b>9 s</b><span>for an agent to delete a production database and its backups — after quoting the rule that forbade it. 93 % of orgs have had an AI-caused incident; 19 % have governance for the next one.</span><a href="https://bex.co/blog/2026/07/11/vibe-coding-incident-guardrails" target="_blank" rel="noopener">PocketOS · Spacelift, 2026</a></div>
+  <!-- THE METHOD — the pitch is not "we route", it is "we measure, then we build the winner" (2026-09-23). -->
+  <section class="method wrap" id="method" aria-label="How a merge is made">
+    <div class="head"><span class="eyebrow">The method</span></div>
+    <h2>Compiled, not trained.</h2>
+    <p class="lede"><b>The same model, checked.</b> One Qwen session passes 35 of 37 behavioural checks on an eight-module task and misses the same two every time. The <em>identical</em> model — planning for itself, verifying its own diff — passes all 37, three runs out of three. That is what a merge sells: not a better model, a checked one, at the cheap model's price.</p>
+    <p class="lede">No weights change. A merge binds the model measured best for each job — <b>planning, editing, verifying, judging, reading</b> — and the adapter supplies what a fine-tune would have to learn: the laws, the graph, the reviews and the blast radius of <b>your</b> codebase, recomputed every commit — plus the skills, the specialists and the tools that role works with. <b>Same models. Better orchestration. Measured results.</b> Nothing is trained and no weights exist that did not
+      exist before — what a merge produces is a pipeline with its own score, price and speed, and every one of those
+      three is measured rather than claimed.</p>
+    <div class="steps3">
+      <div>
+        <i>01 · measure</i>
+        <h3>Every run is scored.</h3>
+        <p>The behavioural audit of the result, a deterministic cost (model × tokens, cache at a tenth), a real timer. One row per job × size × combination — ours shipped with the app, yours added as you work. Sixty arms so far, on one box, same evening per comparison.</p>
+      </div>
+      <div>
+        <i>02 · rank</i>
+        <h3>Quality first, then price.</h3>
+        <p><code>0.7 quality + 0.2 cost + 0.1 time</code>, and a candidate more than three points behind the best gets no credit for being cheap. A row earns its place by repeating — one lucky run ranks nothing.</p>
+      </div>
+      <div>
+        <i>03 · hire</i>
+        <h3>You hire a role, not a stage.</h3>
+        <p>Nobody hires a verifier. You pick a <b>Backender</b>, a <b>Frontend designer</b>, a <b>Tester</b> — and it arrives with the merge that won <em>its</em> kind of work, plus the skills, specialists and tools that role carries. Three of each: <b>cheaper</b>, <b>faster</b>, <b>best</b>.</p>
+      </div>
     </div>
-    <div class="pains">
-      <div class="pain"><div class="q">Rules in a prompt are not enforcement.</div><p>"Don't touch production" lived in the agent's instructions. It read them, and ran the delete anyway. What an agent <b>may</b> do has to be enforced by the tool, not requested of the model.</p></div>
-      <div class="pain"><div class="q">More agents means more to supervise, not less.</div><p>At five or six agents on one repo the questions become: which one is blocked, which one changed the wrong file, which branch is safe to merge. The operator becomes the bottleneck.</p></div>
-      <div class="pain"><div class="q">Nobody can say what it changed or what it cost.</div><p>Review finds it late, production finds it later, the invoice finds it at month end. Trust stays at 29 % because there is no record to check.</p></div>
+    <div class="board" aria-label="first place per job, from the benchmark">
+      <div class="bh"><span>the role you hire</span><span>its merge, measured on its own work</span><span>score</span><span>time</span><span>cost / run</span></div>
+      <div class="br"><b><span class="stamp">BE</span>Backender</b><span class="who">Codex gpt-5.6-terra decides · OpenCode DeepSeek v4 Flash produces</span><span class="n">37/37</span><span class="n">305 s</span><span class="n">$0.012</span></div>
+      <div class="br"><b><span class="stamp">FE</span>Frontender</b><span class="who">Codex gpt-5.6-terra decides · OpenCode Qwen 3.6 Plus produces</span><span class="n">100%</span><span class="n">620 s</span><span class="n">$0.043</span></div>
+      <div class="br"><b><span class="stamp">QA</span>Reviewer</b><span class="who">Codex gpt-5.6-sol checks every claim against the diff</span><span class="n">4/4</span><span class="n">21 s</span><span class="n">$0.001</span></div>
+      <div class="br"><b><span class="stamp">ES</span>one-file change</b><span class="who">no merge — one OpenCode Qwen 3.6 Plus session, five for five</span><span class="n">5/5</span><span class="n">34 s</span><span class="n">$0.011</span></div>
+      <div class="foot"><span>Two rows are the method proving itself: the cheap hands that win on <b style="color:var(--ink)">backend</b> came last on the <b style="color:var(--ink)">screens</b>, and on a one-file change the benchmark says <b style="color:var(--ink)">don't merge</b> — the router obeys both.</span><a href="/paper.html">Read the paper →</a></div>
     </div>
-  </div>
+  </section>
 
   <!-- PRICING -->
   <div class="wrap pricing" id="pricing">
-    <h2>Free for a week. Then $200 a year, or $500 once.</h2>
+    <h2>Free for two weeks. Then $200 a year, or $500 once.</h2>
+    <p class="lede" style="color:var(--dim);max-width:60ch;margin:10px auto 26px;font-size:16px;text-align:center;text-wrap:balance">Lifetime is the app,
+      yours permanently, with two years of updates — about two and a half years of the annual price. When the two
+      years are up nothing stops working: you keep the version you have, and more updates cost money again.</p>
     <div class="plans">
-      <div class="plan"><div class="name">Trial</div><div class="price num">$0<small>7 days</small></div><ul><li><b>everything</b> — Agents and X-ray</li><li>no card, no account</li><li>your projects stay when it ends</li></ul><a class="btn" href="#download">Download</a></div>
-      <div class="plan"><div class="name">Yearly</div><div class="price num">$200<small>/ year</small></div><ul><li><b>updates + support</b> for the year</li><li>one machine at a time, move it anytime</li><li>cancel anytime — runs to the end of the year</li></ul><a class="btn" href="#download" data-checkout="yearly">Buy a year</a></div>
-      <div class="plan lift"><span class="best">pay once</span><div class="name">Lifetime</div><div class="price num">$500<small>once</small></div><ul><li><b>yours forever</b> — never expires</li><li><b>2 years</b> of updates + support</li><li>one machine at a time, move it anytime</li></ul><a class="btn ember" href="#download" data-checkout="lifetime">Buy lifetime</a></div>
+      <div class="plan"><div class="name">Trial</div><div class="price num">$0<small>14 days</small></div><ul><li><b>everything</b> — Agents and X-ray</li><li>no card, no account</li><li>two weeks is real work on a real repo</li><li>your projects stay when it ends</li></ul><a class="btn" href="#download">Download</a></div>
+      <div class="plan"><div class="name">Annual</div><div class="price num">$200<small>/ year</small></div><ul><li><b>updates + support</b> while it is active</li><li>the routing table stays current — that is what renews</li><li>one machine at a time, move it anytime</li><li>cancel anytime — runs to the end of the year</li></ul><a class="btn" href="#download" data-checkout="yearly">Buy a year</a></div>
+      <div class="plan lift"><span class="best">pay once · ≈ 2.5 years of Annual</span><div class="name">Lifetime</div><div class="price num">$500<small>once</small></div><ul><li><b>the app is yours permanently</b> — it never expires or phones home to stop</li><li><b>2 years</b> of updates + support; after that you keep the version you have</li><li>one machine at a time, move it anytime</li></ul><a class="btn ember" href="#download" data-checkout="lifetime">Buy lifetime</a></div>
     </div>
     <p class="terms">USD · tax at checkout · key by email, pasted once · works offline up to 14 days between checks · invoices with VAT for companies</p>
   </div>
