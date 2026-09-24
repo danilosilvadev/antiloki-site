@@ -1,8 +1,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>antiloki — merge models into specialized coding agents: up to 6× cheaper and 57% faster, measured</title>
+<title>antiloki — merge models into specialized coding agents: up to 6× cheaper and 57% faster</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23211e1b'/%3E%3Ctext x='10' y='47' font-family='Geist,Helvetica,Arial,sans-serif' font-weight='700' font-size='40' fill='%23efe9e2' letter-spacing='-2'%3Ea%3Ctspan fill='%23c97c5c'%3E.%3C/tspan%3E%3C/text%3E%3C/svg%3E">
-<meta name="description" content="Claude Seek, Kimi Codex… antiloki merges models into specialized coding agents: a router gives each job — planning, writing, verifying, judging — to the model measured best for it. Up to 6× cheaper and 57% faster than raw Claude Opus on the same tasks, at the same quality, measured. A desktop app for Claude Code, Codex and DeepSeek via OpenCode; your subscriptions are the engines. Free for 14 days.">
+<meta name="description" content="Claude Seek, Kimi Codex… antiloki merges models into specialized coding agents: a router gives each job — planning, writing, verifying, judging — to the model measured best for it. Up to 6× cheaper and 57% faster than raw Claude Opus on the same tasks, at the same quality. A desktop app for Claude Code, Codex and DeepSeek via OpenCode; your subscriptions are the engines. Free for 14 days.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Geist:wght@700&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
@@ -219,6 +219,12 @@
   .stat b { font-family: var(--mono); font-size: 34px; font-weight: 600; letter-spacing: -.03em; color: var(--ember); line-height: 1; }
   .stat span { font-size: 14px; color: var(--dim); line-height: 1.45; }
   .stat a { margin-top: auto; font-family: var(--mono); font-size: 10.5px; color: var(--muted); text-decoration: none; } .stat a:hover { color: var(--ink); text-decoration: underline; }
+  /* the research as one quiet paragraph (2026-09-24) — smaller than the body around it on purpose: it is the
+     evidence under the argument, not the argument */
+  .research { margin: 30px 0 0; max-width: 760px; font-size: 13.5px; line-height: 1.7; color: var(--muted); border-left: 2px solid var(--rule); padding-left: 16px; }
+  .research b { color: var(--dim); font-weight: 600; }
+  .research .src { display: block; margin-top: 8px; font-family: var(--mono); font-size: 10.5px; color: var(--rule); }
+  .research .src a { color: var(--muted); text-decoration: none; } .research .src a:hover { color: var(--ember); text-decoration: underline; }
   .pains { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
   .pain { border: 1px solid var(--rule); border-radius: 14px; padding: 22px 22px 24px; background: var(--panel); }
   .pain .q { font-family: var(--display); font-size: 19px; font-weight: 700; letter-spacing: -.01em; color: var(--ink); line-height: 1.2; }
@@ -346,7 +352,10 @@
   .method h2 { font-size: clamp(26px, 3vw, 38px); }
   .method .lede { color: var(--dim); max-width: 62ch; margin: 10px 0 30px; font-size: 17px; }
   .method .lede b { color: var(--ink); font-weight: 600; }
-  .steps3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; }
+  /* four cards now that "learn" joined control · verify · route (2026-09-24), so the grid takes a count rather
+     than a fixed three — `auto-fit` with a floor keeps three-up and four-up both honest and never strands one
+     card alone on a row at the widths this page is read at */
+  .steps3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; }
   .steps3 > div { background: var(--panel); padding: 22px 22px 24px; display: flex; flex-direction: column; gap: 8px; }
   .steps3 i { font-family: var(--mono); font-style: normal; font-size: 11px; letter-spacing: .14em; color: var(--ember); }
   .steps3 h3 { font-size: 19px; }
@@ -394,7 +403,7 @@
   <!-- HERO — what it is, and the one reason -->
   <div class="wrap hero">
     <span class="eyebrow">A desktop app for merging different models into coding agents.<br>macOS · Windows · Linux</span>
-    <h1 style="margin-top:14px">Claude Seek, Kimi Codex… <em>Merge models into specialized coding agents — up to 6× cheaper and 57% faster, measured.</em></h1>
+    <h1 style="margin-top:14px">Claude Seek, Kimi Codex… <em>Merge models into specialized coding agents — up to 6× cheaper and 57% faster.</em></h1>
     <!-- THE PROOF (2026-09-22): raw Claude Opus against antiloki on the same task, same fresh clone, the same evening; quality by the same
          behavioural audit / test suite on both sides. bench/ladder/ONE-WORKER-RESULTS.md and bench/ladder/RESULTS.md in antiloki-core-rust. -->
     <!-- ONE WORKLOAD, ONE AXIS, ONE METRIC (2026-09-24). The first version was four separate comparisons, each
@@ -404,7 +413,7 @@
          The table that used to sit under it is gone. It was the same numbers a second time, and the operator is
          right that a screen you decide from should hold less, not more. -->
     <div class="bench" aria-label="cost per run on the same task">
-      <div class="bench-h">eight independent modules · <code>npm run build</code> must pass · one machine, one evening</div>
+      <div class="bench-h">eight TypeScript modules in a real React store · <code>tsc -b &amp;&amp; vite build</code> must pass · one machine, one evening</div>
       <div class="brow bwin">
         <span class="bname">antiloki · Opus plans, DeepSeek Flash writes</span>
         <span class="btrack"><span class="bfill" style="width:16.0%"></span><span class="bnum">$0.25</span></span>
@@ -430,7 +439,10 @@
         <span class="btrack"><span class="bfill" style="width:82.0%"></span><span class="bnum">$1.28</span></span>
         <span class="bmeta">37/37 · 303 s</span>
       </div>
-      <div class="bench-f">Cost per run, linear from zero. The audit is 37 behavioural checks on the finished code;
+      <div class="bench-f"><b>The eight:</b> fuzzy product search, a stable sort, two localStorage-backed React hooks,
+        money formatting with discount codes, a quantity-stepper component, and checkout validation with a Luhn card
+        check — strict types, no <code>any</code>, JSDoc on every export, no new dependencies, no edits to existing
+        files. Cost per run, linear from zero. The audit is 37 behavioural checks on the finished code;
         the cheapest arm matches raw Opus on every one of them and is 54 s faster. One run per arm, not a best-of-N —
         raw Opus moves between days, and the same goal took it 112 s and $0.61 the day before.
         <b>On a one-file change the benchmark says don't merge, and the router obeys it.</b>
@@ -457,12 +469,9 @@
     <span class="eyebrow">what it actually is</span>
     <h2>Merging is one part of it.</h2>
     <p class="lede">Run Claude, Codex and the open models side by side on one repo. antiloki <b>routes</b> each job to
-      the model measured best for it, <b>controls</b> what every agent may touch, <b>verifies</b> the result before
-      you see it, and <b>measures</b> the whole thing in seconds and dollars. The merge is what routing produces —
-      the rest is why it can be trusted.</p>
-    <p class="lede">Which matters because adoption is finished and control never arrived. Nine in ten developers use
-      coding agents; fewer than three in ten trust the output. An agent quoted the rule that forbade it and deleted
-      the production database nine seconds later. <b>Rules in a prompt are not enforcement.</b></p>
+      the model measured best for it, <b>controls</b> what every agent may touch, <b>records</b> every read, write and
+      command as it happens, and <b>measures</b> the whole thing in seconds and dollars. The merge is what routing
+      produces — the rest is why it can be trusted.</p>
     <div class="steps3">
       <div>
         <i>control</i>
@@ -472,9 +481,11 @@
       </div>
       <div>
         <i>verify</i>
-        <h3>Nothing merges on trust.</h3>
-        <p>Every task carries its own acceptance criteria, and a second call at a higher tier judges the diff against
-          them before anything joins. A verdict and the reasoning, not a green tick.</p>
+        <h3>The record is a machine's.</h3>
+        <p>Every read, write and command is logged by a hook outside the model, and every turn is priced and timed.
+          That part cannot be talked out of. On top of it you switch on what you want proved — the project's own
+          <b>test</b>, <b>build</b> and <b>lint</b>, plus a <b>QA</b> judge — and a failed gate hands the agent the
+          real log to go again.</p>
       </div>
       <div>
         <i>route</i>
@@ -482,15 +493,26 @@
         <p>Most of an ask is not hard. The router splits it into jobs and binds each to the model the benchmark
           measured best on that work — usually not the expensive one. That is where the numbers above come from.</p>
       </div>
+      <div>
+        <i>learn</i>
+        <h3>It learns your repo.</h3>
+        <p>Every run is scored on your machine — which merge, which job, how long, what it cost, whether it passed
+          first time — and filed in a benchmark that grows as you use it. The numbers above are a starting point;
+          the ones the router obeys are <b>yours</b>. Nothing leaves the machine.</p>
+      </div>
     </div>
-    <!-- the outside evidence, kept — it is the only research on the page and it is what makes the middle paragraph
-         a fact rather than an assertion -->
-    <div class="stats">
-      <div class="stat"><b>90 %</b><span>of professional developers use coding agents weekly; 68 % daily.</span><a href="https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/" target="_blank" rel="noopener">JetBrains, 2026</a></div>
-      <div class="stat"><b>29 %</b><span>trust what the agent produces — down from 40 %. 3 % "highly trust" it. 7 in 10 won't merge without a manual review.</span><a href="https://byteiota.com/stack-overflow-dev-survey-2026-ai-at-84-trust-at-3/" target="_blank" rel="noopener">Stack Overflow, 2026</a></div>
-      <div class="stat"><b>+200 %</b><span>code output per engineer in a year. Review throughput: flat. Review — not generation — is the bottleneck.</span><a href="https://www.contextstudios.ai/blog/run-10-claude-code-agents-review-is-your-real-bottleneck" target="_blank" rel="noopener">Anthropic, internal</a></div>
-      <div class="stat"><b>9 s</b><span>for an agent to delete a production database and its backups — after quoting the rule that forbade it. 93 % of orgs have had an AI-caused incident; 19 % have governance for the next one.</span><a href="https://bex.co/blog/2026/07/11/vibe-coding-incident-guardrails" target="_blank" rel="noopener">PocketOS · Spacelift, 2026</a></div>
-    </div>
+    <!-- THE RESEARCH, SHRUNK (operator 2026-09-24: "the percentages section of the problem should be a small
+         discrete section with the sources as it has now, but all smaller and discrete… one paragraph in natural
+         language saying the whole information"). It was four cards with 34px numbers, which gave the outside
+         research more of the screen than the product had. Every figure and every source survives, in a sentence. -->
+    <p class="research">Adoption is finished and control never arrived: <b>90 %</b> of professional developers use
+      coding agents weekly and <b>68 %</b> daily, but only <b>29 %</b> trust what comes out — down from 40 %, with
+      <b>3 %</b> who highly trust it and seven in ten refusing to merge without reading it themselves. Output per
+      engineer is up <b>200 %</b> in a year while review throughput stayed flat, so review is the bottleneck, not
+      generation. And the failure mode is not theoretical: an agent quoted the rule that forbade it and deleted a
+      production database and its backups <b>nine seconds</b> later — <b>93 %</b> of organisations have had an
+      AI-caused incident, <b>19 %</b> have governance for the next one. Rules in a prompt are not enforcement.
+      <span class="src"><a href="https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/" target="_blank" rel="noopener">JetBrains 2026</a> · <a href="https://byteiota.com/stack-overflow-dev-survey-2026-ai-at-84-trust-at-3/" target="_blank" rel="noopener">Stack Overflow 2026</a> · <a href="https://www.contextstudios.ai/blog/run-10-claude-code-agents-review-is-your-real-bottleneck" target="_blank" rel="noopener">Anthropic, internal</a> · <a href="https://bex.co/blog/2026/07/11/vibe-coding-incident-guardrails" target="_blank" rel="noopener">PocketOS · Spacelift 2026</a></span></p>
   </section>
 
   <!-- THE DUO — the two screens, each with what you get from it (operator 2026-09-21: "not just a code
@@ -513,8 +535,8 @@
         <li class="step" data-step="1" data-zoom="50 50 1"><i>01</i><h3>You hire a role, not a stage.</h3><p>One <b>＋</b>, four questions: a name, what it is for, a role, and what it may write. Backender, Frontend designer, Tester, Reviewer — the role is the template, and it arrives carrying the merge the benchmark picked for <em>its</em> kind of work, plus its skills, its specialists and its tools. One dial, three positions: <b>cheaper</b>, <b>faster</b>, <b>best</b>.</p></li>
         <li class="step" data-step="2" data-zoom="76 8 2.3"><i>02</i><h3>An agent is the workspace.</h3><p>Not a thread, not a box you compose first. Every agent carries its role, its scope, its skills, its specialists, its face and its own episodes — and the two models it is merged from, named under it. Done with one? Archive it: it leaves the roster and loses nothing it did.</p></li>
         <li class="step" data-step="3" data-zoom="22 26 2.1"><i>03</i><h3>A tool opens beside the conversation.</h3><p>A diff, a board, the code graph, the design frames — one click, and it takes half the screen next to the agent. One at a time, so there is no layout to build. A canvas takes the whole desk. What you put in a board is still there next week.</p></li>
-        <li class="step" data-step="4" data-zoom="72 24 2.1"><i>04</i><h3>Heimdall routes every ask.</h3><p>The router reads the ask first and binds a model to every job of it — planning, editing, verifying, judging — from the models actually installed on your machine. The dials set context and effort; AUTO decides both.</p></li>
-        <li class="step" data-step="5" data-zoom="78 74 1.7"><i>05</i><h3>Every agent keeps its own episodes.</h3><p>A long conversation is not one wall of scrollback. Close an episode and it consolidates into a summary and the story of what happened; the next one opens on the same chat, and <code>!</code> brings a closed one back as context when you need it.</p></li>
+        <li class="step" data-step="4" data-zoom="72 24 2.1"><i>04</i><h3>Heimdall routes every ask — and checks the claim.</h3><p>The router reads the ask first and binds a model to every job of it — planning, editing, verifying, judging — from the models actually installed on your machine. The dials set context and effort; AUTO decides both. In the same menu, three switches: run the project's own <b>test</b>, <b>build</b> and <b>lint</b> the moment an agent says it is done. A gate that fails hands the agent the real log and it goes again — once, not forever.</p></li>
+        <li class="step" data-step="5" data-zoom="78 74 1.7"><i>05</i><h3>Episodes, and a report at the end of every turn.</h3><p>A long conversation is not one wall of scrollback. Close an episode and it consolidates into a summary and the story of what happened; <code>!</code> brings a closed one back as context. And every turn closes with what it actually did — who decided and who wrote, each stage in plain English, every gate labelled a machine's or a model's, the diff beside the old version of each file, and the count: files, tools, tokens, the clock, and what the router did not spend.</p></li>
       </ol>
     </article>
     <article class="duo-card story mirror" data-tilt id="xray">
@@ -524,7 +546,7 @@
       </div>
       <div class="sticky"><div class="tilt"><div class="shot"><img src="img/xray-1.jpg" data-step="1" alt="a file review: score 64, why not 100 axis by axis, comments at the lines with the move" class=on><img src="img/xray-2.jpg" data-step="2" alt="the laws: 17 rules, 250 violations across 7 laws, the ones broken most"><img src="img/xray-3.jpg" data-step="3" alt="the codebase as a map: every file a box, area its mass, colour its health; the blast-radius cascade"><img src="img/xray-4.jpg" data-step="4" alt="the review over the snapshots: most improved, most regressed, the axis drift"><img src="img/xray-5.jpg" data-step="5" alt="the design system harvested from the running app: 361 tokens, 108 components, 41 drift"><i class="shine"></i></div></div></div>
       <ol class="steps">
-        <li class="step" data-step="1" data-zoom="18 12 2.2"><i>01</i><h3>The verdict, not a vibe.</h3><p>Every file reviewed and scored — and <em>why not 100</em>, axis by axis: coupling, structure, cohesion, defects, tests, change. Deterministic analysis; no AI in the number.</p></li>
+        <li class="step" data-step="1" data-zoom="18 12 2.2"><i>01</i><h3>The verdict, not a vibe.</h3><p>Every file reviewed and scored — and <em>why not 100</em>, axis by axis: <b>size</b>, <b>complexity</b>, <b>coupling</b> (fan-in and fan-out), <b>density</b>, <b>churn</b> and <b>untested</b>. Arithmetic over your ASTs and your git history; no model is asked for an opinion and the same commit scores the same twice.</p></li>
         <li class="step" data-step="2" data-zoom="16 26 1.9"><i>02</i><h3>Laws, not lint.</h3><p>The rules your codebase lives by, checked at the line: what breaks a law, where, and what compliance is worth. A senior review that reads the same way every time.</p></li>
         <li class="step" data-step="3" data-zoom="24 56 1.9"><i>03</i><h3>The codebase as a map.</h3><p>Every file a box, area its mass, colour its health; hubs, orphans, cycles, the most central and the most risky — at a glance, and per folder.</p></li>
         <li class="step" data-step="4" data-zoom="78 24 2"><i>04</i><h3>What the tests never reach. What a change would touch.</h3><p>Coverage gaps by file, the blast radius before a change lands, and the review over the snapshots — the score's history, scrubbable.</p></li>
