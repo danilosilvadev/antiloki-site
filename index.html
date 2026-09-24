@@ -225,6 +225,10 @@
   .research b { color: var(--dim); font-weight: 600; }
   .research .src { display: block; margin-top: 8px; font-family: var(--mono); font-size: 10.5px; color: var(--rule); }
   .research .src a { color: var(--muted); text-decoration: none; } .research .src a:hover { color: var(--ember); text-decoration: underline; }
+  /* the method's link, where the method's chapter used to be (2026-09-24) — quiet, and deliberately not a card */
+  .method-link { margin: 6px 0 0; max-width: 760px; font-size: 14px; line-height: 1.8; color: var(--muted); }
+  .method-link a { color: var(--ember); text-decoration: none; border-bottom: 1px solid color-mix(in oklab, var(--ember) 40%, transparent); }
+  .method-link a:hover { border-bottom-color: var(--ember); }
   .pains { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
   .pain { border: 1px solid var(--rule); border-radius: 14px; padding: 22px 22px 24px; background: var(--panel); }
   .pain .q { font-family: var(--display); font-size: 19px; font-weight: 700; letter-spacing: -.01em; color: var(--ink); line-height: 1.2; }
@@ -393,7 +397,7 @@
   <a class="q" href="#whatis">What it is</a>
   <a class="q" href="#desk">Agents</a>
   <a class="q" href="#xray">X-ray</a>
-  <a class="q" href="#method">The method</a>
+  <a class="q" href="/blog/">Blog</a>
   <a class="q" href="#pricing">Pricing</a>
   <a class="btn sm ember" href="#download">Download · free 14 days</a>
 </div></nav>
@@ -446,7 +450,7 @@
         the cheapest arm matches raw Opus on every one of them and is 54 s faster. One run per arm, not a best-of-N —
         raw Opus moves between days, and the same goal took it 112 s and $0.61 the day before.
         <b>On a one-file change the benchmark says don't merge, and the router obeys it.</b>
-        <a href="https://github.com/danilosilvadev/antiloki-core-rust/blob/rust-all-the-way/bench/ladder/ONE-WORKER-RESULTS.md" target="_blank" rel="noopener">Every run, with the scripts →</a></div>
+        <a href="/blog/every-run.html">Every run, with the scripts →</a></div>
     </div>
 
     <div class="cta"><a class="btn ember" href="#download">Download — free for 14 days</a></div>
@@ -557,38 +561,18 @@
   <div class="wrap"><p class="cap">the real app · the same codebase on both screens · Agents is where the work happens, X-ray is what they know</p>
   </div>
   <!-- THE METHOD — the pitch is not "we route", it is "we measure, then we build the winner" (2026-09-23). -->
-  <section class="method wrap" id="method" aria-label="How a merge is made">
-    <div class="head"><span class="eyebrow">The method</span></div>
-    <h2>Compiled, not trained.</h2>
-    <p class="lede"><b>The same model, checked.</b> One Qwen session passes 35 of 37 behavioural checks on an eight-module task and misses the same two every time. The <em>identical</em> model — planning for itself, verifying its own diff — passes all 37, three runs out of three. That is what a merge sells: not a better model, a checked one, at the cheap model's price.</p>
-    <p class="lede">No weights change. A merge binds the model measured best for each job — <b>planning, editing, verifying, judging, reading</b> — and the adapter supplies what a fine-tune would have to learn: the laws, the graph, the reviews and the blast radius of <b>your</b> codebase, recomputed every commit — plus the skills, the specialists and the tools that role works with. <b>Same models. Better orchestration. Measured results.</b> Nothing is trained and no weights exist that did not
-      exist before — what a merge produces is a pipeline with its own score, price and speed, and every one of those
-      three is measured rather than claimed.</p>
-    <div class="steps3">
-      <div>
-        <i>01 · measure</i>
-        <h3>Every run is scored.</h3>
-        <p>The behavioural audit of the result, a deterministic cost (model × tokens, cache at a tenth), a real timer. One row per job × size × combination — ours shipped with the app, yours added as you work. Sixty arms so far, on one box, same evening per comparison.</p>
-      </div>
-      <div>
-        <i>02 · rank</i>
-        <h3>Quality first, then price.</h3>
-        <p><code>0.7 quality + 0.2 cost + 0.1 time</code>, and a candidate more than three points behind the best gets no credit for being cheap. A row earns its place by repeating — one lucky run ranks nothing.</p>
-      </div>
-      <div>
-        <i>03 · hire</i>
-        <h3>You hire a role, not a stage.</h3>
-        <p>Nobody hires a verifier. You pick a <b>Backender</b>, a <b>Frontend designer</b>, a <b>Tester</b> — and it arrives with the merge that won <em>its</em> kind of work, plus the skills, specialists and tools that role carries. Three of each: <b>cheaper</b>, <b>faster</b>, <b>best</b>.</p>
-      </div>
-    </div>
-    <div class="board" aria-label="first place per job, from the benchmark">
-      <div class="bh"><span>the role you hire</span><span>its merge, measured on its own work</span><span>score</span><span>time</span><span>cost / run</span></div>
-      <div class="br"><b><span class="stamp">BE</span>Backender</b><span class="who">Codex gpt-5.6-terra decides · OpenCode DeepSeek v4 Flash produces</span><span class="n">37/37</span><span class="n">305 s</span><span class="n">$0.012</span></div>
-      <div class="br"><b><span class="stamp">FE</span>Frontender</b><span class="who">Codex gpt-5.6-terra decides · OpenCode Qwen 3.6 Plus produces</span><span class="n">100%</span><span class="n">620 s</span><span class="n">$0.043</span></div>
-      <div class="br"><b><span class="stamp">QA</span>Reviewer</b><span class="who">Codex gpt-5.6-sol checks every claim against the diff</span><span class="n">4/4</span><span class="n">21 s</span><span class="n">$0.001</span></div>
-      <div class="br"><b><span class="stamp">ES</span>one-file change</b><span class="who">no merge — one OpenCode Qwen 3.6 Plus session, five for five</span><span class="n">5/5</span><span class="n">34 s</span><span class="n">$0.011</span></div>
-      <div class="foot"><span>Two rows are the method proving itself: the cheap hands that win on <b style="color:var(--ink)">backend</b> came last on the <b style="color:var(--ink)">screens</b>, and on a one-file change the benchmark says <b style="color:var(--ink)">don't merge</b> — the router obeys both.</span><a href="/paper.html">Read the paper →</a></div>
-    </div>
+  <!-- THE METHOD LEFT THE PAGE (operator 2026-09-24: "the section The method on the landing is not required you
+       can remove and create a blog post to explain completely how antiloki works and at the landing just add the
+       link somewhere at the bottom"). It was a whole chapter — two ledes, three cards and a five-column board —
+       between the product and the price, and the argument it makes is one a reader either wants in full or does
+       not want at the moment they are deciding. It is /blog/how-a-merge-is-made.html now, in full, and the link
+       sits at the bottom where someone who wants it will go looking. -->
+  <section class="wrap" aria-label="How antiloki works" style="padding-top:8px">
+    <p class="method-link">How a merge is actually made — every run measured, the combinations ranked, the winner
+      bound to a role, and what is deterministic versus what is a model's opinion:
+      <a href="/blog/how-a-merge-is-made.html">Compiled, not trained →</a><br>
+      The numbers on this page, every arm, including the losses: <a href="/blog/every-run.html">Every run, with the
+      scripts →</a></p>
   </section>
 
   <!-- PRICING -->
@@ -629,6 +613,8 @@
 
 <footer><div class="wrap">
   <span>antiloki · Agents · X-ray</span>
+  <a href="/blog/">blog</a>
+  <a href="/blog/every-run.html">the benchmark</a>
   <a href="https://github.com/danilosilvadev/antiloki-core-rust/releases/latest">releases</a>
   <a href="mailto:support@antiloki.dev">support@antiloki.dev</a>
   <span class="r">© 2026 antiloki</span>
