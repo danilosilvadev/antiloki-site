@@ -1,0 +1,582 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>antiloki — build +112% more on your weekly limit, 10× cheaper, with the same code quality</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23211e1b'/%3E%3Ctext x='10' y='47' font-family='Geist,Helvetica,Arial,sans-serif' font-weight='700' font-size='40' fill='%23efe9e2' letter-spacing='-2'%3Ea%3Ctspan fill='%23c97c5c'%3E.%3C/tspan%3E%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Build +112% more on your weekly limit, 10× cheaper, with the same code quality. Claude Grok, Gemini Codex — antiloki merges your existing model subscriptions into specialized coding agents: a router gives each job — planning, writing, verifying, judging — to the model measured best for it. No new account and no extra subscription: antiloki drives the CLIs you are already signed in to, your code goes only to those vendors, and nothing is kept on a server of ours.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Geist:wght@700&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root {
+    --bg: #211e1b; --panel: #2a2521; --rule: #3b3530; --rule2: #4a433c; --ink: #efe9e2; --dim: #a3998f; --muted: #6f665e;
+    --ember: #c97c5c; --ember-soft: rgba(201,124,92,.14); --ok: #7fc48f; --bad: #d9705a;
+    --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif; --body: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif; --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; border-radius: 4px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+  h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; letter-spacing: -.025em; line-height: 1.02; }
+  .mono { font-family: var(--mono); } .num { font-variant-numeric: tabular-nums; }
+  .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ember); }
+
+  nav.top .wrap { display: flex; align-items: center; height: 60px; gap: 20px; }
+
+  .mark { display: inline-flex; align-items: baseline; font-family: "Geist", -apple-system, system-ui, sans-serif; font-weight: 700; font-size: 20px; letter-spacing: -.035em; text-decoration: none; color: var(--ink); line-height: 1; }
+  .mark em { font-style: normal; color: var(--ember); }
+  nav.top .sp { flex: 1; }
+  nav.top a.q { text-decoration: none; color: var(--dim); font-size: 14px; } nav.top a.q:hover { color: var(--ink); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border-radius: 10px; font-family: var(--body); font-weight: 500; font-size: 15px; text-decoration: none; border: 1px solid var(--rule2); color: var(--ink); background: transparent; cursor: pointer; transition: transform .15s ease, border-color .15s ease; }
+  .btn:hover { border-color: var(--dim); transform: translateY(-1px); }
+  .btn.ember { background: var(--ember); border-color: var(--ember); color: #1d1410; } .btn.ember:hover { filter: brightness(1.06); }
+  .btn.sm { padding: 8px 13px; font-size: 13.5px; }
+
+
+  .hero { padding-top: 72px; text-align: center; }
+  .hero h1 { font-size: clamp(34px, 4.6vw, 60px); font-weight: 800; max-width: 26ch; margin: 0 auto; }
+  .hero h1 em { font-style: normal; color: var(--ember); }
+  .hero p { margin: 24px auto 0; max-width: 52ch; font-size: clamp(16px, 1.5vw, 19px); color: var(--dim); }
+  .hero p.why { max-width: 66ch; text-align: left; font-size: clamp(15px, 1.3vw, 17.5px); line-height: 1.55; } .hero p.why b { color: var(--ink); } .hero p.why span { display: block; } .hero p.why span + span { margin-top: 9px; }
+  .hero .cta { display: flex; justify-content: center; gap: 12px; margin-top: 30px; flex-wrap: wrap; align-items: center; }
+  .hero .fine { display: block; margin-top: 12px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+
+  .hero .proof { margin: 26px auto 0; max-width: 760px; text-align: left; border: 1px solid var(--line, rgba(255,255,255,.12)); border-radius: 12px; padding: 10px 14px 9px; font-size: clamp(12.5px, 1.05vw, 14px); }
+  .hero .proof-h, .hero .proof-r { display: grid; grid-template-columns: 1.25fr 1fr 1fr 1.15fr; gap: 10px; align-items: baseline; padding: 6px 0; }
+  .hero .proof-h { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line, rgba(255,255,255,.12)); }
+  .hero .proof-r + .proof-r { border-top: 1px dashed var(--line, rgba(255,255,255,.1)); }
+  .hero .proof-r span:first-child { color: var(--dim); }
+  .hero .proof-r b { color: var(--ink); font-weight: 700; }
+  .hero .proof-r em { font-style: normal; color: var(--ember); font-weight: 700; }
+  .hero .proof-f, .hero .chart .proof-f { display: block; margin-top: 7px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); line-height: 1.6; }
+  .hero .proof-f b { color: var(--dim); font-weight: 700; }
+  .hero .proof-f a { color: var(--ember); text-decoration: underline; text-underline-offset: 2px; }
+  @media (max-width: 640px) { .hero .proof-h { display: none; } .hero .proof-r { grid-template-columns: 1fr 1fr; } .hero .proof-r span:first-child { grid-column: 1 / -1; } }
+
+  .hero .bench { margin: 26px auto 0; max-width: 700px; text-align: left; display: flex; flex-direction: column; gap: 7px; }
+  .hero .bench-h { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .03em; margin-bottom: 4px; }
+  .hero .bench-h code { color: var(--dim); }
+  .brow { display: grid; grid-template-columns: 1fr auto; column-gap: 14px; row-gap: 2px; padding: 3px 0; align-items: center; }
+  .brow .bname { grid-column: 1 / -1; font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
+  .brow.bwin .bname, .brow.braw .bname { color: var(--ink); }
+
+  .brow .btrack { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .brow .bfill { height: 20px; border-radius: 3px; background: rgba(255,255,255,.16); display: block; flex: 0 1 auto; min-width: 3px; }
+  .brow.bwin .bfill { background: var(--ember); }
+  .brow.braw .bfill { background: rgba(255,255,255,.28); }
+  .brow .bnum { font-family: var(--mono); font-size: 13.5px; color: var(--dim); font-weight: 700; white-space: nowrap; }
+  .brow.bwin .bnum { color: var(--ember); }
+  .brow.braw .bnum { color: var(--ink); }
+  .brow .bmeta { font-family: var(--mono); font-size: 10.5px; color: var(--muted); white-space: nowrap; min-width: 72px; text-align: right; }
+  .hero .bench-f { font-family: var(--mono); font-size: 10.5px; color: var(--muted); line-height: 1.65; margin-top: 10px; }
+  .hero .bench-f b { color: var(--dim); font-weight: 700; }
+  .hero .bench-f .bf { display: block; margin-top: 9px; }
+  .btn.soon { opacity: .6; cursor: default; pointer-events: none; }
+  .hero .bench-f a { color: var(--ember); text-decoration: underline; text-underline-offset: 2px; }
+  @media (max-width: 640px) {
+    .hero .bench { padding: 0; }
+    .brow { column-gap: 8px; }
+    .brow .bmeta { min-width: 0; font-size: 9.5px; }
+    .brow .bnum { font-size: 12px; }
+  }
+  .fog { position: fixed; inset: 0; z-index: 55; pointer-events: none; overflow: hidden; background: #0d0b0a; transition: opacity .9s ease .05s; }
+  .fog i { position: absolute; border-radius: 50%; opacity: .9; mix-blend-mode: screen; will-change: transform; }
+  .fog i:nth-child(1) { width: 70vw; height: 70vw; left: -20vw; top: -10vh; background: radial-gradient(circle, rgba(70,52,44,.9), rgba(70,52,44,.35) 35%, transparent 68%); animation: fogA 14s ease-in-out infinite alternate; }
+  .fog i:nth-child(2) { width: 60vw; height: 60vw; right: -15vw; top: 10vh; background: radial-gradient(circle, rgba(52,44,48,.85), rgba(52,44,48,.3) 35%, transparent 68%); animation: fogB 17s ease-in-out infinite alternate; }
+  .fog i:nth-child(3) { width: 80vw; height: 50vw; left: 10vw; bottom: -25vh; background: radial-gradient(circle, rgba(72,50,38,.8), rgba(72,50,38,.3) 35%, transparent 68%); animation: fogC 12s ease-in-out infinite alternate; }
+  .fog i:nth-child(4) { width: 40vw; height: 40vw; left: 30vw; top: 20vh; background: radial-gradient(circle, rgba(201,124,92,.22), rgba(201,124,92,.08) 35%, transparent 68%); animation: fogB 9s ease-in-out infinite alternate-reverse; }
+  .fog::after { content: ""; position: absolute; inset: -50%; opacity: .07; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); animation: grain .6s steps(4) infinite; }
+  @keyframes fogA { from { transform: translate(0, 0) scale(1); } to { transform: translate(14vw, 8vh) scale(1.25); } }
+  @keyframes fogB { from { transform: translate(0, 0) scale(1.1); } to { transform: translate(-12vw, -6vh) scale(.9); } }
+  @keyframes fogC { from { transform: translate(0, 0) scale(1); } to { transform: translate(-8vw, -10vh) scale(1.3); } }
+  @keyframes grain { 0% { transform: translate(0, 0); } 25% { transform: translate(-6%, 4%); } 50% { transform: translate(5%, -7%); } 75% { transform: translate(-3%, -2%); } 100% { transform: translate(4%, 5%); } }
+  html.headline .fog, html.reduced .fog { opacity: 0; }
+  html.gone .fog { display: none; }
+
+  .hero .eyebrow, .hero p, .hero .proof, .hero .cta, .hero .fine { opacity: 0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease; }
+  .hero h1 .w { display: inline-block; opacity: 0; transform: translateY(.45em); filter: blur(10px); transition: opacity .45s ease, transform .6s cubic-bezier(.2,.8,.2,1), filter .5s ease; }
+  html.headline .hero h1 .w { opacity: 1; transform: none; filter: none; }
+  html.settled .hero .eyebrow, html.settled .hero p, html.settled .hero .proof, html.settled .hero .cta, html.settled .hero .fine { opacity: 1; transform: none; }
+  html.reduced .hero .eyebrow, html.reduced .hero p, html.reduced .hero .proof, html.reduced .hero .cta, html.reduced .hero .fine, html.reduced .hero h1 .w { opacity: 1; transform: none; filter: none; transition: none; }
+
+
+                  box-shadow: 0 70px 120px -50px rgba(0,0,0,.95), 0 0 0 1px rgba(255,255,255,.03) inset; transform-style: preserve-3d; will-change: transform, filter, opacity;
+                  transition: transform 1.3s cubic-bezier(.16,.84,.24,1), filter 1.1s ease, opacity .9s ease; }
+
+                          box-shadow: 0 80px 160px -50px rgba(0,0,0,.95), 0 0 0 1px rgba(255,255,255,.04) inset; transform-origin: top left; cursor: zoom-out; }
+  .screen { position: relative; border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; background: var(--panel); box-shadow: 0 60px 120px -60px rgba(0,0,0,.8); aspect-ratio: 1440 / 860; margin-top: 48px; }
+  .screen video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; }
+
+
+  .problem { padding: 110px 0 0; }
+  .problem h2 { font-size: clamp(30px, 3.8vw, 46px); font-weight: 700; max-width: 22ch; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; margin-top: 36px; }
+  .stat { background: var(--panel); padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 8px; }
+  .stat b { font-family: var(--mono); font-size: 34px; font-weight: 600; letter-spacing: -.03em; color: var(--ember); line-height: 1; }
+  .stat span { font-size: 14px; color: var(--dim); line-height: 1.45; }
+  .stat a { margin-top: auto; font-family: var(--mono); font-size: 10.5px; color: var(--muted); text-decoration: none; } .stat a:hover { color: var(--ink); text-decoration: underline; }
+
+  .research { margin: 30px 0 0; max-width: 760px; font-size: 13.5px; line-height: 1.7; color: var(--muted); border-left: 2px solid var(--rule); padding-left: 16px; }
+  .research b { color: var(--dim); font-weight: 600; }
+  .research .src { display: block; margin-top: 8px; font-family: var(--mono); font-size: 10.5px; color: var(--rule); }
+  .research .src a { color: var(--muted); text-decoration: none; } .research .src a:hover { color: var(--ember); text-decoration: underline; }
+
+  .method-link { margin: 6px 0 0; max-width: 760px; font-size: 14px; line-height: 1.8; color: var(--muted); }
+  .method-link a { color: var(--ember); text-decoration: none; border-bottom: 1px solid color-mix(in oklab, var(--ember) 40%, transparent); }
+  .method-link a:hover { border-bottom-color: var(--ember); }
+  .pains { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+  .pain { border: 1px solid var(--rule); border-radius: 14px; padding: 22px 22px 24px; background: var(--panel); }
+  .pain .q { font-family: var(--display); font-size: 19px; font-weight: 700; letter-spacing: -.01em; color: var(--ink); line-height: 1.2; }
+  .pain p b { color: var(--ink); font-weight: 500; }
+  .bridge { padding: 110px 0 0; text-align: center; }
+  .bridge h2 { font-size: clamp(28px, 3.4vw, 42px); font-weight: 700; max-width: 26ch; margin: 14px auto 0; }
+  .bridge p { margin: 18px auto 0; color: var(--dim); font-size: 17px; max-width: 58ch; }
+  .pain p { margin: 12px 0 0; color: var(--dim); font-size: 15px; }
+
+
+  .wow { padding: 120px 0 0; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 56px; align-items: center; }
+  .wow.flip { direction: rtl; } .wow.flip > * { direction: ltr; }
+  .wow h2 { font-size: clamp(30px, 3.6vw, 44px); font-weight: 700; margin-top: 12px; }
+  .wow p { margin: 18px 0 0; color: var(--dim); font-size: 17px; max-width: 42ch; }
+  .wow .proof { margin-top: 22px; font-family: var(--mono); font-size: 12.5px; color: var(--ink); display: flex; flex-direction: column; gap: 6px; }
+  .wow .proof span::before { content: "— "; color: var(--ember); }
+  .wow .screen { margin: 0; aspect-ratio: 760 / 800; max-width: 520px; margin-left: auto; margin-right: auto; }
+
+
+  .measure { border: 1px solid var(--rule); border-radius: 14px; background: var(--panel); padding: 24px 26px; }
+  .measure .t { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 18px; }
+  .bars { display: grid; gap: 18px; }
+  .bar { display: grid; grid-template-columns: 96px 1fr 118px; gap: 14px; align-items: center; font-family: var(--mono); font-size: 12px; }
+  .bar .who { color: var(--ink); } .bar .who small { display: block; color: var(--muted); font-size: 10px; }
+  .bar .track { height: 14px; background: var(--rule); border-radius: 3px; position: relative; overflow: hidden; }
+  .bar .fill { position: absolute; inset: 0 auto 0 0; background: var(--dim); border-radius: 3px; width: 0; transition: width 1.2s cubic-bezier(.2,.8,.2,1); }
+  .bar.win .fill { background: var(--ember); }
+  .bar .val { color: var(--dim); text-align: right; } .bar .val b { color: var(--ink); font-weight: 600; }
+  .verdicts { margin-top: 18px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .verdict { border: 1px solid var(--rule); border-radius: 8px; padding: 8px 10px; font-family: var(--mono); font-size: 10.5px; color: var(--dim); background: var(--bg); }
+  .verdict b { display: block; color: var(--ok); font-weight: 600; }
+
+
+  .record { border: 1px solid var(--rule); border-radius: 14px; background: var(--bg); padding: 18px 20px; font-family: var(--mono); font-size: 12px; display: grid; gap: 18px; }
+  .record .fuel { text-align: right; color: var(--muted); line-height: 1.7; } .record .fuel b { color: var(--ink); font-weight: 600; } .record .fuel .dot { display: inline-block; width: 6px; height: 6px; border-radius: 6px; background: var(--ember); margin-left: 6px; vertical-align: middle; }
+  .record .tl { display: grid; gap: 4px; } .record .tl div { display: grid; grid-template-columns: 62px 10px 1fr auto; gap: 10px; align-items: center; color: var(--dim); }
+  .record .tl .ts { color: var(--muted); } .record .tl i { width: 8px; height: 8px; border-radius: 8px; background: var(--ember); } .record .tl i.y { background: var(--muted); } .record .tl b { color: var(--ink); font-weight: 600; } .record .tl .no { color: var(--bad); } .record .tl .ok { color: var(--ok); } .record .tl .who { color: var(--muted); font-size: 10.5px; }
+
+
+  .desk { padding: 120px 0 0; }
+  .desk h2 { font-size: clamp(30px, 3.6vw, 44px); font-weight: 700; margin-top: 12px; max-width: 24ch; }
+  .desk > p { margin: 18px 0 0; color: var(--dim); font-size: 17px; max-width: 60ch; }
+  .desk .grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 40px; margin-top: 40px; align-items: start; }
+  .facets { display: grid; gap: 12px; }
+  .facet { border: 1px solid var(--rule); border-radius: 14px; padding: 18px 20px; background: var(--panel); }
+  .facet b { font-family: var(--display); font-size: 18px; font-weight: 700; letter-spacing: -.01em; display: block; }
+  .facet p { margin: 8px 0 0; color: var(--dim); font-size: 14.5px; }
+  .deskmock { border: 1px solid var(--rule); border-radius: 14px; background: var(--bg); overflow: hidden; font-family: var(--mono); font-size: 11px; display: grid; grid-template-columns: 172px 1fr; min-height: 420px; position: relative; }
+  .deskmock .side { border-right: 1px solid var(--rule); padding: 12px 0; color: var(--dim); }
+  .deskmock .cat { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); padding: 4px 14px; }
+  .deskmock .th { display: flex; align-items: center; gap: 7px; padding: 5px 14px; } .deskmock .th.on { background: var(--panel); border-left: 2px solid var(--ember); color: var(--ink); }
+  .deskmock .th i { width: 7px; height: 7px; border-radius: 7px; background: var(--muted); } .deskmock .th.on i { background: var(--ember); }
+  .deskmock .th small { margin-left: auto; color: var(--muted); }
+  .deskmock .member { padding: 2px 14px 2px 30px; color: var(--dim); font-size: 10.5px; }
+  .deskmock .studio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px 10px 6px; }
+  .deskmock .kind { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 7px 2px 5px; border-radius: 7px; font-size: 8.5px; color: var(--muted); }
+  .deskmock .kind.sel { background: var(--panel); border: 1px solid var(--ember); color: var(--ink); }
+  .deskmock .kind svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+  .deskmock .kind.a svg { color: var(--ember); } .deskmock .kind.t svg { color: var(--ok); } .deskmock .kind.d svg { color: #d8a657; } .deskmock .kind.c svg { color: var(--dim); }
+  .deskmock .stage { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1px; background: var(--rule); }
+  .deskmock .cell { background: var(--bg); padding: 9px 12px; color: var(--muted); display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+  .deskmock .cell.tall { grid-row: span 2; }
+  .deskmock .cell .hd { display: flex; gap: 7px; align-items: center; color: var(--ink); } .deskmock .cell .hd em { font-style: normal; color: var(--ember); }
+  .deskmock .cell .ln { height: 6px; border-radius: 3px; background: var(--rule); } .deskmock .cell .ln.w { width: 70%; } .deskmock .cell .ln.n { width: 45%; }
+  .deskmock .cell .ok { color: var(--ok); } .deskmock .cell .no { color: var(--bad); }
+  .deskmock .switch { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 2px; padding: 2px; border-radius: 9px; background: var(--panel); border: 1px solid var(--rule2); font-size: 10.5px; }
+  .deskmock .switch span { padding: 3px 10px; border-radius: 7px; color: var(--dim); } .deskmock .switch span.on { background: var(--ember-soft); color: var(--ember); }
+  .deskmock .switch .mid { display: flex; gap: 6px; padding: 0 8px; border-left: 1px solid var(--rule2); border-right: 1px solid var(--rule2); margin: 0 2px; }
+  .deskmock .switch .mid svg { width: 14px; height: 14px; stroke: var(--dim); fill: none; stroke-width: 1.75; }
+  .deskmock .switch .mid .ring { width: 14px; height: 14px; border-radius: 14px; border: 2px solid var(--rule2); border-top-color: var(--ember); border-right-color: var(--ember); }
+
+
+  .fit { padding-top: 120px; text-align: center; }
+  .fit h2 { font-size: clamp(28px, 3.4vw, 40px); font-weight: 700; }
+  .fit p { margin: 18px auto 0; color: var(--dim); font-size: 17px; max-width: 58ch; }
+  .fit .row { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; margin-top: 26px; font-family: var(--mono); font-size: 12.5px; color: var(--ink); }
+  .fit .row span::before { content: "◆ "; color: var(--ember); }
+
+
+  .pricing { padding-top: 120px; text-align: center; }
+  .pricing h2 { font-size: clamp(30px, 3.6vw, 44px); font-weight: 700; }
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 34px; text-align: left; }
+  .plan { border: 1px solid var(--rule); border-radius: 14px; padding: 24px; background: var(--panel); display: flex; flex-direction: column; gap: 12px; position: relative; }
+  .plan.lift { border-color: var(--ember); background: linear-gradient(180deg, var(--ember-soft), var(--panel) 60%); }
+  .plan .name { font-family: var(--display); font-weight: 700; font-size: 20px; }
+  .plan .price { font-family: var(--mono); font-size: 40px; font-weight: 600; letter-spacing: -.03em; line-height: 1; }
+  .plan .price small { font-size: 12px; font-weight: 400; color: var(--muted); letter-spacing: 0; margin-left: 6px; }
+  .plan.lift .price { color: var(--ember); }
+  .plan ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 14.5px; color: var(--dim); }
+  .plan ul li::before { content: "— "; color: var(--muted); } .plan ul li b { color: var(--ink); font-weight: 500; }
+  .plan .btn { margin-top: auto; justify-content: center; }
+  .plan .best { position: absolute; top: -11px; left: 22px; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; background: var(--ember); color: #1d1410; padding: 3px 8px; border-radius: 5px; font-weight: 600; }
+  .terms { margin: 16px auto 0; font-family: var(--mono); font-size: 11.5px; color: var(--muted); max-width: 70ch; }
+
+
+  .download { padding-top: 120px; text-align: center; }
+  .download h2 { font-size: clamp(30px, 3.6vw, 44px); font-weight: 700; }
+  .dl { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 34px; }
+  .os { border: 1px solid var(--rule); border-radius: 14px; padding: 20px 22px; background: var(--panel); text-decoration: none; display: flex; flex-direction: column; gap: 4px; text-align: left; transition: border-color .15s ease, transform .15s ease; }
+  .os:hover { border-color: var(--dim); transform: translateY(-2px); } .os.me { border-color: var(--ember); }
+  .os b { font-family: var(--display); font-weight: 700; font-size: 22px; } .os span { font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
+  .os em { font-style: normal; margin-top: 8px; color: var(--ember); font-size: 14px; }
+  .needs { margin-top: 18px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .faq { padding-block: 90px 80px; max-width: 760px; margin: 0 auto; }
+  .faq details { border-top: 1px solid var(--rule); padding: 16px 0; } .faq details:last-child { border-bottom: 1px solid var(--rule); }
+  .faq summary { cursor: pointer; font-weight: 500; font-size: 16px; list-style: none; display: flex; justify-content: space-between; gap: 20px; }
+  .faq summary::-webkit-details-marker { display: none; } .faq summary::after { content: "+"; font-family: var(--mono); color: var(--muted); } .faq details[open] summary::after { content: "–"; }
+  .faq p { margin: 10px 0 0; color: var(--dim); font-size: 15px; }
+
+  footer { border-top: 1px solid var(--rule); padding: 28px 0 40px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+  footer .wrap { display: flex; gap: 22px; flex-wrap: wrap; align-items: center; } footer a { color: var(--dim); text-decoration: none; } footer .r { margin-left: auto; }
+
+  @media (max-width: 900px) {
+    .pains, .plans, .dl, .verdicts { grid-template-columns: 1fr; } .stats { grid-template-columns: 1fr 1fr; }
+    .wow, .wow.flip { grid-template-columns: 1fr; direction: ltr; gap: 28px; padding-top: 80px; }
+    .desk { padding-top: 80px; } .desk .grid { grid-template-columns: 1fr; } .deskmock { grid-template-columns: 1fr; } .deskmock .side { display: none; }
+    .problem, .fit, .pricing, .download, .bridge { padding-top: 80px; }
+    nav.top a.q { display: none; }
+  }
+
+
+  .method { margin-top: 72px; }
+  .method .head { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+  .method h2 { font-size: clamp(26px, 3vw, 38px); }
+  .method .lede { color: var(--dim); max-width: 62ch; margin: 10px 0 30px; font-size: 17px; }
+  .method .lede b { color: var(--ink); font-weight: 600; }
+
+  .steps3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; }
+  .steps3 > div { background: var(--panel); padding: 22px 22px 24px; display: flex; flex-direction: column; gap: 8px; }
+  .steps3 i { font-family: var(--mono); font-style: normal; font-size: 11px; letter-spacing: .14em; color: var(--ember); }
+  .steps3 h3 { font-size: 19px; }
+  .steps3 p { margin: 0; color: var(--dim); font-size: 14.5px; line-height: 1.55; }
+  .steps3 code { font-family: var(--mono); font-size: .85em; color: var(--ink); background: rgba(0,0,0,.25); padding: 1px 5px; border-radius: 4px; }
+  @media (max-width: 860px) { .steps3 { grid-template-columns: 1fr; } }
+
+  .premise { margin-top: 68px; }
+  .premise h2 { font-size: clamp(26px, 3vw, 38px); margin: 8px 0 0; }
+  .premise .lede { color: var(--dim); max-width: 66ch; margin: 14px 0 0; font-size: 17px; line-height: 1.6; }
+  .premise .lede + .lede { margin-top: 12px; }
+  .premise .lede b { color: var(--ink); font-weight: 600; }
+  .premise .steps3 { margin-top: 28px; }
+  .premise .stats { margin-top: 22px; }
+
+  .board { margin-top: 26px; border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; }
+  .board .bh, .board .br { display: grid; grid-template-columns: 1.5fr 1.6fr .7fr .7fr .8fr; gap: 14px; padding: 11px 20px; align-items: baseline; }
+  .board .bh { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); background: var(--panel); border-bottom: 1px solid var(--rule); }
+  .board .br + .br { border-top: 1px solid var(--rule); }
+  .board .br { font-size: 14.5px; }
+  .board .br b { font-weight: 600; }
+  .board .who { font-family: var(--mono); font-size: 12.5px; color: var(--dim); }
+  .board .n { font-family: var(--mono); font-size: 13px; font-variant-numeric: tabular-nums; }
+  .board .stamp { display: inline-block; min-width: 22px; text-align: center; font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: var(--ember); border: 1px solid var(--ember); border-radius: 999px; padding: 1px 0; margin-right: 8px; }
+  .board .foot { padding: 11px 20px; background: var(--panel); border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 11.5px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline; }
+  .board .foot a { color: var(--ember); }
+  @media (max-width: 720px) { .board .bh { display: none; } .board .br { grid-template-columns: 1fr 1fr; row-gap: 4px; } .board .br .who { grid-column: 1 / -1; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } html { scroll-behavior: auto; } .bar .fill { transition: none; } }
+</style>
+
+<nav class="top"><div class="wrap">
+  <a class="mark" href="#top" aria-label="antiloki">antiloki<em>.</em></a>
+  <span class="sp"></span>
+  <a class="q" href="#whatis">What it is</a>
+  <a class="q" href="#agents">Agents</a>
+  <a class="q" href="#xray">X-ray</a>
+  <a class="q" href="/blog/">Blog</a>
+  <a class="q" href="#pricing">Pricing</a>
+  <a class="btn sm ember" href="#download">Download · free 7 days</a>
+</div></nav>
+
+<main id="top">
+  <div class="fog" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="wrap hero">
+    <span class="eyebrow">A desktop app for merging the subscriptions you have into one coding agent.<br>Windows today · macOS and Linux builds are older, see <a href="#download" style="color:inherit">Download</a></span>
+    <h1 style="margin-top:14px"><em>Build +112% more on your weekly limit, 10× cheaper, with the same code quality.</em></h1>
+    <p class="lede" style="margin-top:10px">Claude Grok, Gemini Codex — antiloki merges your existing model subscriptions into specialized coding agents. <b>No new account and no extra subscription: antiloki drives the CLIs you are already signed in to, your code goes only to those vendors, and nothing is kept on a server of ours.</b></p>
+    <div class="bench" aria-label="cost per run on the same task">
+      <div class="bench-h">eight TypeScript modules in a real React store · <code>tsc -b &amp;&amp; vite build</code> must pass · 37 behavioural checks · cost per run, same task, same checks · pipeline arms measured 2026-09-28/29, Claude references 2026-09-22/23 · Composer = Cursor Composer 2.5 (needs a Cursor seat)</div>
+      <div class="brow">
+        <span class="bname">antiloki · Composer alone, no planner, no QA step (an ask of size L)</span>
+        <span class="btrack"><span class="bfill" style="width:4.8%"></span><span class="bnum">$0.067</span></span>
+        <span class="bmeta">36.3/37 · 61 s · n=3</span>
+      </div>
+      <div class="brow bwin">
+        <span class="bname">antiloki · Composer plans, Composer writes, Composer judges (QA included) — the headline arm</span>
+        <span class="btrack"><span class="bfill" style="width:7.3%"></span><span class="bnum">$0.102</span></span>
+        <span class="bmeta">36.0/37 · 95 s · n=3</span>
+      </div>
+      <div class="brow">
+        <span class="bname">antiloki · Sonnet plans, Composer writes, Sonnet judges</span>
+        <span class="btrack"><span class="bfill" style="width:11.1%"></span><span class="bnum">$0.155</span></span>
+        <span class="bmeta">36.8/37 · 106 s · n=5</span>
+      </div>
+      <div class="brow">
+        <span class="bname">antiloki · Codex plans, Composer writes, Codex judges</span>
+        <span class="btrack"><span class="bfill" style="width:11.8%"></span><span class="bnum">$0.165</span></span>
+        <span class="bmeta">36.7/37 · 137 s · n=3</span>
+      </div>
+      <div class="brow">
+        <span class="bname">antiloki · Gemini plans, Composer writes, Gemini judges</span>
+        <span class="btrack"><span class="bfill" style="width:13.1%"></span><span class="bnum">$0.184</span></span>
+        <span class="bmeta">36.3/37 · 134 s · n=5</span>
+      </div>
+      <div class="brow">
+        <span class="bname">antiloki · Grok-4.6-high plans, Composer writes, Grok judges</span>
+        <span class="btrack"><span class="bfill" style="width:20.8%"></span><span class="bnum">$0.292</span></span>
+        <span class="bmeta">36.3/37 · 199 s · n=3</span>
+      </div>
+      <div class="brow braw">
+        <span class="bname">raw Claude Sonnet, one session (the secondary reference, 2026-09-23)</span>
+        <span class="btrack"><span class="bfill" style="width:23.5%"></span><span class="bnum">$0.330</span></span>
+        <span class="bmeta">36/37 · 121 s · n=1</span>
+      </div>
+      <div class="brow braw">
+        <span class="bname">raw Claude Opus, one session (the headline reference, 2026-09-22/23)</span>
+        <span class="btrack"><span class="bfill" style="width:82.0%"></span><span class="bnum">$1.151</span></span>
+        <span class="bmeta">37/37 · 278 s · n=2</span>
+      </div>
+      <div class="proof" aria-label="how many times cheaper, on the eight-module task">
+        <div class="proof-h"><span>arm</span><span>cost per run</span><span>against raw Opus</span><span>against raw Sonnet</span></div>
+        <div class="proof-r"><span>Composer alone, no QA step</span><span>$0.0671</span><b>17.2× vs Opus</b><b>4.9× vs Sonnet</b></div>
+        <div class="proof-r"><span>Composer × Composer, with QA</span><span>$0.1017</span><em>11.3× vs Opus</em><b>3.2× vs Sonnet</b></div>
+        <div class="proof-r"><span>Sonnet plans + judges, Composer writes</span><span>$0.1554</span><b>7.4× vs Opus</b><b>2.1× vs Sonnet</b></div>
+      </div>
+      <div class="bench-f">
+        <span class="bf"><b>10× is our best measured result against raw Claude Opus on the eight-module task.</b> Raw Opus, one session: $1.151 a run (n=2, 37 of 37 checks, 278 s). The antiloki pipeline, Composer planning, writing and judging with its QA step: $0.1017 a run (n=3, 36.0 of 37, 95 s). That is 11.3×, and the headline rounds it down to 10×. This headline arm is the nearest measured arm to the shipped path, not the shipped path itself: for an ask of size L the shipped path is solo (no planning call) plus QA, and that exact path has not been run end to end. The reference is Opus because it is the Claude model a Max subscriber reaches for; against raw Sonnet ($0.330, n=1) the same pipeline is 3.2× and the Sonnet-planned run 2.1×, both in the table above.</span>
+        <span class="bf"><b>The honest range is 6×–11×.</b> Raw Opus does not cost the same every day: the ladder run of 2026-09-22 recorded $0.61 for this same task, and against that run the pipeline is about 6.0×. 11.3× is the best measured cell, not the typical one. The 17.2× row has no QA step; the shipped path is solo plus QA, and it was not measured end to end.</span>
+        <span class="bf"><b>The same code quality</b> here means code that passes the same 37 checks: the pipeline averaged 36.0 of 37 against 37 for raw Opus, which is 0.973 of 1.0 — inside the product's 80 % tolerance, not identical. The checks are executed code written before any arm ran, not a model's opinion; quality is the mean over the audited runs (4 of 5 in the Sonnet and Gemini arms, so their means are 36.75 and 36.25, printed 36.8 and 36.3).</span>
+        <span class="bf"><b>+112 % on your weekly limit</b> is a paired task result and not a measured percentage of anyone's weekly limit. On this task the arm where Claude still plans and judges while Composer writes cost $0.1554 against $0.3297 for raw Sonnet: 2.12×, so about 2.1× further on that task (n=5 against n=1, list-price dollars standing in for an allowance the vendors do not publish). What it does for your limit depends on your mix of work.</span>
+        <span class="bf"><b>Limits.</b> One task in one repository, n of 1 to 5 per arm. Dollars are API list prices; Cursor, Codex and Gemini report tokens, not dollars, so theirs are estimated from the tokens. The shipped path adds a separate screening call before the plan ($0.006 on Gemini, $0.014 on Haiku) that is not in these figures, and the solo path (no planner, for an ask of size L or smaller) has not been watched end to end in a real run. The small-ask suite cuts the other way: on S2, raw Haiku cost $0.0437, Composer alone $0.0488 and the Composer pipeline with QA $0.086, so on a small ask there is no saving against Haiku — and in the report's small-ask cells Composer is priced about ten times lower than on S2 for asks of similar size, cause not found. That family is not the evidence for this headline. Across seven cells against the cheapest Claude arm inside the tolerance the geometric mean was 5.7× before QA and about 3.2× with QA added by estimate; the report keeps them as context.</span>
+        <span class="bf"><b>The eight:</b> fuzzy product search, a stable sort, two localStorage-backed React hooks, money formatting with discount codes, a quantity-stepper component, and checkout validation with a Luhn card check — strict types, no <code>any</code>, JSDoc on every export, no new dependencies, no edits to existing files.</span>
+        <span class="bf"><a href="/paper.html">The report, fourth edition →</a> · <a href="/blog/every-run.html">The first edition, with the scripts →</a></span>
+      </div>
+    </div>
+
+    <div class="cta"><a class="btn ember" href="#download">Download — free for 7 days</a></div>
+    <span class="fine">one binary · no account · your current subscription is the engine</span>
+  </div>
+
+
+
+    <section class="wrap premise" id="whatis" aria-label="Why antiloki exists">
+    <span class="eyebrow">what it actually is</span>
+    <h2>Merging is one part of it.</h2>
+    <p class="lede">Your Claude, Codex, Cursor, Gemini and Grok subscriptions, on one repo, as one agent. antiloki <b>routes</b>
+      each job of an ask to the seat measured best for it, automatically, under one rule: keep at least 80&nbsp;% of
+      the best measured quality, then the cheapest, then the fastest. The frontier seat is asked only for the parts
+      that need it, and a seat that is out of quota — or nearly — is skipped before the job, not after it fails. It
+      <b>controls</b> what may be touched, <b>records</b> every turn — priced, timed and attributed to a seat — <b>tests</b>
+      every run before it counts, and <b>measures</b> the whole thing in seconds and dollars. The merge is what
+      routing produces — the rest is why it can be trusted.</p>
+    <div class="steps3">
+      <div>
+        <i>control</i>
+        <h3>One agent, fenced where you say.</h3>
+        <p>Decide which folders may be written. For every seat the fence is enforced where the work lands: a change beyond it
+          is shown, can be undone in one click, and stops the merge or the delivery. On Claude panes a hook at the tool
+          call, outside the model, also refuses the write before it happens; the other seats have no such hook.</p>
+      </div>
+      <div>
+        <i>verify</i>
+        <h3>Every run ends in a test.</h3>
+        <p>Every turn is priced and timed, and on Claude panes a hook outside the model
+          logs each tool call. Then QA opens the real page in Chrome and uses the controls the change is about, or
+          sends requests to the server, with checks written as plain expectations — the judge is shown a picture only
+          when a check failed, none could decide, or the styles changed. Unmet claims go back to the worker; when the send-backs are spent, the run
+          becomes a question to <b>you</b>. The judge is chosen on how often it let a broken run through.</p>
+      </div>
+      <div>
+        <i>route</i>
+        <h3>Frontier money only where it earns it.</h3>
+        <p>Most of an ask is not hard. An ask of size L or smaller goes to one seat, alone, with no planning call;
+          a bigger one is split into jobs, and each job is bound to the seat the benchmark measured best on that work
+          — usually not the expensive one. A seat at 95&nbsp;% of its window, or out of quota, is skipped before the
+          job starts. There are no per-job pickers to set. That is where the numbers above come from.</p>
+      </div>
+      <div>
+        <i>learn</i>
+        <h3>It keeps measuring on your machine.</h3>
+        <p>Every run is scored on your machine — which seat, which job, how long, what it cost, whether it passed
+          first time — and filed in the benchmark that ships with the app. The numbers above are the starting point;
+          your runs adjust the shipped scores, by at most a third, and a pairing that was only watched working never
+          displaces one that was benched. The scores stay on the machine.</p>
+      </div>
+    </div>
+        <p class="research">Adoption is finished and control never arrived: <b>90 %</b> of professional developers use
+      coding agents weekly and <b>68 %</b> daily, but only <b>29 %</b> trust what comes out — down from 40 %, with
+      <b>3 %</b> who highly trust it. And the failure mode is not theoretical: an agent quoted the rule that
+      forbade it and deleted a production database and its backups, and the deletion call took <b>nine seconds</b> — <b>93 %</b> of organisations have had an
+      AI-caused incident, <b>19 %</b> have governance for the next one. Rules in a prompt are not enforcement.
+      <span class="src"><a href="https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/" target="_blank" rel="noopener">JetBrains 2026</a> · <a href="https://byteiota.com/stack-overflow-dev-survey-2026-ai-at-84-trust-at-3/" target="_blank" rel="noopener">Stack Overflow 2026</a> · <a href="https://bex.co/blog/2026/07/11/vibe-coding-incident-guardrails" target="_blank" rel="noopener">PocketOS · Spacelift 2026</a></span></p>
+  </section>
+
+  <section class="wrap premise" id="agents" aria-label="Agents">
+    <span class="eyebrow">agents</span>
+    <h2>One agent per role, on the seat measured best for the job.</h2>
+    <p class="lede">You do not staff a roster. A setup wizard finds the AIs on your machine — Claude, Codex, Cursor, Gemini and Grok, each listed as ready, not signed in or not installed, with the command that fixes it — and asks for one main provider. Then you ask, and the agent takes the role the ask needs (Backender, Frontend designer, Tester, Reviewer and others), arriving with its scope, skills and specialists. The router chooses the seat for every job, from the seats you are signed in to and that still have room in their window; there is no per-job picker to set.</p>
+    <p class="lede">Each agent keeps a queue of asks you can reorder, cancel and re-prompt, with a checkpoint per response to undo to. A run can be paused, resumed or stopped, and the QA can be stopped on its own. The QA test is filmed — a live browser frame while it runs and the kept recording afterwards — and every turn closes with what it did, which seat did it, what it cost, and the QA verdict. A long conversation closes into episodes that consolidate into a summary.</p>
+  </section>
+  <section class="wrap premise" id="xray" aria-label="X-ray">
+    <span class="eyebrow">X-ray</span>
+    <h2>The codebase judged by arithmetic, before anything ships.</h2>
+    <p class="lede">X-ray is the deterministic half. Every file gets a verdict — a score and why it is not 100, axis by axis — computed from your ASTs and git history, so the same commit scores the same twice and no model is asked for the number. Around it: file reviews with comments at the lines, the rules your codebase lives by checked at the line, a map of the codebase (every file a box; hubs, orphans, cycles), the coverage gaps, and the blast radius of a change before it lands.</p>
+    <p class="lede">It reads TypeScript and, since 2026-10-01, Flow-typed JavaScript: on a copy of React the Flow files it had to skip went from 1,160 to none, and 11 of 1,177 are still unreadable. It says what it did not index — excluded, an unsupported language, a parse that failed, changed since the index. The same facts reach the agent as its context pack. Measured on a wide TypeScript rename (three agents, one run per cell), the map alone was 31&nbsp;% faster on 48&nbsp;% fewer input tokens at the same pass rate. On a small change the map alone passed 0 of 3, because the index had left out the file that needed the change; that is why the pack now says what it could not read. On a second repository the map made Codex use more tokens (472k to 1.15M). <a href="/paper.html" style="color:var(--ember)">The report</a> has the cells.</p>
+  </section>
+    <section class="wrap premise" id="more" aria-label="Around the work">
+    <span class="eyebrow">around the work</span>
+    <h2>What sits around the work.</h2>
+    <div class="steps3">
+      <div>
+        <i>QA</i>
+        <h3>Watch the test run.</h3>
+        <p>A browser frame with the live picture, a cursor gliding to each target, a subtitle for every step, and the
+          kept film to replay afterwards; for a server, a terminal of requests, answers and checks. Before and after
+          screenshots sit in the run story, linked at full size.</p>
+      </div>
+      <div>
+        <i>control</i>
+        <h3>Pause, resume, stop — or stop only the QA.</h3>
+        <p>Buttons in the run story. While a finished run is still being judged the button reads <em>stop the QA</em>:
+          the work stands, is marked not verified, and nothing is sent back. Each agent also keeps a queue of asks
+          (done, doing, next) you can reorder, cancel and re-prompt, with a checkpoint per response to undo to.</p>
+      </div>
+      <div>
+        <i>seats</i>
+        <h3>Switch a whole seat off.</h3>
+        <p>Settings has a switch per seat, and a seat you turn off is not called — not by a chat, a terminal, a
+          hand-off, QA, a merge or the advice. Nothing is hard-coded to one vendor: a new chat starts on the first
+          usable seat, and every role has a measured fallback when its first choice is off or out of quota.</p>
+      </div>
+      <div>
+        <i>limits</i>
+        <h3>Where each seat stands.</h3>
+        <p>Claude and Codex show their 5-hour and weekly windows. Cursor, Gemini and Grok publish no quota, so they
+          show the calls and tokens sent in the last 5 hours and 7 days — a count, never dressed up as a percentage.
+          The saving on screen counts only the current workspace's runs, and drops the old number the moment you
+          switch; the windows and the counts are the account's and this machine's, whatever workspace made the call —
+          and the counts cover only what went through antiloki.</p>
+      </div>
+      <div>
+        <i>setup</i>
+        <h3>The first run finds your AIs.</h3>
+        <p>The wizard lists the five seats as found on this machine — ready, not signed in, not installed — with the
+          exact command to fix each one, lets you switch off the ones you do not have, and asks for one main
+          provider. It offers a provider only when the seat is real, never merely because a binary exists. New
+          workspaces open in a proper window with a folder browser.</p>
+      </div>
+      <div>
+        <i>ship</i>
+        <h3>The pull-request button says what a click does.</h3>
+        <p>Before it opens a PR it tells you what will happen; for a repo with no online remote it offers, with your
+          confirmation, to create a private GitHub repo first. A GitHub token can be added in Settings: verified
+          before it is saved, kept owner-only, never shown again, removable.</p>
+      </div>
+      <div>
+        <i>igryt</i>
+        <h3>The plain parts are not asked of a model.</h3>
+        <p>A yes, or a number, after a proposal is read by a deterministic front in English, Portuguese, Spanish,
+          French, German and Italian. A gate rejects a run that changed nothing, wiped the tree or only deleted
+          files before any model reads it. Gauges decide only when they can point at a fact.</p>
+      </div>
+    </div>
+  </section>
+
+      <section class="wrap" aria-label="How antiloki works" style="padding-top:8px">
+    <p class="method-link">How a merge is actually made — every run measured, the combinations ranked, the winner
+      bound to a role, and what is deterministic versus what is a model's opinion:
+      <a href="/blog/how-a-merge-is-made.html">Compiled, not trained →</a><br>
+      The numbers on this page, the cells behind them and the losses, measured on the five seats:
+      <a href="/paper.html">the technical report, fourth edition →</a> — and the first edition's arms, with their
+      scripts: <a href="/blog/every-run.html">Every run →</a></p>
+  </section>
+
+    <div class="wrap pricing" id="pricing">
+    <h2>Free for a week. Paid plans are coming.</h2>
+    <p class="lede" style="color:var(--dim);max-width:60ch;margin:10px auto 26px;font-size:16px;text-align:center;text-wrap:balance">Planned prices: $200 a year, or $500 once. Checkout is not open yet, so the 7-day
+      trial is the only way in today.</p>
+    <div class="plans">
+      <div class="plan"><div class="name">Trial</div><div class="price num">$0<small>7 days</small></div><ul><li><b>everything</b> — agents and X-ray</li><li>no card, no account</li><li>a week is real work on a real repo</li><li>your projects stay when it ends</li></ul><a class="btn ember" href="#download">Download</a></div>
+      <div class="plan"><div class="name">Annual</div><div class="price num">$200<small>/ year, planned</small></div><ul><li><b>updates + support</b> while it is active</li><li>the shipped routing table stays current — that is what renews</li><li>activated on a machine, deactivated to move it</li></ul><span class="btn soon" aria-disabled="true">Coming soon</span></div>
+      <div class="plan"><div class="name">Lifetime</div><div class="price num">$500<small>once, planned</small></div><ul><li><b>one payment</b> — no yearly subscription</li><li>the update terms are set at checkout</li><li>activated on a machine, deactivated to move it</li></ul><span class="btn soon" aria-disabled="true">Coming soon</span></div>
+    </div>
+    <p class="terms">Prices are USD and may change before checkout opens. The app works offline for up to 14 days between license checks, once a key is activated; the trial makes no check.</p>
+  </div>
+
+    <div class="wrap download" id="download">
+    <h2>Install. Open a repo. Ask.</h2>
+    <div class="dl">
+      <a class="os" data-os="mac" href="https://github.com/danilosilvadev/antiloki-releases/releases/tag/v0.1.0"><b>macOS</b><span>Apple silicon · .dmg · v0.1.0 (older build)</span><em>Download ↓</em></a>
+      <a class="os" data-os="win" href="https://github.com/danilosilvadev/antiloki-releases/releases/latest"><b>Windows</b><span>.exe · x64 · installer</span><em>Download ↓</em></a>
+      <a class="os" data-os="linux" href="https://github.com/danilosilvadev/antiloki-releases/releases/tag/v0.1.4"><b>Linux</b><span>.deb from v0.1.4 · needs glibc 2.44 or newer (Arch and other recent rolling distributions); wider support is in progress</span><em>Download ↓</em></a>
+    </div>
+    <p class="needs">needs git and at least one of <b>Claude</b> · <b>Codex</b> · <b>Cursor</b> · <b>Gemini</b> · <b>Grok</b> <em>signed in</em>; the browser QA needs Chrome or Chromium — antiloki reads the seat, not the binary, so an unauthenticated CLI is never offered, and the setup wizard shows which seats it found and the command to fix the rest. A <b>merge</b> wants two usable seats: one for the brain and a cheap one for the hands. With one it runs solo, still routed per job. OpenCode, and the Zen and open models behind it, are optional and off by default.</p>
+  </div>
+
+  <div class="wrap faq">
+    <details><summary>What is antiloki, in one sentence?</summary><p>A desktop workspace that <b>merges</b> the model subscriptions you already have — Claude, Codex, Cursor, Gemini, Grok — into one coding agent: the seat measured best for each job of an ask, not one model for all of them. It makes your weekly limit last longer and each ask cost less, with folder-level write enforcement, a test at the end of every run and a full audit timeline: the control layer the agents don't ship with.</p></details>
+    <details><summary>Does it replace Claude Code, Codex, Cursor, Gemini or Grok?</summary><p>No — it runs them, twice over: as the agent in its box, and as the engine behind antiloki's own AI (the chat, the reviews, the ultra review), each through its own vendor CLI. Keep your subscriptions; there is no API key to paste.</p></details>
+    <details><summary>What does the X-ray do that a linter doesn't?</summary><p>It judges every file against your rules and its own measurements (tests, coupling, structure, change) and tells you why a file is not 100. Then the ultra review: a $0 survey of the territory, and your engine reading the worst units to report what it can verify — with the fix. The chat sees all of it, so "why is this file 81?" gets a real answer — and the intel handed to an agent says which files it could not read.</p></details>
+    <details><summary>Do I need two subscriptions?</summary><p>For a <b>merge</b>, two usable seats. A merge never puts two frontier models together; it puts cheap hands under a good brain. Google's free tier is capped at a small daily number of agent requests (about twenty when we checked) — enough to try, not a seat to rely on. antiloki only offers a provider you are actually <b>signed in to</b>: it reads the seat, not the installed binary, so a CLI sitting on your machine unauthenticated is never offered as something it can bind. With one seat it runs solo — still routed per job, still tested, just not merged.</p></details>
+    <details><summary>Isn't this just worktrees and tmux?</summary><p>Worktrees are the easy part. The fence enforced where the work lands, the verifier before merge, the QA test and the cost-per-task record are what you can't script in an afternoon — and what the trial is for.</p></details>
+    <details><summary>Why is the headline measured against Opus, not a cheaper Claude?</summary><p>Because Opus is the Claude model a Max subscriber reaches for, and the headline is our best measured result against it on one task: 11.3×, rounded down to 10×. Against raw Sonnet the same pipeline is 3.2× and a Sonnet-planned run 2.1×; against the cost Opus recorded on another day (the 2026-09-22 ladder run, $0.61) it is about 6×. The honest range is 6× to 11×, and the table under the headline shows every arm with its n.</p></details>
+    <details><summary>Is +112&nbsp;% a measured share of my weekly limit?</summary><p>No. It is a paired task result: on the eight-module task, the run where Claude plans and judges while Composer writes cost $0.1554 against $0.3297 for raw Sonnet, 2.12×. That is dollars at list price standing in for an allowance the vendors do not publish, so how much further your own limit goes depends on your mix of work.</p></details>
+    <details><summary>More calls must mean a bigger bill.</summary><p>More <em>calls</em>, less <em>money</em>: the expensive model is asked only for the part that needs it, and the cheap one does the rest. That is the whole trade, and it is why the bill is on screen for every turn — including the runs where the router declined to split because splitting was not worth it, and the small asks it runs on one seat with no planning call. A failed run reports what it spent and claims no saving.</p></details>
+    <details><summary>Can my company install it?</summary><p>One binary, local, no account, no telemetry. The network calls are: your CLIs' own calls; a license check once a day, once you have activated a key (the trial makes none); an update check against a static file on GitHub Releases; the window's fonts, fetched from Google Fonts (fonts.googleapis.com and fonts.gstatic.com) when it opens; api.openai.com or openrouter.ai only if you set up the optional OpenCode route with your own key; and GitHub only if you add a token or open a pull request. Send that to security.</p></details>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <span>antiloki · agents · X-ray</span>
+  <a href="/blog/">blog</a>
+  <a href="/paper.html">the benchmark</a>
+  <a href="https://github.com/danilosilvadev/antiloki-releases/releases">releases</a>
+  <a href="mailto:support@antiloki.com">support@antiloki.com</a>
+  <span class="r">© 2026 antiloki · updated 2026-10-01</span>
+</div></footer>
+
+<script>
+  const root = document.documentElement, h1 = document.querySelector(".hero h1");
+  const wrapWords = (el) => { for (const node of Array.from(el.childNodes)) { if (node.nodeType === 3) { const frag = document.createDocumentFragment(); node.textContent.split(/(\s+)/).forEach((t) => { if (!t) return; if (/^\s+$/.test(t)) frag.appendChild(document.createTextNode(t)); else { const w = document.createElement("span"); w.className = "w"; w.textContent = t; frag.appendChild(w); } }); node.replaceWith(frag); } else if (node.nodeType === 1) wrapWords(node); } };
+  wrapWords(h1);
+  h1.querySelectorAll(".w").forEach((w, i) => { w.style.transitionDelay = `${i * 40}ms`; });
+  const timers = []; const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const settle = () => { timers.forEach(clearTimeout); root.classList.add("formed", "headline", "settled"); setTimeout(() => root.classList.add("gone"), 900); };
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { root.classList.add("reduced", "gone"); }
+  else {
+    at(150, () => root.classList.add("formed"));
+    at(500, () => root.classList.add("headline"));
+    at(1100, () => root.classList.add("settled"));
+    at(1900, () => root.classList.add("gone"));
+    const cut = () => { settle(); for (const ev of ["wheel", "touchstart", "keydown", "pointerdown"]) window.removeEventListener(ev, cut); };
+    for (const ev of ["wheel", "touchstart", "keydown", "pointerdown"]) window.addEventListener(ev, cut, { passive: true });
+  }
+  const ua = navigator.userAgent, os = /Mac/.test(ua) ? "mac" : /Win/.test(ua) ? "win" : /Linux/.test(ua) ? "linux" : null;
+  if (os) document.querySelector(`.os[data-os="${os}"]`)?.classList.add("me");
+  const RELEASES = "danilosilvadev/antiloki-releases";
+  const PICK = { mac: [/\.dmg$/], win: [/-setup\.exe$/, /\.msi$/], linux: [/\.AppImage$/, /\.deb$/] };
+  const LIST = `https://github.com/${RELEASES}/releases`;
+  const fallback = () => { for (const key of ["mac", "linux"]) { const a = document.querySelector(`.os[data-os="${key}"]`); if (a) a.href = LIST; } };
+  fetch(`https://api.github.com/repos/${RELEASES}/releases?per_page=10`, { headers: { accept: "application/vnd.github+json" } }).then((r) => (r.ok ? r.json() : null)).then((rels) => {
+    if (!Array.isArray(rels)) { fallback(); return; }
+    const newest = rels.find((x) => !x.draft && !x.prerelease) || rels.find((x) => !x.draft);
+    for (const [key, pats] of Object.entries(PICK)) {
+      const a = document.querySelector(`.os[data-os="${key}"]`); if (!a) continue;
+      for (const rel of rels) {
+        if (rel.draft || !Array.isArray(rel.assets)) continue;
+        const asset = pats.map((re) => rel.assets.find((x) => re.test(x.name))).find(Boolean);
+        if (!asset) continue;
+        a.href = asset.browser_download_url; a.querySelector("em").textContent = `Download ${rel.tag_name} ↓`; a.title = `${asset.name} · ${(asset.size / 1048576).toFixed(0)} MB`;
+        const note = a.querySelector("span");
+        if (note && key !== "win") { note.textContent = note.textContent.replace(/v\d+\.\d+\.\d+/, rel.tag_name); if (rel === newest) note.textContent = note.textContent.replace(" (older build)", ""); }
+        break;
+      }
+    }
+  }).catch(() => { fallback(); });
+</script>
